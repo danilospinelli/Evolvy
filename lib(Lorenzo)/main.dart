@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_View.dart';
+
+import 'ui/Pagina3/view/Pagina3View.dart';
 
 void main() {
   runApp(const MyApp());
 }
- 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Evolvy',
+      title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 97, 205, 38))
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: const MainScreen_View(),
+      home: const Pagina3View(),
     );
   }
 }
