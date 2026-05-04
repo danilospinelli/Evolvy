@@ -10,7 +10,7 @@ Future<void> main() async {
   );
 
   OpenFoodAPIConfiguration.userAgent = UserAgent(
-    name: 'Tracker Calorie',
+    name: 'Evolvy',
     version: '1.0.0',
     system: 'Flutter',
     url: 'mail',
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Tracker Calorie',
+      title: 'Evolvy',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

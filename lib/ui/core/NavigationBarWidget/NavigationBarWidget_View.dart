@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class NavigationBarWidget extends StatefulWidget {
-  const NavigationBarWidget({super.key, required this.onPageSelected});
+class NavigationBarWidget_View extends StatefulWidget {
+  const NavigationBarWidget_View({super.key, required this.onPageSelected});
 
   final Function(int) onPageSelected;
 
   @override
-  State<NavigationBarWidget> createState() => _NavigationBarState();
+  State<NavigationBarWidget_View> createState() => _NavigationBarState();
 }
 
-class _NavigationBarState extends State<NavigationBarWidget> {
+class _NavigationBarState extends State<NavigationBarWidget_View> {
   int currentPageIndex = 0;
 
   @override
