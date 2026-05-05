@@ -1,21 +1,15 @@
-import 'package:openfoodfacts/openfoodfacts.dart';
-import '../services/OpenFoodFactorService.dart';
+import '../services/FoodService.dart';
+import '../../domain/models/FoodModel.dart';
 
-class FoodRepository {
-  FoodRepository({OpenFoodFactorService? foodService})
-    : foodService = foodService ?? OpenFoodFactorService();
+class Foodrepository {
+  Foodrepository({FoodService? foodService})
+    : _foodService = foodService ?? FoodService();
 
-  final OpenFoodFactorService foodService;
+  final FoodService _foodService;
 
-  //metodi che la repository espone al di fuori
-
-  Future<List<Product>> getFoodsbyName(String cibo) async {
-    final foods = await foodService.searchByNome(cibo);
-    return foods;
-  }
-
-  Future<List<Product>> getFoodsbyBarCode(String barcode) async {
-    final foods = await foodService.searchByCodiceBarre(barcode);
-    return foods;
+  //metodi che la repository espone al di fuori,
+  Future<FoodList> getFoods(String nome_cibo) async {
+    final FoodJson = await _foodService.getCiboService(nome_cibo: nome_cibo);
+    return FoodList.fromJson(FoodJson);
   }
 }

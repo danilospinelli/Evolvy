@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LogMealService {
@@ -18,7 +15,7 @@ class LogMealService {
   }
 
   // Recupera i pasti giornalieri per un utente e una data specifica
-  Future<dynamic> getPastiGiornalieri({
+  Future<dynamic> getPastiGiornalieriService({
     required int utenteId,
     required DateTime data,
   }) async {
@@ -35,7 +32,7 @@ class LogMealService {
   }
 
   // rimuove un cibo specifico da un pasto per un utente e una data specifica
-  Future<void> removeCibo({
+  Future<void> removeCiboService({
     required int id_utente,
     required DateTime data,
     required String meal,
@@ -60,7 +57,7 @@ class LogMealService {
   }
 
   // aggiunge un cibo specifico a un pasto per un utente e una data specifica
-  Future<void> addCibo({
+  Future<void> addCiboService({
     required int id_utente,
     required DateTime data,
     required String meal,

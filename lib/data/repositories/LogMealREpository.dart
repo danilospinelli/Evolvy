@@ -9,7 +9,7 @@ class Logmealrepository {
 
   //metodi che la repository espone al di fuori,
   Future<LogMeal> getLogMealByDate(int utenteId, DateTime data) async {
-    final mealJson = await _logMealService.getPastiGiornalieri(
+    final mealJson = await _logMealService.getPastiGiornalieriService(
       utenteId: utenteId,
       data: data,
     );
@@ -23,7 +23,7 @@ class Logmealrepository {
     required String nome_cibo,
     required double quantita,
   }) async {
-    await _logMealService.removeCibo(
+    await _logMealService.removeCiboService(
       id_utente: id_utente,
       data: data,
       meal: meal,
@@ -43,7 +43,7 @@ class Logmealrepository {
     required double proteine,
     required double grassi,
   }) async {
-    await _logMealService.addCibo(
+    await _logMealService.addCiboService(
       id_utente: id_utente,
       data: data,
       meal: meal,

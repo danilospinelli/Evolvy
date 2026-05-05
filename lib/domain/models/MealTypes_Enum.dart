@@ -1,8 +1,1 @@
-
-
-enum MealTypes_Enum {
-  Colazione,
-  Pranzo,
-  Cena,
-  Altro
-}
+enum MealTypes_Enum { Colazione, Pranzo, Cena, Altro }
