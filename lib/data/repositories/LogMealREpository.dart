@@ -1,13 +1,13 @@
 import 'package:flutter_application_1/data/services/LogMealService.dart';
 import '../../domain/models/LogMealModel.dart';
 
-class Logmealrepository {
-  Logmealrepository({LogMealService? logMealService})
+class LogMealRepository {
+  LogMealRepository({LogMealService? logMealService})
     : _logMealService = logMealService ?? LogMealService();
 
   final LogMealService _logMealService;
 
-  //metodi che la repository espone al di fuori,
+  // metodi che la repository espone al di fuori
   Future<LogMeal> getLogMealByDate(int utenteId, DateTime data) async {
     final mealJson = await _logMealService.getPastiGiornalieriService(
       utenteId: utenteId,

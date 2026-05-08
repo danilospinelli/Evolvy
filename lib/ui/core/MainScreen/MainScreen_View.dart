@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_ViewModel.dart';
 import 'package:flutter_application_1/ui/core/NavigationBarWidget/NavigationBarWidget_View.dart';
 
-// Contiene tutti i widget della Homepage
+// E' il wrap delle 4 pagine principali
 class MainScreen_View extends StatefulWidget {
   const MainScreen_View({super.key});
 

@@ -1,8 +1,8 @@
 import '../services/FoodService.dart';
 import '../../domain/models/FoodModel.dart';
 
-class Foodrepository {
-  Foodrepository({FoodService? foodService})
+class FoodRepository {
+  FoodRepository({FoodService? foodService})
     : _foodService = foodService ?? FoodService();
 
   final FoodService _foodService;

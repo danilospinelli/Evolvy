@@ -11,7 +11,7 @@ class FoodService {
     try {
       final response = await client.rpc(
         'cerca_alimenti_json',
-        params: {'p_nome_cibo': nome_cibo},
+        params: {'search_term': nome_cibo},
       );
       return response;
     } catch (e) {
