@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/models/MealTypes_Enum.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
+import 'package:flutter_application_1/ui/InfoSliderAlimento/InfoSliderAlimento_View.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/RicercaCibi_View.dart';
+import 'package:flutter_application_1/domain/models/FoodModel.dart';
 
 class Homepage_View extends StatelessWidget {
   const Homepage_View({super.key});
@@ -34,7 +36,6 @@ class MealBox_View extends StatefulWidget {
 }
 
 class _MealBox_ViewState extends State<MealBox_View> {
-
   bool isExpanded = false;
 
   @override
@@ -85,12 +86,13 @@ class _MealBox_ViewState extends State<MealBox_View> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => RicercaView(),
+                            builder: (_) =>
+                                RicercaView(mealType: widget.mealType),
                           ),
                         );
                       },
                       icon: const Icon(Icons.add),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -115,10 +117,7 @@ class _MealBox_ViewState extends State<MealBox_View> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 4,
-                    color: Colors.black12,
-                  )
+                  BoxShadow(blurRadius: 4, color: Colors.black12),
                 ],
               ),
 
@@ -128,25 +127,26 @@ class _MealBox_ViewState extends State<MealBox_View> {
 
                 builder: (context, snapshot) {
                   // Mostra un indicatore di caricamento mentre i dati vengono recuperati
-                  if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
                   }
                   // Se non ci sono dati o la lista è vuota, mostra un messaggio
-                  if (!snapshot.hasData ||
-                      snapshot.data!.isEmpty) {
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Text("Nessun cibo caricato");
                   }
 
                   final foods = snapshot.data!;
 
                   return Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: foods.map((f) {
-                      return InsertedFood(food: f, mealtype: widget.mealType);
+                      return InsertedFood(
+                        food: f,
+                        mealtype: widget.mealType,
+                        onDeleted: () {
+                          setState(() {});
+                        },
+                      );
                     }).toList(),
                   );
                 },
@@ -159,12 +159,17 @@ class _MealBox_ViewState extends State<MealBox_View> {
   }
 }
 
-
 class InsertedFood extends StatelessWidget {
-  const InsertedFood({super.key, required this.food, required this.mealtype});
+  const InsertedFood({
+    super.key,
+    required this.food,
+    required this.mealtype,
+    required this.onDeleted,
+  });
 
   final LoggedFood food;
   final MealTypes_Enum mealtype;
+  final VoidCallback onDeleted;
 
   @override
   Widget build(BuildContext context) {
@@ -172,45 +177,61 @@ class InsertedFood extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10),
       child: Material(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            elevation: 5,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(10),
-              onTap: () { // Apri schermata info del cibo
-                /*Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => InfoCibi(food: food),
-                  ),
-              );*/
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      food.toString(),
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        elevation: 5,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
 
-                    IconButton(
-                      onPressed: () { // Elimina il cibo dal pasto, AGGIORNA LO SHEET CON NOTIFY???????
-                        viewmodel.removeFoodFromMeal(
-                          mealtype: mealtype,
-                          food: food,
-                        );
-                      },
-                      icon: const Icon(Icons.delete),
-                    )
-                  ],
+          //HO MODIFICATO IL METODO PER PERMETTERE DI TORNARE ALL INFOVIEW. POSSIBILE MODIFICA TRAMITE FUNZIONE SQL!!
+          //POICHE QUI FACCIO DLETE INSERT
+          // In futuro, il Data Layer (Supabase) dovrebbe esporre una funzione RPC dedicata
+          // alla modifica (es. 'modifica_log_pasto' tramite SQL UPDATE o UPSERT).
+          // Quando quella funzione sarà pronta, si potrà eliminare questo blocco di cancellazione
+          // e fare una singola chiamata asincrona per garantire l'atomicità dell'operazione.
+          onTap: () async {
+            final moltiplicatore = (food.quantita ?? 100) / 100;
+            final foodRicostruito = Food(
+              nome: food.nome,
+              kcalper100: (food.calorie ?? 0) / moltiplicatore,
+              carbper100: (food.carboidrati ?? 0) / moltiplicatore,
+              protper100: (food.proteine ?? 0) / moltiplicatore,
+              grasper100: (food.grassi ?? 0) / moltiplicatore,
+            );
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => InfoSliderAlimentoView(
+                  ciboSelezionato: foodRicostruito,
+                  mealType: mealtype,
+                  ciboGiaLoggato: food,
                 ),
               ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(food.toString(), style: const TextStyle(fontSize: 16)),
+
+                IconButton(
+                  onPressed: () async {
+                    // Elimina il cibo dal pasto, AGGIORNA LO SHEET CON NOTIFY???????
+                    await viewmodel.removeFoodFromMeal(
+                      mealtype: mealtype,
+                      food: food,
+                    );
+                    onDeleted();
+                  },
+                  icon: const Icon(Icons.delete),
+                ),
+              ],
             ),
           ),
+        ),
+      ),
     );
   }
 }

@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/ui/InfoSliderAlimento/InfoSliderAlimento_View.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/RicercaCibi_ViewModel.dart';
 import 'RigaAlimento.dart';
+import 'package:flutter_application_1/domain/models/MealTypes_Enum.dart';
 
 class ListaRisultati extends StatelessWidget {
   final RicercaViewModel viewModel;
 
-  const ListaRisultati({super.key, required this.viewModel});
+  final MealTypes_Enum mealType;
+
+  const ListaRisultati({
+    super.key,
+    required this.viewModel,
+    required this.mealType,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +46,7 @@ class ListaRisultati extends StatelessWidget {
                   risultati == null
                       ? 'Nessun alimento cercato.'
                       : 'Nessun risultato trovato.',
-                  style: TextStyle(color: Colors.grey),
+                  style: const TextStyle(color: Colors.grey),
                 ),
               );
             }
@@ -56,7 +64,16 @@ class ListaRisultati extends StatelessWidget {
                 return RigaAlimento(
                   alimento: cibo,
                   onTap: () {
-                    print('Alimento selezionato: ${cibo.nome}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InfoSliderAlimentoView(
+                          ciboSelezionato: cibo,
+
+                          mealType: mealType,
+                        ),
+                      ),
+                    );
                   },
                 );
               },

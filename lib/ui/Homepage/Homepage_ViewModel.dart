@@ -39,14 +39,14 @@ class InsertedFood_ViewModel {
   final LogMealRepository repo = LogMealRepository();
 
   // Rimuove un cibo dal pasto specificato
-  void removeFoodFromMeal({
+  Future<void> removeFoodFromMeal({
     required MealTypes_Enum mealtype,
     required LoggedFood food,
   }) async {
     await repo.removeCibo(
       id_utente: 1, // UN MODO PER PRENDERE L'ID DELL'UTENTE LOGGATO
-      data: DateTime.now(), // DA ELIMINARE LA DATA, NON SO QUANDO è STATO CARICATO QUEL CIBO
-      meal: mealtype.toString(),
+      data: DateTime.parse('2026-04-28'), // DA ELIMINARE LA DATA, NON SO QUANDO è STATO CARICATO QUEL CIBO
+      meal: mealtype.toString().split('.').last.toLowerCase(),
       nome_cibo: food.nome,
       quantita: food.quantita,
     );

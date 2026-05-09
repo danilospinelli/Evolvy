@@ -1,13 +1,18 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/ui/Homepage/Homepage_View.dart';
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
 import 'RicercaCibi_ViewModel.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarCode.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarraDiRicerca.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/ListaRisultati.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 
+import 'package:flutter_application_1/domain/models/MealTypes_Enum.dart';
+
 class RicercaView extends StatefulWidget {
-  const RicercaView({super.key});
+  final MealTypes_Enum mealType;
+
+  const RicercaView({super.key, required this.mealType});
 
   @override
   State<RicercaView> createState() => _RicercaViewState();
@@ -30,7 +35,7 @@ class _RicercaViewState extends State<RicercaView> {
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
         title: const Text('Ricerca Alimenti'),
-        leading: const FrecciaIndietro(coloreIcona: Colors.black),
+        leading: const FrecciaIndietro(coloreIcona: Colors.blue),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -53,19 +58,36 @@ class _RicercaViewState extends State<RicercaView> {
                 const SizedBox(width: 12),
                 BarCode(
                   onPressed: () {
+                    // ignore: avoid_print
                     print("Scansione QR code");
                   },
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            Expanded(flex: 3, child: ListaRisultati(viewModel: _viewModel)),
+
+            Expanded(
+              flex: 3,
+              child: ListaRisultati(
+                viewModel: _viewModel,
+                mealType: widget.mealType,
+              ),
+            ),
+
             Expanded(
               flex: 1,
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: AvatarCondiviso(
-                  messaggio: "ciccione",
+                  messaggio: "Ciao!, cerchiamo qualcosa da mangiare!",
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Homepage_View(),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
