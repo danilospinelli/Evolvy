@@ -39,7 +39,7 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimentoView> {
     super.initState();
     _viewModel = InfoSliderAlimentoViewModel(alimento: widget.ciboSelezionato);
     if (widget.ciboGiaLoggato != null) {
-      final vecchiaQuantita = widget.ciboGiaLoggato!.quantita ?? 0.0;
+      final vecchiaQuantita = widget.ciboGiaLoggato!.quantita;
 
       _textController = TextEditingController(text: vecchiaQuantita.toString());
       _viewModel.aggiornaQuantita(vecchiaQuantita.toString());
@@ -81,7 +81,6 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimentoView> {
                   ),
                   const SizedBox(height: 30),
 
-                  // PRIMA ROW: LA ZONA COMANDI (Input, Tendina, Tasto Verde)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -130,8 +129,7 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimentoView> {
                         },
                       ),
                     ],
-                  ), // <--- ECCO LA CHIAVE! QUESTA PARENTESI PRIMA MANCAVA QUI. Chiude la zona orizzontale superiore.
-                  // ORA TORNIAMO NELLA COLUMN VERTICALE PRINCIPALE
+                  ),
                   const SizedBox(height: 32),
 
                   const Align(
@@ -147,14 +145,11 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimentoView> {
                     ),
                   ),
 
-                  const SizedBox(
-                    height: 16,
-                  ), // Un respiro extra prima del riquadro
-                  // SECONDA ROW: LA DASHBOARD (Nutrienti a sx, Mascotte a dx)
+                  const SizedBox(height: 16),
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ZONA SINISTRA
                       Expanded(
                         flex: 6,
                         child: RiquadroNutrizonale(
