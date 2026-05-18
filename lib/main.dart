@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart'; 
 import 'ui/core/MainScreen/MainScreen_View.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
 
 
 Future<void> main() async {
@@ -10,8 +12,20 @@ Future<void> main() async {
   );
 
   runApp(
-    const MyApp(),
-  ); // Aggiunto 'const' se MyApp lo supporta (ottimizzazione Flutter)
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Homepage_ViewModel>(
+          create: (_) {
+            final viewModel = Homepage_ViewModel();
+            viewModel.initialize();
+            return viewModel;
+          },
+        ),
+      ],
+
+      child: const MyApp(),
+    ),
+  ); 
 }
 
 class MyApp extends StatelessWidget {

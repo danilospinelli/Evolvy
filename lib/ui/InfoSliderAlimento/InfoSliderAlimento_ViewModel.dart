@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/repositories/LogMealREpository.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
-import 'package:flutter_application_1/domain/models/MealTypes_Enum.dart';
+import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
 
 class InfoSliderAlimentoViewModel extends ChangeNotifier {
   final Food alimento;
@@ -24,7 +24,7 @@ class InfoSliderAlimentoViewModel extends ChangeNotifier {
     return _quantitaInserita;
   }
 
-  Future<void> salvaCiboNelDatabase(MealTypes_Enum pastoSelezionato) async {
+  Future<void> salvaCiboNelDatabase(MealType_Enum pastoSelezionato) async {
     final ciboDaSalvare = generaCiboLoggato();
 
   

@@ -7,7 +7,7 @@ import 'package:flutter_application_1/ui/InfoSliderAlimento/InfoSliderAlimento_V
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/SelettoreQuantita.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/TastoConferma.dart';
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
-import 'package:flutter_application_1/domain/models/MealTypes_Enum.dart';
+import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/InputQuantita.dart';
 import 'Widgets/RiquadroNutrizionale.dart';
 import 'Widgets/RigaNutriente.dart';
@@ -15,7 +15,7 @@ import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.da
 
 class InfoSliderAlimentoView extends StatefulWidget {
   final Food ciboSelezionato;
-  final MealTypes_Enum mealType;
+  final MealType_Enum mealType;
   final LoggedFood? ciboGiaLoggato;
 
   const InfoSliderAlimentoView({
@@ -178,8 +178,7 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimentoView> {
                         ),
                       ),
 
-                      const SizedBox(width: 12), // Terra di nessuno
-                      // ZONA DESTRA
+                      const SizedBox(width: 12),
                       Expanded(
                         flex: 4,
                         child: SingleChildScrollView(
@@ -191,7 +190,7 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimentoView> {
                               child: AvatarCondiviso(
                                 messaggio: "Guarda come cambiano i valori!",
                                 onTap: () {
-                                  //AGGIUNGERE PIU AVANTI TOCCO Mascotte
+                                  // TODO: AGGIUNGERE PIU AVANTI TOCCO Mascotte
                                   print("Mascotte toccata nella pagina Info");
                                 },
                               ),

@@ -6,11 +6,10 @@ import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarCode.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarraDiRicerca.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/ListaRisultati.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
-
-import 'package:flutter_application_1/domain/models/MealTypes_Enum.dart';
+import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
 
 class RicercaView extends StatefulWidget {
-  final MealTypes_Enum mealType;
+  final MealType_Enum mealType;
 
   const RicercaView({super.key, required this.mealType});
 
@@ -81,6 +80,7 @@ class _RicercaViewState extends State<RicercaView> {
                 child: AvatarCondiviso(
                   messaggio: "Ciao!, cerchiamo qualcosa da mangiare!",
                   onTap: () {
+                    // TODO: attenzione a stack overflow
                     Navigator.push(
                       context,
                       MaterialPageRoute(
