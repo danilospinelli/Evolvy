@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart'; 
-import 'ui/core/MainScreen/MainScreen_View.dart';
+import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_View.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
-
+import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_ViewModel.dart';
 
 Future<void> main() async {
   await Supabase.initialize(
@@ -14,6 +14,9 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider<MainScreen_ViewModel>(
+          create: (_) => MainScreen_ViewModel(),
+        ),
         ChangeNotifierProvider<Homepage_ViewModel>(
           create: (_) {
             final viewModel = Homepage_ViewModel();

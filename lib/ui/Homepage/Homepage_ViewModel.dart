@@ -148,7 +148,6 @@ class Homepage_ViewModel extends ChangeNotifier {
   }
 
   // SEZIONE DAILYRECAP -----------------------------------------------------------------------------
-  // TODO: non aggiorna le macro, usa notify
 
   // Restituisce la somma totale di un macro specifico (calorie, carboidrati, proteine o grassi) consumato nel giorno corrente
   double obtainedMacros(MacroType_Enum macro, List<LoggedFood> foods) {

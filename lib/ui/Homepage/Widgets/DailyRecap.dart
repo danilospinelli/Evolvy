@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/domain/models/MacroType_Enum.dart'; 
+import 'package:flutter_application_1/domain/models/MacroColors.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/Homepage/Widgets/ProgressBar.dart';
 
@@ -9,7 +10,8 @@ class DailyRecap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final homepage_vm = context.watch<Homepage_ViewModel>();
+    // Usiamo il .watch perché ad ogni cambiamento, tutti i widget devono modificarsi (rebuild totale)
+    final vm = context.watch<Homepage_ViewModel>();
 
     return Container(
       margin: const EdgeInsets.all(12),
@@ -53,43 +55,22 @@ class DailyRecap extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 18),
-
-                  _macroTile(
-                    label: MacroType_Enum.Carboidrati.toString().split('.').last,
-                    value: homepage_vm
-                        .obtainedMacros(MacroType_Enum.Carboidrati, homepage_vm.allFoods)
-                        .toString(),
-                    goal: homepage_vm
-                        .dailyMacroGoal(MacroType_Enum.Carboidrati, homepage_vm.allFoods)
-                        .toString(),
-                    color: Colors.orange,
-                  ),
-
-                  const SizedBox(height: 14),
-
-                  _macroTile(
-                    label: MacroType_Enum.Proteine.toString().split('.').last,
-                    value: homepage_vm
-                        .obtainedMacros(MacroType_Enum.Proteine, homepage_vm.allFoods)
-                        .toString(),
-                    goal: homepage_vm
-                        .dailyMacroGoal(MacroType_Enum.Proteine, homepage_vm.allFoods)
-                        .toString(),
-                    color: Colors.blue,
-                  ),
-
-                  const SizedBox(height: 14),
-
-                  _macroTile(
-                    label: MacroType_Enum.Grassi.toString().split('.').last,
-                    value: homepage_vm
-                        .obtainedMacros(MacroType_Enum.Grassi, homepage_vm.allFoods)
-                        .toString(),
-                    goal: homepage_vm
-                        .dailyMacroGoal(MacroType_Enum.Grassi, homepage_vm.allFoods)
-                        .toString(),
-                    color: Colors.redAccent,
-                  ),
+                  // Cicla su tutti i macro e crea un tile per ognuno, tranne per "Calorie"
+                  ...MacroType_Enum.values
+                  .where((meal) => meal != MacroType_Enum.Calorie)
+                  .map(
+                    (meal) => Column(
+                      children: [
+                        _macroTile(
+                          label: meal.toString().split('.').last,
+                          value: vm.obtainedMacros(meal, vm.allFoods).toString(),
+                          goal: vm.dailyMacroGoal(meal, vm.allFoods).toString(),
+                          color: macroColor(meal),
+                        ),
+                        const SizedBox(height: 14),
+                      ], 
+                    )
+                  )
                 ],
               ),
             ),
@@ -101,8 +82,8 @@ class DailyRecap extends StatelessWidget {
           Expanded(
             flex: 3,
             child: ProgressBar(
-              current: homepage_vm.obtainedMacros(MacroType_Enum.Calorie, homepage_vm.allFoods),
-              goal: homepage_vm.dailyMacroGoal(MacroType_Enum.Calorie, homepage_vm.allFoods),
+              current: vm.obtainedMacros(MacroType_Enum.Calorie, vm.allFoods),
+              goal: vm.dailyMacroGoal(MacroType_Enum.Calorie, vm.allFoods),
             ),
           ),
 
@@ -147,7 +128,7 @@ class DailyRecap extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            homepage_vm.dailyTip,
+                            vm.dailyTip,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               color: Colors.black87,

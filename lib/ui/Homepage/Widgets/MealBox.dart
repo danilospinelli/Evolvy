@@ -15,14 +15,11 @@ class MealBox extends StatefulWidget {
 }
 
 class _MealBox_ViewState extends State<MealBox> {
-
+  // Usiamo uno StatefulWidget perché è uno stato interno, che determina il comportamento del widget
   bool isExpanded = false; // Stato di MealBox
 
   @override
   Widget build(BuildContext context) {
-    final viewmodel = context.watch<Homepage_ViewModel>();
-    final foods = viewmodel.foodsByMeal(widget.mealType);
-
     return Container(
       margin: const EdgeInsets.all(10),
       child: Column(
@@ -47,7 +44,7 @@ class _MealBox_ViewState extends State<MealBox> {
                     Row(
                       children: [
                         Icon(
-                          viewmodel.mealTypeIcon(widget.mealType),
+                          context.read<Homepage_ViewModel>().mealTypeIcon(widget.mealType),
                           size: 30,
                         ),
 
@@ -81,7 +78,7 @@ class _MealBox_ViewState extends State<MealBox> {
             ),
           ),
 
-          // SEZIONE ESPANDIBILE
+          // SEZIONE ESPANDIBILE ------------------------------------------------------------------------
           AnimatedCrossFade(
             duration: const Duration(milliseconds: 300),
             crossFadeState: isExpanded
@@ -102,11 +99,16 @@ class _MealBox_ViewState extends State<MealBox> {
                   BoxShadow(blurRadius: 4, color: Colors.black12),
                 ],
               ),
-              child: viewmodel.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : foods.isEmpty
-                      ? const Text('Nessun cibo caricato')
-                      : Column(
+              // Consumer per aggiornare la lista dei cibi inseriti in tempo reale, non devi rebuildare tutto
+              child: Consumer<Homepage_ViewModel>(
+                builder: (context, vm, child) { 
+                  final foods = vm.foodsByMeal(widget.mealType);
+
+                  return vm.isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : foods.isEmpty
+                          ? const Text('Nessun cibo caricato')
+                          : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: foods.map((f) {
                             return InsertedFood(
@@ -114,7 +116,9 @@ class _MealBox_ViewState extends State<MealBox> {
                               mealtype: widget.mealType,
                             );
                           }).toList(),
-                        ),
+                        );
+                }
+              )
             ),
           ),
         ],

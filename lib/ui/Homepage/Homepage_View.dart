@@ -14,10 +14,9 @@ class Homepage_View extends StatelessWidget {
           children: [
             DailyRecap(),
 
-            MealBox(mealType: MealType_Enum.Colazione),
-            MealBox(mealType: MealType_Enum.Pranzo),
-            MealBox(mealType: MealType_Enum.Cena),
-            MealBox(mealType: MealType_Enum.Spuntino),
+            ...MealType_Enum.values.map(
+              (meal) => MealBox(mealType: meal),
+            ),
           ],
         ),
       ),

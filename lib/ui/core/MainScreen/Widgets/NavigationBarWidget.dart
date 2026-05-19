@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_ViewModel.dart';
+import 'package:provider/provider.dart';
 
-class NavigationBarWidget_View extends StatefulWidget {
-  const NavigationBarWidget_View({super.key, required this.onPageSelected});
-
-  final Function(int) onPageSelected;
-
-  @override
-  State<NavigationBarWidget_View> createState() => _NavigationBarState();
-}
-
-class _NavigationBarState extends State<NavigationBarWidget_View> {
-  int currentPageIndex = 0;
+class NavigationBarWidget extends StatelessWidget {
+  const NavigationBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +14,10 @@ class _NavigationBarState extends State<NavigationBarWidget_View> {
         NavigationDestination(icon: Icon(Icons.fireplace), label: 'Avatar'),
         NavigationDestination(icon: Icon(Icons.settings), label: 'Global Ranking'),
       ],
-      selectedIndex: currentPageIndex,
+      selectedIndex: context.watch<MainScreen_ViewModel>().currentPageIndex,
       onDestinationSelected: (int index) {
-        setState(() {
-          currentPageIndex = index;
-          widget.onPageSelected(index);
-        });
+        // Aggiorna l'indice della pagina selezionata nel ViewModel
+        context.read<MainScreen_ViewModel>().setCurrentPageIndex(index);
       },
     );
   }

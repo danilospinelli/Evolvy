@@ -116,9 +116,8 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimento_View> {
                           );
                           if (!context.mounted) return;
                           // Cambia schermata e torna alla Homepage
-                          // TODO: serve davvero il true? oppure pop normale? vedi gestione Navigator 
-                          // (Collegato a ListaRisultati) Se true, significa che l'utente ha loggato un alimento, quindi possiamo tornare alla homepage e aggiornare i dati. Se è null o false, significa che l'utente è tornato indietro senza loggare nulla, quindi non facciamo nulla)
-                          Navigator.pop(context, true);
+                          // TODO: ATTENZIONE: Homepage deve rimanere alla base dello stack
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         },
                       ),
                     ],
