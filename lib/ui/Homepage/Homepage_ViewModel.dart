@@ -15,7 +15,7 @@ class Homepage_ViewModel extends ChangeNotifier {
     cena: [],
     spuntino: [],
   );
-  String _dailyTip = 'Aggiungi un alimento per ricevere suggerimenti.';
+  String _dailyTip = '⭐ Aggiungi il primo alimento del giorno!';
 
   bool get isLoading => _isLoading;
   // Restituisce una lista di LoggedFood con tutti i cibi caricati nel giorno corrente
@@ -152,7 +152,7 @@ class Homepage_ViewModel extends ChangeNotifier {
 
   // Restituisce la somma totale di un macro specifico (calorie, carboidrati, proteine o grassi) consumato nel giorno corrente
   double obtainedMacros(MacroType_Enum macro, List<LoggedFood> foods) {
-    return foods.fold<double>(0.0, (sum, food) {
+    double result = foods.fold<double>(0.0, (sum, food) {
       switch (macro) {
         case MacroType_Enum.Calorie:
           return sum + food.calorie;
@@ -164,7 +164,9 @@ class Homepage_ViewModel extends ChangeNotifier {
           return sum + food.grassi;
       }
     });
-  }
+    // Tronca il risultato a 1 decimale per una visualizzazione più pulita
+    return double.parse(result.toStringAsFixed(1));
+}
 
   // Ritorna i macro goal giornalieri
   // TODO: caricare i goal dall'oggetto del dominio User (preso da MainScreen_ViewAModel (?))
@@ -180,7 +182,7 @@ class Homepage_ViewModel extends ChangeNotifier {
     final fats = obtainedMacros(MacroType_Enum.Grassi, foods);
 
     if (foods.isEmpty) {
-      _dailyTip = '❔ Aggiungi un alimento per ricevere suggerimenti.';
+      _dailyTip = '⭐ Aggiungi il primo alimento del giorno!';
     } else if (carbs > proteins && carbs > fats) {
       _dailyTip = '❌ Hai consumato più carboidrati; bilancia con proteine e grassi sani.';
     } else if (proteins > carbs && proteins > fats) {

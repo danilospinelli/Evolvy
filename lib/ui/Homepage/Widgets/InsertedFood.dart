@@ -46,7 +46,7 @@ class InsertedFood extends StatelessWidget {
             await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => InfoSliderAlimentoView(
+                builder: (_) => InfoSliderAlimento_View(
                   ciboSelezionato: foodRicostruito,
                   mealType: mealtype,
                   ciboGiaLoggato: food,

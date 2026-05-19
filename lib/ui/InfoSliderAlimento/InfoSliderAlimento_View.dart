@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/repositories/LogMealREpository.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
-import 'package:flutter_application_1/ui/Homepage/Homepage_View.dart';
+import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/InfoSliderAlimento_ViewModel.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/SelettoreQuantita.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/TastoConferma.dart';
@@ -12,13 +11,14 @@ import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/InputQuantit
 import 'Widgets/RiquadroNutrizionale.dart';
 import 'Widgets/RigaNutriente.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
+import 'package:provider/provider.dart';
 
-class InfoSliderAlimentoView extends StatefulWidget {
+class InfoSliderAlimento_View extends StatefulWidget {
   final Food ciboSelezionato;
   final MealType_Enum mealType;
   final LoggedFood? ciboGiaLoggato;
 
-  const InfoSliderAlimentoView({
+  const InfoSliderAlimento_View({
     super.key,
     required this.ciboSelezionato,
     required this.mealType,
@@ -26,18 +26,18 @@ class InfoSliderAlimentoView extends StatefulWidget {
   });
 
   @override
-  State<InfoSliderAlimentoView> createState() => _InfoSliderAlimentoViewState();
+  State<InfoSliderAlimento_View> createState() => _InfoSliderAlimentoViewState();
 }
 
-class _InfoSliderAlimentoViewState extends State<InfoSliderAlimentoView> {
-  late final InfoSliderAlimentoViewModel _viewModel;
+class _InfoSliderAlimentoViewState extends State<InfoSliderAlimento_View> {
+  late final InfoSliderAlimento_ViewModel _viewModel;
   late final TextEditingController _textController;
 
   //PROBABILMENTE è POSSIBILE FARE CIO CON UNA FUNZIONE SQL PIU SEMPLICE!!!
   @override
   void initState() {
     super.initState();
-    _viewModel = InfoSliderAlimentoViewModel(alimento: widget.ciboSelezionato);
+    _viewModel = InfoSliderAlimento_ViewModel(alimento: widget.ciboSelezionato);
     if (widget.ciboGiaLoggato != null) {
       final vecchiaQuantita = widget.ciboGiaLoggato!.quantita;
 
@@ -100,32 +100,25 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimentoView> {
                       const SizedBox(width: 12),
                       TastoConferma(
                         onPressed: () async {
+                          final homepageVM = context.read<Homepage_ViewModel>();
+                          // Se c'è un cibo già loggato, lo rimuoviamo prima di aggiungere quello nuovo
                           if (widget.ciboGiaLoggato != null) {
-                            final logRepo = LogMealRepository();
-                            await logRepo.removeCibo(
-                              id_utente: 1,
-                              data: DateTime.parse('2026-04-28'),
-                              meal: widget.mealType
-                                  .toString()
-                                  .split('.')
-                                  .last
-                                  .toLowerCase(),
-                              nome_cibo: widget.ciboGiaLoggato!.nome ?? '',
-                              quantita: widget.ciboGiaLoggato!.quantita ?? 0.0,
+                            await homepageVM.removeFood(
+                              mealType: widget.mealType, 
+                              food: widget.ciboGiaLoggato!,
                             );
                           }
-                          await _viewModel.salvaCiboNelDatabase(
+                          // Cibo da aggiungere
+                          final insertingFood = _viewModel.generaCiboLoggato();
+                          await homepageVM.addFood(
                             widget.mealType,
+                            insertingFood,
                           );
-
                           if (!context.mounted) return;
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Homepage_View(),
-                            ),
-                            (Route<dynamic> route) => false,
-                          );
+                          // Cambia schermata e torna alla Homepage
+                          // TODO: serve davvero il true? oppure pop normale? vedi gestione Navigator 
+                          // (Collegato a ListaRisultati) Se true, significa che l'utente ha loggato un alimento, quindi possiamo tornare alla homepage e aggiornare i dati. Se è null o false, significa che l'utente è tornato indietro senza loggare nulla, quindi non facciamo nulla)
+                          Navigator.pop(context, true);
                         },
                       ),
                     ],

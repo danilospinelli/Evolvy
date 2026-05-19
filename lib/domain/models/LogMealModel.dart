@@ -29,7 +29,7 @@ class LoggedFood {
 
   @override
   String toString(){
-    return "$nome $quantita g $calorie kcal";;
+    return "$nome $quantita g $calorie kcal";
   }
 }
 

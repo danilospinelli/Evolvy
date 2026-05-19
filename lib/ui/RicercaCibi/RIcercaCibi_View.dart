@@ -57,7 +57,7 @@ class _RicercaViewState extends State<RicercaView> {
                 const SizedBox(width: 12),
                 BarCode(
                   onPressed: () {
-                    // ignore: avoid_print
+                    // TODO: ignore: avoid_print
                     print("Scansione QR code");
                   },
                 ),

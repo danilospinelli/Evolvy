@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
-import 'package:flutter_application_1/ui/RicercaCibi/RIcercaCibi_View.dart';
+import 'package:flutter_application_1/ui/RicercaCibi/RicercaCibi_View.dart';
 import 'package:flutter_application_1/ui/Homepage/Widgets/InsertedFood.dart';
 import 'package:provider/provider.dart';
 

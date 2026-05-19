@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/repositories/LogMealREpository.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
-import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
 
-class InfoSliderAlimentoViewModel extends ChangeNotifier {
+class InfoSliderAlimento_ViewModel extends ChangeNotifier {
   final Food alimento;
-  final LogMealRepository _repository = LogMealRepository();
 
   var _quantitaInserita = 0.0;
   var _unitaMisura = "g";
   final List<String> unitaDisponibili = ['g', 'ml', 'kg', 'l'];
 
-  InfoSliderAlimentoViewModel({required this.alimento});
+  InfoSliderAlimento_ViewModel({required this.alimento});
 
   double get quantita => _quantitaInserita;
   String get unita => _unitaMisura;
@@ -23,25 +20,6 @@ class InfoSliderAlimentoViewModel extends ChangeNotifier {
     }
     return _quantitaInserita;
   }
-
-  Future<void> salvaCiboNelDatabase(MealType_Enum pastoSelezionato) async {
-    final ciboDaSalvare = generaCiboLoggato();
-
-  
-      await _repository.addCibo(
-        id_utente: 1, 
-        data: DateTime.parse('2026-04-28'), 
-        meal: pastoSelezionato.toString().split('.').last.toLowerCase(),
-        nome_cibo: ciboDaSalvare.nome ,
-        quantita: ciboDaSalvare.quantita ,
-        calorie: ciboDaSalvare.calorie ,
-        carboidrati: ciboDaSalvare.carboidrati ,
-        proteine: ciboDaSalvare.proteine,
-        grassi: ciboDaSalvare.grassi,
-      );
-  
-  }
-
 
   int get kcalCalcolate {
     final base = alimento.kcalper100 ?? 0.0;

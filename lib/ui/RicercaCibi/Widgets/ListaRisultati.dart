@@ -63,17 +63,20 @@ class ListaRisultati extends StatelessWidget {
                 final cibo = risultati.foods[index];
                 return RigaAlimento(
                   alimento: cibo,
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => InfoSliderAlimentoView(
+                        builder: (_) => InfoSliderAlimento_View(
                           ciboSelezionato: cibo,
-
-                          mealType: mealType,
-                        ),
+                          mealType: mealType,),
                       ),
-                    );
+                     );
+                    // TODO: serve davvero result? oppure pop normale? vedi gestione Navigator
+                    // (Collegato a InfoSliderAlimento_View) Se result è true, significa che l'utente ha loggato un alimento, quindi possiamo tornare alla homepage e aggiornare i dati. Se è null o false, significa che l'utente è tornato indietro senza loggare nulla, quindi non facciamo nulla)
+                    if (result != null && context.mounted) {
+                      Navigator.pop(context);
+                    }
                   },
                 );
               },
