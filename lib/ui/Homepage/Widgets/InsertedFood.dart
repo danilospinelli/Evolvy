@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
+import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/InfoSliderAlimento_View.dart';

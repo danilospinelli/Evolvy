@@ -1,15 +1,18 @@
-import 'package:flutter_application_1/data/services/LogMealService.dart';
 import '../../domain/models/LogMealModel.dart';
+import '../services/LogMealService.dart';
 
 class LogMealRepository {
-  LogMealRepository({LogMealService? logMealService})
-    : _logMealService = logMealService ?? LogMealService();
+  late final LogMealService logmealservice;
 
-  final LogMealService _logMealService;
+  
+  LogMealRepository(){
+    this.logmealservice=LogMealService();
+  }
+
 
   // metodi che la repository espone al di fuori
-  Future<LogMeal> getLogMealByDate(int utenteId, DateTime data) async {
-    final mealJson = await _logMealService.getPastiGiornalieriService(
+  Future<LogMeal> getPastiGiornalieri(int utenteId, DateTime data) async {
+    final mealJson = await logmealservice.getPastiGiornalieriService(
       utenteId: utenteId,
       data: data,
     );
@@ -23,7 +26,7 @@ class LogMealRepository {
     required String nome_cibo,
     required double quantita,
   }) async {
-    await _logMealService.removeCiboService(
+    await logmealservice.removeCiboService(
       id_utente: id_utente,
       data: data,
       meal: meal,
@@ -43,7 +46,7 @@ class LogMealRepository {
     required double proteine,
     required double grassi,
   }) async {
-    await _logMealService.addCiboService(
+    await logmealservice.addCiboService(
       id_utente: id_utente,
       data: data,
       meal: meal,

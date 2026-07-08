@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/domain/models/MacroType_Enum.dart';
+import 'package:flutter_application_1/domain/MacroType_Enum.dart';
 
 // Restituisce il colore associato a un macronutriente
 Color macroColor(MacroType_Enum type) {

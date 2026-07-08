@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
+import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/data/repositories/LogMealRepository.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
-import 'package:flutter_application_1/domain/models/MacroType_Enum.dart';
+import 'package:flutter_application_1/domain/MacroType_Enum.dart';
 
 class Homepage_ViewModel extends ChangeNotifier {
   final LogMealRepository repo = LogMealRepository();

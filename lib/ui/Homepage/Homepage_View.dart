@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
+import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/Homepage/Widgets/MealBox.dart';
 import 'package:flutter_application_1/ui/Homepage/Widgets/DailyRecap.dart';
 

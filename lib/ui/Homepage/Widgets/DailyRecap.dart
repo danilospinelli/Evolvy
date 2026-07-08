@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
-import 'package:flutter_application_1/domain/models/MacroType_Enum.dart'; 
-import 'package:flutter_application_1/domain/models/MacroColors.dart';
+import 'package:flutter_application_1/domain/MacroType_Enum.dart'; 
+import 'package:flutter_application_1/domain/MacroColors.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/Homepage/Widgets/ProgressBar.dart';
 
