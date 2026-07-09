@@ -1,11 +1,11 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FoodService {
-  FoodService({SupabaseClient? client})
-    : client = client ?? Supabase.instance.client;
+  late final SupabaseClient client;
 
-  final SupabaseClient client;
-
+  FoodService() {
+    this.client = Supabase.instance.client;
+  }
   // Recupera i pasti giornalieri per un utente e una data specifica
   Future<dynamic> getCiboService({required String nome_cibo}) async {
     try {

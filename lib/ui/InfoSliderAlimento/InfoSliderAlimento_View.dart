@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_application_1/ui/InfoSliderAlimento/InfoSliderAlimento_V
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/SelettoreQuantita.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/TastoConferma.dart';
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
-import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/InputQuantita.dart';
 import 'Widgets/RiquadroNutrizionale.dart';
 import 'Widgets/RigaNutriente.dart';

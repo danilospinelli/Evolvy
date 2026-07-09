@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/InfoSliderAlimento_View.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/RicercaCibi_ViewModel.dart';
 import 'RigaAlimento.dart';
-import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
 
 class ListaRisultati extends StatelessWidget {
   final RicercaViewModel viewModel;

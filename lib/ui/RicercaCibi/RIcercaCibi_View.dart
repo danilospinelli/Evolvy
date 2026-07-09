@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_View.dart';
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
 import 'RicercaCibi_ViewModel.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarCode.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarraDiRicerca.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/ListaRisultati.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
-import 'package:flutter_application_1/domain/models/MealType_Enum.dart';
 
 class RicercaView extends StatefulWidget {
   final MealType_Enum mealType;

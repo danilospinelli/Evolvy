@@ -1,10 +1,13 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LogMealService {
-  LogMealService({SupabaseClient? client})
-    : client = client ?? Supabase.instance.client;
 
-  final SupabaseClient client;
+  late final SupabaseClient client;
+
+  LogMealService(){
+    this.client = Supabase.instance.client;
+  }
+
 
   //formatta la data nel formato corretto
   String dateFormatter(DateTime data) {

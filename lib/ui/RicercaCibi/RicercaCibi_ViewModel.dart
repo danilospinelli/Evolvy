@@ -20,7 +20,7 @@ class RicercaViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final dati = await _foodRepository.getFoods(query);
+      final dati = await _foodRepository.getCibo(query);
       _risultati = dati;
     } catch (e) {
       print('Errore durante la ricerca dei cibi: $e');
