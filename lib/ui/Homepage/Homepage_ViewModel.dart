@@ -34,7 +34,7 @@ class Homepage_ViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      logMeal = await repo.getLogMealByDate(
+      logMeal = await repo.getPastiGiornalieri(
         1,
         DateTime.parse('2026-04-28'),
       );
