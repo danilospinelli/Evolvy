@@ -10,7 +10,7 @@ class NavigationBarWidget extends StatelessWidget {
     return NavigationBar(
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-        NavigationDestination(icon: Icon(Icons.auto_graph), label: 'Progressi'),
+        NavigationDestination(icon: Icon(Icons.auto_graph), label: 'Quiz'),
         NavigationDestination(icon: Icon(Icons.fireplace), label: 'Avatar'),
         NavigationDestination(icon: Icon(Icons.settings), label: 'Global Ranking'),
       ],

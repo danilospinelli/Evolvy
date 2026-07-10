@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_ViewModel.dart';
 import 'package:flutter_application_1/ui/core/MainScreen/Widgets/NavigationBarWidget.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_View.dart';
-import 'package:flutter_application_1/ui/Progress/Progress_View.dart';
+import 'package:flutter_application_1/ui/QuizPage/QuizPage_View.dart';
 import 'package:flutter_application_1/ui/Avatar/Avatar_View.dart';
 import 'package:flutter_application_1/ui/GlobalRanking/GlobalRanking_View.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,7 @@ class MainScreen_View extends StatelessWidget {
     // Lista delle pagine per IndexedStack
     final pages = [ 
       const Homepage_View(),
-      const Progress_View(),
+      const QuizPage_View(),
       const Avatar_View(),
       const GlobalRanking_View(),
     ];

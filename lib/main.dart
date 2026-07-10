@@ -4,6 +4,7 @@ import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_View.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_ViewModel.dart';
+import 'package:flutter_application_1/ui/QuizPage/QuizPage_ViewModel.dart';
 
 Future<void> main() async {
   await Supabase.initialize(
@@ -20,6 +21,13 @@ Future<void> main() async {
         ChangeNotifierProvider<Homepage_ViewModel>(
           create: (_) {
             final viewModel = Homepage_ViewModel();
+            viewModel.initialize();
+            return viewModel;
+          },
+        ),
+        ChangeNotifierProvider<QuizPage_ViewModel>(
+          create: (_) {
+            final viewModel = QuizPage_ViewModel();
             viewModel.initialize();
             return viewModel;
           },
