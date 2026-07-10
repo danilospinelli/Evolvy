@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class ProgressBar extends StatelessWidget {
   final double current;
   final double goal;
+  final String label;
+  final String abbr;
 
   const ProgressBar({
     super.key,
     required this.current,
     required this.goal,
+    required this.label,
+    required this.abbr,
   });
 
   @override
@@ -27,8 +31,8 @@ class ProgressBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
 
-          const Text(
-            'Calorie',
+          Text(
+            label,
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -38,7 +42,7 @@ class ProgressBar extends StatelessWidget {
           const SizedBox(height: 28),
 
           Text(
-            '$current / $goal kcal',
+            '$current / $goal $abbr',
             style: const TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,

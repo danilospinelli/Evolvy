@@ -4,6 +4,7 @@ import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_View.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_ViewModel.dart';
+import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
 
 Future<void> main() async {
   await Supabase.initialize(
@@ -23,6 +24,9 @@ Future<void> main() async {
             viewModel.initialize();
             return viewModel;
           },
+        ),
+        ChangeNotifierProvider<Avatar_ViewModel>(
+          create: (_) => Avatar_ViewModel(),
         ),
       ],
 
