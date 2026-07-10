@@ -12,15 +12,20 @@ class Avatar_ViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  String? _error;
+  String? get error => _error;
+
   /// Carica profilo utente e sfide giornaliere dal database.
   Future<void> initialize() async {
     _isLoading = true;
+    _error = null;
     notifyListeners();
 
     try {
       // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE (CLAUDE NON TOCCARE, grazie)
       _user = await repo.getAvatarInfo(id_utente: 1);
     } catch (e) {
+      _error = e.toString();
       debugPrint('Errore caricamento dei dati: $e');
     } finally {
       _isLoading = false;
@@ -29,18 +34,51 @@ class Avatar_ViewModel extends ChangeNotifier {
   }
 
   /// Aggiorna username di AvatarModel in uso
-  void editName(String name) {
+  Future<void> editName(String name) async {
+    if (_user == null) return;
 
+    try {
+      _user = await repo.updateAvatarInfo(
+        id_utente: 1,
+        nome_avatar: name,
+        colore_avatar: _user!.chosen_color,
+      );
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Errore aggiornamento nome: $e');
+    }
   }
 
   // Aggiorna colore scelto e sprite mascotte in uso
-  // TODO: TROVARE UN MODO PER SETTARE LO SPRITE DELLA MASCOTTE IN USO, MAGARI COME VARIABILE INSIEME ALLO USER
-  void aggiornaColore(int new_color){
+  Future<void> aggiornaColore(int new_color) async {
+    if (_user == null) return;
 
+    try {
+      _user = await repo.updateAvatarInfo(
+        id_utente: 1,
+        nome_avatar: _user!.username,
+        colore_avatar: new_color,
+      );
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Errore aggiornamento colore: $e');
+    }
   }
 
   // setta come completato l'obiettivo challenge e agggiungi le sue exp all'utente
-  void completaObiettivo(Obiettivo challenge){
+  Future<void> completaObiettivo(Obiettivo challenge) async {
+    if (_user == null) return;
 
+    try {
+      _user = await repo.updateAvatarObiettivo(
+        id_utente: 1,
+        id_obiettivo: challenge.id,
+        livello: _user!.livello,
+        exp: _user!.exp,
+      );
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Errore completamento obiettivo: $e');
+    }
   }
 }

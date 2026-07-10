@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/domain/AvatarColors.dart';
+import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
 
 class AvatarCondiviso extends StatelessWidget {
   final String messaggio;
@@ -8,6 +11,8 @@ class AvatarCondiviso extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final chosenColor = context.watch<Avatar_ViewModel>().user?.chosen_color ?? 0;
+
     return Align(
       alignment: Alignment.bottomRight,
       child: Row(
@@ -54,7 +59,7 @@ class AvatarCondiviso extends StatelessWidget {
               width: 180,
               height: 180,
               child: Image.asset(
-                'assets/images/fiammella.png',
+                avatarSprite(chosenColor),
                 fit: BoxFit.contain,
               ),
             ),

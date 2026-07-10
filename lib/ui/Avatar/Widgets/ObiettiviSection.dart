@@ -42,7 +42,7 @@ class _ChallengeCard extends StatelessWidget {
     final completed = challenge.completed;
 
     return InkWell(
-      onTap: completed ? null : context.read<Avatar_ViewModel>().completaObiettivo(challenge), 
+      onTap: completed ? null : () => context.read<Avatar_ViewModel>().completaObiettivo(challenge),
       borderRadius: BorderRadius.circular(30),
       child: Row(
         children: [

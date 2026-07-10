@@ -27,3 +27,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/fiammella.png
+    - assets/images/fiammella blu.png
+    - assets/images/fiammella verde.png
+    - assets/images/fiammella viola.png

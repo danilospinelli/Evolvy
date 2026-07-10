@@ -20,6 +20,28 @@ class ProfileHeader extends StatefulWidget {
 class _ProfileHeader_ViewState extends State<ProfileHeader> {
   // Stato interno
   bool _not_editing_name = true;
+  late final TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.user.username);
+  }
+
+  @override
+  void didUpdateWidget(covariant ProfileHeader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Se il nome è cambiato "da fuori" (es. dopo il salvataggio) e non stiamo editando, sincronizza il campo
+    if (_not_editing_name && widget.user.username != oldWidget.user.username) {
+      _nameController.text = widget.user.username;
+    }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +55,9 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
             children: [
               Row(
                 children: [
-                  // TODO: TEXT FIELD DEVE MOSTRARE IL NOME
-                  TextField(
+                  Expanded(
+                    child: TextField(
+                    controller: _nameController,
                     readOnly: _not_editing_name, // Se true, blocca la modifica
                     onTap: () {
                       setState(() {
@@ -55,15 +78,27 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
                       : null,
                     ),
                     style: const TextStyle(fontSize: 20, color: Colors.black),
+                    ),
                   ),
                 ],
               ),
+              Padding(
+                padding: const EdgeInsets.only(left: 12, top: 2),
+                child: Text(
+                  'Livello ${widget.user.livello}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+              ),
               const SizedBox(height: 8),
               ProgressBar(
-                current: (context.watch<Avatar_ViewModel>().user!).exp as double, 
-                goal: (context.watch<Avatar_ViewModel>().user!).livello * 10, 
-                label: 'Esperienza', 
-                abbr: 'exp', 
+                current: (context.watch<Avatar_ViewModel>().user!).exp.toDouble(),
+                goal: ((context.watch<Avatar_ViewModel>().user!).livello * 10).toDouble(),
+                label: 'Esperienza',
+                abbr: 'exp',
               )
             ],
           ),

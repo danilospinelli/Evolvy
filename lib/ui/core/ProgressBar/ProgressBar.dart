@@ -19,7 +19,6 @@ class ProgressBar extends StatelessWidget {
     double progress = (current / goal).clamp(0.0, 1.0);
 
     return Container(
-      height: 252,
       padding: const EdgeInsets.all(20),
 
       decoration: BoxDecoration(
@@ -28,11 +27,13 @@ class ProgressBar extends StatelessWidget {
       ),
 
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
 
           Text(
             label,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,

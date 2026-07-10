@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/QuizPage/QuizPage_ViewModel.dart';
+import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
+import 'package:flutter_application_1/domain/AvatarColors.dart';
 
 class ExplanationBubble extends StatelessWidget {
   const ExplanationBubble({super.key});
@@ -8,6 +10,7 @@ class ExplanationBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<QuizPage_ViewModel>();
+    final chosenColor = context.watch<Avatar_ViewModel>().user?.chosen_color ?? 0;
 
     return Container(
       width: double.infinity,
@@ -59,7 +62,7 @@ class ExplanationBubble extends StatelessWidget {
             width: 70,
             height: 70,
             child: Image.asset(
-              'assets/images/fiammella.png',
+              avatarSprite(chosenColor),
               fit: BoxFit.contain,
             ),
           ),
