@@ -22,7 +22,7 @@ class AvatarService {
   }
 
   //restituisce tutte le informazione per la pagina avatar
-  Future<dynamic> updateAvatarInfoService({required int id_utente, required String nome_avatar, required String colore_avatar}) async {
+  Future<dynamic> updateAvatarInfoService({required int id_utente, required String nome_avatar, required int colore_avatar}) async {
     try {
       final response = await client.rpc(
         'update_dati_avatar',

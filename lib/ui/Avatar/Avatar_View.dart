@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
-import 'package:flutter_application_1/ui/Avatar/Widgets/ChallengesSection.dart';
+import 'package:flutter_application_1/ui/Avatar/Widgets/ObiettiviSection.dart';
 import 'package:flutter_application_1/ui/Avatar/Widgets/AvatarSection.dart';
 import 'package:flutter_application_1/ui/Avatar/Widgets/ProfileHeader.dart';
 
@@ -10,34 +10,30 @@ class Avatar_View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<Avatar_ViewModel>();
     return Scaffold(
-      body: Consumer<Avatar_ViewModel>(
-          builder: (context, vm, _) {
-            if (vm.isLoading) { 
-              return const Center(child: CircularProgressIndicator());
-            }
+      body: vm.isLoading ?
+              const Center(child: CircularProgressIndicator()) :
 
-            return ListView(
+              ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
-                  // --- Blocco in alto: profilo + avatar ---
+                  // --- Blocco in alto: profilo
                   ProfileHeader(
                     user: vm.user!,
                   ),
                   const SizedBox(height: 24),
+                  // --- Blocco in mezzo: avatar
                   AvatarSection(
                     user: vm.user!,
                   ),
                   const SizedBox(height: 32),
-
                   // --- Blocco in basso: sfide giornaliere ---
-                  ChallengesSection(
-                    challenges: vm.challenges,
+                  ObiettiviSection(
+                    challenges: (vm.user!).obiettivi,
                   ),
                 ],
-              );
-          },
-      ),
+              )
     );
   }
 }

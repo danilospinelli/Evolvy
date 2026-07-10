@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
 
-/// Blocco in basso: lista delle sfide/obiettivi giornalieri.
-class ChallengesSection extends StatelessWidget {
-  const ChallengesSection({
+class ObiettiviSection extends StatelessWidget {
+  const ObiettiviSection({
     super.key,
     required this.challenges,
   });
 
-  final List<Challenge> challenges;
+  final List<Obiettivo> challenges;
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +35,14 @@ class ChallengesSection extends StatelessWidget {
 class _ChallengeCard extends StatelessWidget {
   const _ChallengeCard({required this.challenge});
 
-  final Challenge challenge;
+  final Obiettivo challenge;
 
   @override
   Widget build(BuildContext context) {
     final completed = challenge.completed;
 
     return InkWell(
-      onTap: completed ? null : , //TODO: AGGIORNARE LE EXP
+      onTap: completed ? null : context.read<Avatar_ViewModel>().completaObiettivo(challenge), 
       borderRadius: BorderRadius.circular(30),
       child: Row(
         children: [

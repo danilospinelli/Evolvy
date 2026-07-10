@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
+import 'package:flutter_application_1/domain/models/AvatarModel.dart';
+import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
 
 /// Blocco centrale: avatar + icona shop, e riga di selezione colore mascotte.
 class AvatarSection extends StatelessWidget {
@@ -9,7 +11,7 @@ class AvatarSection extends StatelessWidget {
     required this.user,
   });
 
-  final UserProfile user;
+  final AvatarModel user;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class AvatarSection extends StatelessWidget {
               top: -10,
               right: -10,
               child: const Icon(Icons.storefront, size: 22), 
+              // TODO: CAMBIO SCHERMATA TASTO PER LO SHOP (CLAUDE FAI CHE PREMENDO SULL'ICONA CAMBIA SCHERMATA MA è VUOTA)
             ),
           ],
         ),
@@ -39,20 +42,20 @@ class AvatarSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        _ColorPickerRow(
-          selectedColor: user.selectedMascotColor,
+        _ColorPicker(
+          chosen_color: user.chosen_color,
         ),
       ],
     );
   }
 }
 
-class _ColorPickerRow extends StatelessWidget {
-  _ColorPickerRow({
-    required this.selectedColor,
+class _ColorPicker extends StatelessWidget {
+  _ColorPicker({
+    required this.chosen_color,
   });
 
-  final Color selectedColor;
+  final int chosen_color;
   final List<Color> colors = [Colors.orange, Colors.green, Colors.blue, Colors.purple];
 
   @override
@@ -69,7 +72,7 @@ class _ColorPickerRow extends StatelessWidget {
             (color) => Padding(
               padding: const EdgeInsets.only(right: 10),
               child: GestureDetector(
-                onTap: () => , // TODO: AGGIORNARE COLORE E SPRITE MASCOTTE
+                onTap: () => context.read<Avatar_ViewModel>().aggiornaColore(colors.indexOf(color)),
                 child: Container(
                   width: 32,
                   height: 32,
@@ -77,7 +80,7 @@ class _ColorPickerRow extends StatelessWidget {
                     color: color,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: selectedColor == color
+                      color: colors[chosen_color] == color
                           ? Colors.black
                           : Colors.transparent,
                       width: 2,

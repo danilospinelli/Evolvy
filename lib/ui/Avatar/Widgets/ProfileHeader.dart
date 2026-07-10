@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/core/ProgressBar/ProgressBar.dart';
+import 'package:flutter_application_1/domain/models/AvatarModel.dart';
+import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
 
 /// Blocco in alto a sinistra/destra: nome, barra XP, monete, streak.
 class ProfileHeader extends StatefulWidget {
@@ -9,15 +11,15 @@ class ProfileHeader extends StatefulWidget {
     required this.user,
   });
 
-  final UserProfile user;
+  final AvatarModel user;
 
   @override
   State<ProfileHeader> createState() => _ProfileHeader_ViewState();
 }
 
 class _ProfileHeader_ViewState extends State<ProfileHeader> {
-
-  bool _not_editing = true;
+  // Stato interno
+  bool _not_editing_name = true;
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +33,24 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
             children: [
               Row(
                 children: [
+                  // TODO: TEXT FIELD DEVE MOSTRARE IL NOME
                   TextField(
-                    readOnly: _not_editing, // Se true, blocca la modifica
+                    readOnly: _not_editing_name, // Se true, blocca la modifica
                     onTap: () {
                       setState(() {
-                        _not_editing = false; // Al click, sblocca il campo
+                        _not_editing_name = false; // Al click, sblocca il campo
                       });
                     },
                     onSubmitted: (nuovoTesto) {
                       setState(() {
-                        _not_editing = true; // Quando premi "Invio" sulla tastiera, salva e blocca
-                        // TODO: SALVA LA MODIFICA IN DB
+                        _not_editing_name = true; // Quando premi "Invio" sulla tastiera, salva e blocca
+                        context.read<Avatar_ViewModel>().editName(nuovoTesto);
                       });
                     },
                     decoration: InputDecoration(
                       // Rimuove la linea sotto se è in modalità sola lettura
-                      border: _not_editing ? InputBorder.none : const UnderlineInputBorder(),
-                      suffixIcon: _not_editing 
+                      border: _not_editing_name ? InputBorder.none : const UnderlineInputBorder(),
+                      suffixIcon: _not_editing_name 
                       ? const Icon(Icons.edit, size: 16) // Mostra una matitina di aiuto
                       : null,
                     ),
@@ -57,8 +60,8 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
               ),
               const SizedBox(height: 8),
               ProgressBar(
-                current: widget.user.currentXp, 
-                goal: widget.user.level * 10, 
+                current: (context.watch<Avatar_ViewModel>().user!).exp as double, 
+                goal: (context.watch<Avatar_ViewModel>().user!).livello * 10, 
                 label: 'Esperienza', 
                 abbr: 'exp', 
               )
@@ -73,7 +76,7 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
             Row(
               children: [
                 Text(
-                  '${widget.user.coins}',
+                  '${(context.watch<Avatar_ViewModel>().user!).monete}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -90,7 +93,7 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
                 const SizedBox(width: 4),
                 const Icon(Icons.local_fire_department,
                     color: Colors.deepOrange, size: 18),
-                Text('${widget.user.streakDays}gg',
+                Text('${(context.watch<Avatar_ViewModel>().user!).streak}gg',
                     style: const TextStyle(fontWeight: FontWeight.w600)),
               ],
             ),
