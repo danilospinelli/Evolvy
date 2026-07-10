@@ -3,7 +3,7 @@ import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/domain/MacroType_Enum.dart'; 
 import 'package:flutter_application_1/domain/MacroColors.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_application_1/ui/Homepage/Widgets/ProgressBar.dart';
+import 'package:flutter_application_1/ui/core/ProgressBar/ProgressBar.dart';
 
 class DailyRecap extends StatelessWidget {
   const DailyRecap({super.key});
@@ -84,6 +84,8 @@ class DailyRecap extends StatelessWidget {
             child: ProgressBar(
               current: vm.obtainedMacros(MacroType_Enum.Calorie, vm.allFoods),
               goal: vm.dailyMacroGoal(MacroType_Enum.Calorie, vm.allFoods),
+              label: 'Calorie',
+              abbr: 'kcal', 
             ),
           ),
 
