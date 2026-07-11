@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 import 'package:flutter_application_1/domain/AvatarColors.dart';
 import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
@@ -19,23 +18,28 @@ class AvatarSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Avatar + shop affiancato, shop leggermente in alto a destra
+        // Solo la mascotte (senza fumetto), con l'icona shop in alto a destra
         Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.center,
           children: [
-            AvatarCondiviso(
-              messaggio: 'Qui puoi personalizzarmi e visualizzare le sfide giornaliere!',
+            SizedBox(
+              width: 190,
+              height: 190,
+              child: Image.asset(
+                avatarSprite(user.chosen_color),
+                fit: BoxFit.contain,
+              ),
             ),
             Positioned(
-              top: -10,
-              right: -10,
+              top: 0,
+              right: 24,
               child: GestureDetector(
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const Shop_View()),
                 ),
-                child: const Icon(Icons.storefront, size: 22),
+                child: const Icon(Icons.storefront, size: 26),
               ),
             ),
           ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
-import 'package:flutter_application_1/domain/MacroType_Enum.dart'; 
+import 'package:flutter_application_1/domain/MacroType_Enum.dart';
 import 'package:flutter_application_1/domain/MacroColors.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/core/ProgressBar/ProgressBar.dart';
@@ -28,120 +28,132 @@ class DailyRecap extends StatelessWidget {
         ],
       ),
 
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+
+          // MACRONUTRIENTI + SUGGERIMENTI affiancati (stessa altezza)
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: _macroBox(vm),
+                ),
+                const SizedBox(width: 18),
+                Expanded(
+                  flex: 2,
+                  child: _tipsBox(vm),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 18),
+
+          // SEZIONE CALORIE (barra senza il riquadro azzurro, valore in piccolo a destra)
+          ProgressBar(
+            current: vm.obtainedMacros(MacroType_Enum.Calorie, vm.allFoods),
+            goal: vm.dailyMacroGoal(MacroType_Enum.Calorie, vm.allFoods),
+            label: 'Calorie',
+            abbr: 'kcal',
+            showBackground: false,
+            valueOnSide: true,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // BOX MACRONUTRIENTI -------------------------------------------------------------------------
+  Widget _macroBox(Homepage_ViewModel vm) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(18),
+      ),
+
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          // SEZIONE MACRONUTRIENTI -------------------------------------------------------------------
-          Expanded(
-            flex: 3,
-            child: Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: Colors.orange.shade50,
-                borderRadius: BorderRadius.circular(18),
-              ),
-
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-
-                  const Text(
-                    'Macronutrienti',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 18),
-                  // Cicla su tutti i macro e crea un tile per ognuno, tranne per "Calorie"
-                  ...MacroType_Enum.values
-                  .where((meal) => meal != MacroType_Enum.Calorie)
-                  .map(
-                    (meal) => Column(
-                      children: [
-                        _macroTile(
-                          label: meal.toString().split('.').last,
-                          value: vm.obtainedMacros(meal, vm.allFoods).toString(),
-                          goal: vm.dailyMacroGoal(meal, vm.allFoods).toString(),
-                          color: macroColor(meal),
-                        ),
-                        const SizedBox(height: 14),
-                      ], 
-                    )
-                  )
-                ],
-              ),
+          const Text(
+            'Macronutrienti',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
 
-          const SizedBox(width: 18),
+          const SizedBox(height: 18),
+          // Cicla su tutti i macro e crea un tile per ognuno, tranne per "Calorie"
+          ...MacroType_Enum.values
+          .where((meal) => meal != MacroType_Enum.Calorie)
+          .map(
+            (meal) => Column(
+              children: [
+                _macroTile(
+                  label: meal.toString().split('.').last,
+                  value: vm.obtainedMacros(meal, vm.allFoods).toString(),
+                  goal: vm.dailyMacroGoal(meal, vm.allFoods).toString(),
+                  color: macroColor(meal),
+                ),
+                const SizedBox(height: 14),
+              ],
+            )
+          )
+        ],
+      ),
+    );
+  }
 
-          // SEZIONE CALORIE ---------------------------------------------------------------------------
-          Expanded(
-            flex: 3,
-            child: ProgressBar(
-              current: vm.obtainedMacros(MacroType_Enum.Calorie, vm.allFoods),
-              goal: vm.dailyMacroGoal(MacroType_Enum.Calorie, vm.allFoods),
-              label: 'Calorie',
-              abbr: 'kcal', 
+  // BOX SUGGERIMENTI ---------------------------------------------------------------------------
+  Widget _tipsBox(Homepage_ViewModel vm) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.green.shade50,
+        borderRadius: BorderRadius.circular(18),
+      ),
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          const Text(
+            'Suggerimenti',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
 
-          const SizedBox(width: 18),
+          const SizedBox(height: 16),
 
-          // SEZIONE TIPS -----------------------------------------------------------------------------
           Expanded(
-            flex: 2,
             child: Container(
-              height: 252,
-              padding: const EdgeInsets.all(18),
+              width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.green.shade50,
-                borderRadius: BorderRadius.circular(18),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: Colors.green.shade100,
+                ),
               ),
-
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-
-                  const Text(
-                    'Suggerimenti',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    vm.dailyTip,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 15,
                     ),
                   ),
-
-                  const SizedBox(height: 16),
-
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: Colors.green.shade100,
-                        ),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            vm.dailyTip,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),

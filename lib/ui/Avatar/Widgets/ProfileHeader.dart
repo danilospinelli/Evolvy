@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_application_1/ui/core/ProgressBar/ProgressBar.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
 
@@ -45,6 +44,10 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final xpGoal = widget.user.livello * 10;
+    final xpProgress =
+        xpGoal == 0 ? 0.0 : (widget.user.exp / xpGoal).clamp(0.0, 1.0);
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -82,23 +85,51 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12, top: 2),
-                child: Text(
-                  'Livello ${widget.user.livello}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade700,
+              const SizedBox(height: 6),
+              // Barra compatta: "LVL n" a sinistra, barra con xP corrente/obiettivo a destra
+              Row(
+                children: [
+                  Text(
+                    'LVL ${widget.user.livello}',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              ProgressBar(
-                current: (context.watch<Avatar_ViewModel>().user!).exp.toDouble(),
-                goal: ((context.watch<Avatar_ViewModel>().user!).livello * 10).toDouble(),
-                label: 'Esperienza',
-                abbr: 'exp',
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: LinearProgressIndicator(
+                            value: xpProgress,
+                            minHeight: 22,
+                            backgroundColor: Colors.grey.shade200,
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                              Colors.green,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              'xP ${widget.user.exp}/$xpGoal',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               )
             ],
           ),
