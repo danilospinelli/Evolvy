@@ -8,7 +8,7 @@ class QuizModel {
   final bool value2;
   final bool value3;
   final String spiegazione;
-  final bool risposto;
+  final bool risposta;
 
   QuizModel({
     required this.id,
@@ -20,11 +20,10 @@ class QuizModel {
     required this.value2,
     required this.value3,
     required this.spiegazione,
-    required this.risposto
+    required this.risposta
   });
 
 
-  //converte i json in loggedfood
   factory QuizModel.fromJson(Map<String, dynamic> json) {
     return QuizModel(
         id: json['id'] as int,
@@ -36,8 +35,8 @@ class QuizModel {
         value2: json['check2'] as bool,
         value3: json['check3'] as bool,
         spiegazione: json['spiegazione'] as String,
-        // se la RPC non restituisce ancora questo campo, di default lo trattiamo come non risposto
-        risposto: json['risposto'] as bool? ?? false
+        // di default lo trattiamo come non risposto
+        risposta: json['risposto'] as bool? ?? false
     );
 
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_ViewModel.dart';
+import 'package:flutter_application_1/ui/core/MainScreen/ViewModel/MainScreen_ViewModel.dart';
 import 'package:provider/provider.dart';
 
 class NavigationBarWidget extends StatelessWidget {

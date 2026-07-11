@@ -21,19 +21,17 @@ class AvatarModel {
 
   factory AvatarModel.fromJson(Map<String, dynamic> json) {
     return AvatarModel(
-      username: _asString(json['username'] ?? json['nome_avatar']),
+      username: _asString(json['username']),
       livello: _asInt(json['livello']),
       exp: _asInt(json['exp']),
       monete: _asInt(json['monete']),
       streak: _asInt(json['streak']),
-      chosen_color: _asInt(json['chosen_color'] ?? json['colore_avatar']),
-      // La RPC restituisce null quando non ci sono obiettivi per la giornata
+      chosen_color: _asInt(json['chosen_color']),
       obiettivi: (json['obiettivi_giornalieri'] as List<dynamic>? ?? [])
           .map((o) => Obiettivo.fromMap(o as Map<String, dynamic>))
           .toList(),
     );
   }
-
 }
 
 
@@ -52,33 +50,17 @@ class Obiettivo {
 
   factory Obiettivo.fromMap(Map<String, dynamic> json) {
     return Obiettivo(
-      id: _asString(json['id_obiettivo'] ?? json['id']),
-      title: _asString(json['testo'] ??
-          json['title'] ??
-          json['titolo'] ??
-          json['descrizione'] ??
-          json['nome']),
-      xpReward: _asInt(json['exp_obiettivo'] ??
-          json['xpReward'] ??
-          json['xp_reward'] ??
-          json['exp'] ??
-          json['ricompensa'] ??
-          json['xp']),
-      completed: _asBool(json['completato'] ?? json['completed']),
+      id: _asString(json['id']),
+      title: _asString(json['testo']),
+      xpReward: _asInt(json['exp_obiettivo']),
+      completed: _asBool(json['completato']),
     );
   }
 }
 
-// Helper di conversione difensivi: la forma esatta restituita dalle RPC di
-// Supabase puo' variare (nomi di campo IT/EN, numeri come stringa, null), quindi
-// evitiamo cast rigidi che farebbero crashare l'intera pagina.
 String _asString(dynamic value) => value?.toString() ?? '';
 
-int _asInt(dynamic value) {
-  if (value is int) return value;
-  if (value is num) return value.toInt();
-  return int.tryParse(value?.toString() ?? '') ?? 0;
-}
+int _asInt(dynamic value) => value.toInt(); 
 
 bool _asBool(dynamic value) {
   if (value is bool) return value;

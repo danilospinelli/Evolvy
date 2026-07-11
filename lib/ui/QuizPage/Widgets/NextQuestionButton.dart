@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_application_1/ui/QuizPage/QuizPage_ViewModel.dart';
+import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.dart';
 
 class NextQuestionButton extends StatelessWidget {
   const NextQuestionButton({super.key});

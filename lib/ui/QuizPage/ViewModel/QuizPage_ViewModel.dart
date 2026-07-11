@@ -9,13 +9,21 @@ class QuizPage_ViewModel extends ChangeNotifier {
   static const int _currentUserId = 1;
   static const int _expPerCorrectAnswer = 2;
 
+
+  // TODO: SONO VARIABILI DA METTERE NEL DOMINIO
+
   // Stato
   bool _isLoading = false;
   List<QuizModel> _quizzes = [];
+  // Indice della domanda (da 0 a 4)
   int _currentIndex = 0;
+  // Indice della risposta selezionata (da 0 a 2)
   int? _selectedIndex;
+  // True se ho risposto alla domanda
   bool _answered = false;
+  // True se ho finito tutti i quiz
   bool _finished = false;
+  // ???
   String? _error;
   String? _submitError;
 
@@ -45,6 +53,9 @@ class QuizPage_ViewModel extends ChangeNotifier {
     ];
   }
 
+  // True se l'indice della risposta selezionata è quello della risposta corretta
+  bool isCorrect(int index) => answers[index].correct;
+
   // Carica le domande del quiz giornaliero dell'utente dal repository
   Future<void> initialize({int idUtente = _currentUserId}) async {
     _isLoading = true;
@@ -53,7 +64,7 @@ class QuizPage_ViewModel extends ChangeNotifier {
     try {
       final result = await repo.getQuiz(idUtente);
       // scarta le domande già risposte oggi, anche se il backend le restituisce comunque
-      _quizzes = result.quizzes.where((q) => !q.risposto).toList();
+      _quizzes = result.quizzes.where((q) => !q.risposta).toList();
       _currentIndex = 0;
       _selectedIndex = null;
       _answered = false;
@@ -81,8 +92,6 @@ class QuizPage_ViewModel extends ChangeNotifier {
     final expGuadagnata = isCorrect(index) ? _expPerCorrectAnswer : 0;
     _submitAnswer(quiz.id, expGuadagnata);
   }
-
-  bool isCorrect(int index) => answers[index].correct;
 
   // Invia al backend la singola risposta appena data
   Future<void> _submitAnswer(int idQuiz, int expGuadagnata) async {

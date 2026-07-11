@@ -1,30 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_application_1/ui/QuizPage/QuizPage_ViewModel.dart';
+import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/QuizProgressBar.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/QuestionCard.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/ExplanationBubble.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/NextQuestionButton.dart';
 
-// E' un tab della MainScreen (IndexedStack), non una route pushata: nessuna freccia indietro
 class QuizPage_View extends StatelessWidget {
   const QuizPage_View({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('QUIZ'),
-        centerTitle: true,
-      ),
-      body: Consumer<QuizPage_ViewModel>(
-        builder: (context, vm, child) {
-          if (vm.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    QuizPage_ViewModel vm = context.watch<QuizPage_ViewModel>();
 
-          if (vm.error != null) {
-            return Center(
+    Widget body;
+
+    if (vm.isLoading) {
+      body = const Center(child: CircularProgressIndicator());
+    } else if (vm.error != null) {
+            body = Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
@@ -34,10 +28,8 @@ class QuizPage_View extends StatelessWidget {
                 ),
               ),
             );
-          }
-
-          if (vm.totalQuestions == 0) {
-            return const Center(
+          } else if (vm.totalQuestions == 0) {
+            body = const Center(
               child: Padding(
                 padding: EdgeInsets.all(24),
                 child: Text(
@@ -47,10 +39,8 @@ class QuizPage_View extends StatelessWidget {
                 ),
               ),
             );
-          }
-
-          if (vm.finished) {
-            return const Center(
+          } else if (vm.finished) {
+            body = const Center(
               child: Padding(
                 padding: EdgeInsets.all(24),
                 child: Column(
@@ -70,9 +60,8 @@ class QuizPage_View extends StatelessWidget {
                 ),
               ),
             );
-          }
-
-          return SingleChildScrollView(
+          } else {
+            body = SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -91,8 +80,15 @@ class QuizPage_View extends StatelessWidget {
               ],
             ),
           );
-        },
+
+          }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('QUIZ'),
+        centerTitle: true,
       ),
+      body: body
     );
   }
 }

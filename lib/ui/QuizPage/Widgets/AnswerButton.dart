@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_application_1/ui/QuizPage/QuizPage_ViewModel.dart';
+import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.dart';
 
 class AnswerButton extends StatelessWidget {
   const AnswerButton({
@@ -22,6 +22,8 @@ class AnswerButton extends StatelessWidget {
     Color backgroundColor = Colors.white;
     Color borderColor = Colors.grey.shade300;
 
+
+    // TODO: PUZZA, STATEFUL? MA HA SENSO CHE RIMANDI AL PADRE (CONTENITORE DELLA DMANDA) PERCHE POI CAMBIANO ACHE GLI ALTRI
     if (showResult) {
       if (vm.isCorrect(index)) {
         backgroundColor = Colors.green.shade50;

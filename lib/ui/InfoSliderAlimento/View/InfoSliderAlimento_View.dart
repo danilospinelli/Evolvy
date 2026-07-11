@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
-import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
-import 'package:flutter_application_1/ui/InfoSliderAlimento/InfoSliderAlimento_ViewModel.dart';
+import 'package:flutter_application_1/ui/Homepage/ViewModel/Homepage_ViewModel.dart';
+import 'package:flutter_application_1/ui/InfoSliderAlimento/ViewModel/InfoSliderAlimento_ViewModel.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/SelettoreQuantita.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/TastoConferma.dart';
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/InputQuantita.dart';
-import 'Widgets/RiquadroNutrizionale.dart';
-import 'Widgets/RigaNutriente.dart';
+import '../Widgets/RiquadroNutrizionale.dart';
+import '../Widgets/RigaNutriente.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +33,7 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimento_View> {
   late final InfoSliderAlimento_ViewModel _viewModel;
   late final TextEditingController _textController;
 
-  //PROBABILMENTE è POSSIBILE FARE CIO CON UNA FUNZIONE SQL PIU SEMPLICE!!!
+  // TODO: PROBABILMENTE è POSSIBILE FARE CIO CON UNA FUNZIONE SQL PIU SEMPLICE!!!
   @override
   void initState() {
     super.initState();

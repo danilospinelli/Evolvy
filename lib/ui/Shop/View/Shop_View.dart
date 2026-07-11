@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
 
-// Schermata dello shop: al momento vuota, in attesa delle funzionalità di acquisto cosmetici
 class Shop_View extends StatelessWidget {
   const Shop_View({super.key});
 

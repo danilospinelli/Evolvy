@@ -1,3 +1,4 @@
+// TODO: DA ELIMINARE
 class CosmeticModel {
   final int id;
   final String path;
@@ -24,9 +25,6 @@ class CosmeticsListModel {
     required this.equipaggiato,
   });
 
-
-
-
   factory CosmeticsListModel.fromJson(Map<String, dynamic> json) {
     return CosmeticsListModel(
       nonAcquistati: (json['non_acquistati'] as List<dynamic>)
@@ -37,7 +35,7 @@ class CosmeticsListModel {
           .toList(),
       equipaggiato: json['equipaggiato'] != null
           ? CosmeticModel.fromJson(json['equipaggiato'] as Map<String, dynamic>)
-          : null, // <-- questa parte mancava
+          : null,
     );
 }
 }

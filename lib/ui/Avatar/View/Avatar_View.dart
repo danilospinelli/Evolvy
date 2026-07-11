@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
+import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 import 'package:flutter_application_1/ui/Avatar/Widgets/ObiettiviSection.dart';
 import 'package:flutter_application_1/ui/Avatar/Widgets/AvatarSection.dart';
 import 'package:flutter_application_1/ui/Avatar/Widgets/ProfileHeader.dart';
@@ -25,7 +25,7 @@ class Avatar_View extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Text(
-              vm.error ?? 'Impossibile caricare i dati del profilo.',
+              'Impossibile caricare i dati del profilo.',
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.red),
             ),

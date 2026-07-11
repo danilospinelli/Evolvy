@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/repositories/AvatarRepository.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 
-
 class Avatar_ViewModel extends ChangeNotifier {
   final AvatarRepository repo = AvatarRepository();
 
@@ -12,20 +11,14 @@ class Avatar_ViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  String? _error;
-  String? get error => _error;
-
-  /// Carica profilo utente e sfide giornaliere dal database.
+  /// Carica profilo utente e sfide giornaliere dal database
   Future<void> initialize() async {
     _isLoading = true;
-    _error = null;
     notifyListeners();
-
     try {
-      // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE (CLAUDE NON TOCCARE, grazie)
+      // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
       _user = await repo.getAvatarInfo(id_utente: 1);
     } catch (e) {
-      _error = e.toString();
       debugPrint('Errore caricamento dei dati: $e');
     } finally {
       _isLoading = false;
@@ -39,7 +32,7 @@ class Avatar_ViewModel extends ChangeNotifier {
 
     try {
       _user = await repo.updateAvatarInfo(
-        id_utente: 1,
+        id_utente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
         nome_avatar: name,
         colore_avatar: _user!.chosen_color,
       );
@@ -55,7 +48,7 @@ class Avatar_ViewModel extends ChangeNotifier {
 
     try {
       _user = await repo.updateAvatarInfo(
-        id_utente: 1,
+        id_utente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
         nome_avatar: _user!.username,
         colore_avatar: new_color,
       );
@@ -65,16 +58,16 @@ class Avatar_ViewModel extends ChangeNotifier {
     }
   }
 
-  // setta come completato l'obiettivo challenge e agggiungi le sue exp all'utente
+  // Setta come completato l'obiettivo challenge e agggiungi le sue exp all'utente
   Future<void> completaObiettivo(Obiettivo challenge) async {
     if (_user == null) return;
 
     try {
       _user = await repo.updateAvatarObiettivo(
-        id_utente: 1,
+        id_utente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
         id_obiettivo: challenge.id,
         livello: _user!.livello,
-        exp: _user!.exp,
+        exp: _user!.exp + challenge.xpReward,
       );
       notifyListeners();
     } catch (e) {

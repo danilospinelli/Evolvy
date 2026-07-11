@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_ViewModel.dart';
+import 'package:flutter_application_1/ui/core/MainScreen/ViewModel/MainScreen_ViewModel.dart';
 import 'package:flutter_application_1/ui/core/MainScreen/Widgets/NavigationBarWidget.dart';
-import 'package:flutter_application_1/ui/Homepage/Homepage_View.dart';
-import 'package:flutter_application_1/ui/QuizPage/QuizPage_View.dart';
-import 'package:flutter_application_1/ui/Avatar/Avatar_View.dart';
-import 'package:flutter_application_1/ui/GlobalRanking/GlobalRanking_View.dart';
+import 'package:flutter_application_1/ui/Homepage/View/Homepage_View.dart';
+import 'package:flutter_application_1/ui/QuizPage/View/QuizPage_View.dart';
+import 'package:flutter_application_1/ui/Avatar/View/Avatar_View.dart';
+import 'package:flutter_application_1/ui/GlobalRanking/View/GlobalRanking_View.dart';
 import 'package:provider/provider.dart';
 
 // E' il wrap delle 4 pagine principali

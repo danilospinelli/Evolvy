@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// Colori selezionabili per la mascotte, nello stesso ordine degli sprite in assets/images
+// Colori selezionabili per la mascotte
 const List<Color> avatarColors = [
   Colors.orange,
   Colors.green,
@@ -15,5 +15,5 @@ const List<String> _avatarSprites = [
   'assets/images/fiammella viola.png',
 ];
 
-// Restituisce l'asset della mascotte associato al colore scelto
+// Restituisce l'immagine della mascotte associato al colore scelto
 String avatarSprite(int chosenColor) => _avatarSprites[chosenColor];

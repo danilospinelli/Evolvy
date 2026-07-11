@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/MealType_Enum.dart';
-import 'package:flutter_application_1/ui/Homepage/Homepage_View.dart';
+import 'package:flutter_application_1/ui/Homepage/View/Homepage_View.dart';
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
-import 'RicercaCibi_ViewModel.dart';
+import 'package:flutter_application_1/ui/RicercaCibi/ViewModel/RicercaCibi_ViewModel.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarCode.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarraDiRicerca.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/ListaRisultati.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 
+// TODO: NON C'è STATO, FALLO STATELESS
 class RicercaView extends StatefulWidget {
-  final MealType_Enum mealType;
 
   const RicercaView({super.key, required this.mealType});
+
+  final MealType_Enum mealType;
 
   @override
   State<RicercaView> createState() => _RicercaViewState();
 }
 
 class _RicercaViewState extends State<RicercaView> {
-  final RicercaViewModel _viewModel = RicercaViewModel();
+  final RicercaCibi_ViewModel _viewModel = RicercaCibi_ViewModel();
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -80,13 +82,7 @@ class _RicercaViewState extends State<RicercaView> {
                 child: AvatarCondiviso(
                   messaggio: "Ciao!, cerchiamo qualcosa da mangiare!",
                   onTap: () {
-                    // TODO: attenzione a stack overflow
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Homepage_View(),
-                      ),
-                    );
+                    // TODO: TOCCO MASCOTTE
                   },
                 ),
               ),

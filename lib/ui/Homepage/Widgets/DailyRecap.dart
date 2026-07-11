@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
+import 'package:flutter_application_1/ui/Homepage/ViewModel/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/domain/MacroType_Enum.dart';
 import 'package:flutter_application_1/domain/MacroColors.dart';
 import 'package:provider/provider.dart';
@@ -58,8 +58,8 @@ class DailyRecap extends StatelessWidget {
             goal: vm.dailyMacroGoal(MacroType_Enum.Calorie, vm.allFoods),
             label: 'Calorie',
             abbr: 'kcal',
-            showBackground: false,
-            valueOnSide: true,
+            showBackground: true,
+            valueOnSide: false,
           ),
         ],
       ),
@@ -76,7 +76,7 @@ class DailyRecap extends StatelessWidget {
       ),
 
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
 
           const Text(
@@ -119,7 +119,7 @@ class DailyRecap extends StatelessWidget {
       ),
 
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
 
           const Text(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_View.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
-import 'package:flutter_application_1/ui/core/MainScreen/MainScreen_ViewModel.dart';
-import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
-import 'package:flutter_application_1/ui/QuizPage/QuizPage_ViewModel.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_application_1/ui/core/MainScreen/View/MainScreen_View.dart';
+import 'package:flutter_application_1/ui/Homepage/ViewModel/Homepage_ViewModel.dart';
+import 'package:flutter_application_1/ui/core/MainScreen/ViewModel/MainScreen_ViewModel.dart';
+import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
+import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.dart';
 
 Future<void> main() async {
   await Supabase.initialize(
