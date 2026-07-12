@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 
 class RigaAlimento extends StatelessWidget {
-  final Food alimento;
+  final FoodModel alimento;
   final VoidCallback onTap;
 
   const RigaAlimento({super.key, required this.alimento, required this.onTap});

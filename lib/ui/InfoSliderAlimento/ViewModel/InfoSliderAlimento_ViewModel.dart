@@ -3,7 +3,7 @@ import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
 
 class InfoSliderAlimento_ViewModel extends ChangeNotifier {
-  final Food alimento;
+  final FoodModel alimento;
 
   var _quantitaInserita = 0.0;
   var _unitaMisura = "g";

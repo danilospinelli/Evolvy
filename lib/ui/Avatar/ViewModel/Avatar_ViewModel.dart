@@ -17,7 +17,7 @@ class Avatar_ViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
-      _user = await repo.getAvatarInfo(id_utente: 1);
+      _user = await repo.getAvatarInfo(idUtente: 1);
     } catch (e) {
       debugPrint('Errore caricamento dei dati: $e');
     } finally {
@@ -32,9 +32,9 @@ class Avatar_ViewModel extends ChangeNotifier {
 
     try {
       _user = await repo.updateAvatarInfo(
-        id_utente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
-        nome_avatar: name,
-        colore_avatar: _user!.chosen_color,
+        idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+        nomeAvatar: name,
+        coloreAvatar: _user!.chosenColor,
       );
       notifyListeners();
     } catch (e) {
@@ -48,9 +48,9 @@ class Avatar_ViewModel extends ChangeNotifier {
 
     try {
       _user = await repo.updateAvatarInfo(
-        id_utente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
-        nome_avatar: _user!.username,
-        colore_avatar: new_color,
+        idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+        nomeAvatar: _user!.username,
+        coloreAvatar: new_color,
       );
       notifyListeners();
     } catch (e) {
@@ -64,8 +64,8 @@ class Avatar_ViewModel extends ChangeNotifier {
 
     try {
       _user = await repo.updateAvatarObiettivo(
-        id_utente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
-        id_obiettivo: challenge.id,
+        idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+        idObiettivo: challenge.id,
         livello: _user!.livello,
         exp: _user!.exp + challenge.xpReward,
       );

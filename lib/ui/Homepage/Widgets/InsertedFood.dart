@@ -36,7 +36,7 @@ class InsertedFood extends StatelessWidget {
           // TODO: metterlo nel ViewModel
           onTap: () async {
             final moltiplicatore = (food.quantita ?? 100) / 100;
-            final foodRicostruito = Food(
+            final foodRicostruito = FoodModel(
               nome: food.nome,
               kcalper100: (food.calorie ?? 0) / moltiplicatore,
               carbper100: (food.carboidrati ?? 0) / moltiplicatore,

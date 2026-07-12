@@ -6,10 +6,10 @@ class RicercaCibi_ViewModel extends ChangeNotifier {
   final FoodRepository _foodRepository;
   RicercaCibi_ViewModel() : _foodRepository = FoodRepository();
 
-  FoodList? _risultati;
+  List<FoodModel>? _risultati;
   var _isLoading = false;
 
-  FoodList? get risultati => _risultati;
+  List<FoodModel>? get risultati => _risultati;
   bool get isLoading => _isLoading;
 
   Future<void> cercaCibi(String query) async {

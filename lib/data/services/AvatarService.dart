@@ -37,7 +37,7 @@ class AvatarService {
 
 
   //aggiorna i dati dell'avatar relati agli obiettivi e restituisce le informazioni aggiornate
-  Future<dynamic> updateAvatarObbietivoService({required int idUtente,required String idObiettivo,required int livello,required int exp}) async {
+  Future<dynamic> updateAvatarObbietivoService({required int idUtente,required int idObiettivo,required int livello,required int exp}) async {
     try {
       final response = await _client.rpc(
         'completa_obietivi',

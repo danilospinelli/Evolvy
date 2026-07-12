@@ -55,7 +55,7 @@ class AvatarSection extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         _ColorPicker(
-          chosen_color: user.chosen_color,
+          chosen_color: user.chosenColor,
         ),
       ],
     );

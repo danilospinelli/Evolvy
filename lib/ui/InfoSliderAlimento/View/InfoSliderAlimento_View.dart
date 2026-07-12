@@ -14,7 +14,7 @@ import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.da
 import 'package:provider/provider.dart';
 
 class InfoSliderAlimento_View extends StatefulWidget {
-  final Food ciboSelezionato;
+  final FoodModel ciboSelezionato;
   final MealType_Enum mealType;
   final LoggedFood? ciboGiaLoggato;
 

@@ -10,8 +10,8 @@ class QuizRepository {
 
   //metodi che la repository espone al di fuori,
   Future<List<QuizModel>> getQuiz(int idUtente) async {
-    final quizJson = await _quizService.getQuizService(idUtente: idUtente);
-    List<QuizModel> quizzes=quizJson.map((json) => QuizModel.fromJson(json)).toList();
+    final quizJson = await _quizService.getQuizService(idUtente: idUtente) as List;
+    List<QuizModel> quizzes = quizJson.map((json) => QuizModel.fromJson(json as Map<String, dynamic>)).toList();
     return quizzes;
   }
   

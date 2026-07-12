@@ -64,7 +64,7 @@ class QuizPage_ViewModel extends ChangeNotifier {
     try {
       final result = await repo.getQuiz(idUtente);
       // scarta le domande già risposte oggi, anche se il backend le restituisce comunque
-      _quizzes = result.quizzes.where((q) => !q.risposta).toList();
+      _quizzes = result.where((q) => !q.risposta).toList();
       _currentIndex = 0;
       _selectedIndex = null;
       _answered = false;

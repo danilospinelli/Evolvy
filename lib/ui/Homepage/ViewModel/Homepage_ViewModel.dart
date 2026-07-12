@@ -9,7 +9,7 @@ class Homepage_ViewModel extends ChangeNotifier {
 
   // Stato condiviso da più widget
   bool _isLoading = false;
-  LogMeal logMeal = LogMeal(
+  LogMealModel logMeal = LogMealModel(
     colazione: [],
     pranzo: [],
     cena: [],
@@ -88,10 +88,10 @@ class Homepage_ViewModel extends ChangeNotifier {
     // Aggiorna il Database
     try {
       await repo.addCibo(
-        id_utente: 1,
+        idUtente: 1,
         data: DateTime.parse('2026-04-28'),
         meal: mealType.toString().split('.').last.toLowerCase(),
-        nome_cibo: food.nome,
+        nomeCibo: food.nome,
         quantita: food.quantita,
         calorie: food.calorie,
         carboidrati: food.carboidrati,
@@ -121,10 +121,10 @@ class Homepage_ViewModel extends ChangeNotifier {
     // Aggiorna il Database
     try {
       await repo.removeCibo(
-        id_utente: 1,
+        idUtente: 1,
         data: DateTime.parse('2026-04-28'),
         meal: mealType.toString().split('.').last.toLowerCase(),
-        nome_cibo: food.nome,
+        nomeCibo: food.nome,
         quantita: food.quantita,
       );
     } catch (e) {

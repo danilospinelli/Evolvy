@@ -19,7 +19,7 @@ class AvatarRepository {
     return AvatarModel.fromJson(avatarJson);
   }
 
-  Future<dynamic> updateAvatarObiettivo({required int idUtente,required String idObiettivo,required int livello,required int exp}) async {
+  Future<dynamic> updateAvatarObiettivo({required int idUtente,required int idObiettivo,required int livello,required int exp}) async {
     final avatarJson = await _avatarService.updateAvatarObbietivoService(idUtente: idUtente, idObiettivo: idObiettivo, livello: livello, exp: exp);
     return AvatarModel.fromJson(avatarJson);
   }

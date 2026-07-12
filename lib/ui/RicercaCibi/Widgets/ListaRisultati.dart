@@ -40,7 +40,7 @@ class ListaRisultati extends StatelessWidget {
 
             final risultati = viewModel.risultati;
 
-            if (risultati == null || risultati.foods.isEmpty) {
+            if (risultati == null || risultati.isEmpty) {
               return Center(
                 child: Text(
                   risultati == null
@@ -52,7 +52,7 @@ class ListaRisultati extends StatelessWidget {
             }
 
             return ListView.separated(
-              itemCount: risultati.foods.length,
+              itemCount: risultati.length,
               separatorBuilder: (context, index) => Divider(
                 height: 1,
                 color: Colors.grey[300],
@@ -60,7 +60,7 @@ class ListaRisultati extends StatelessWidget {
                 endIndent: 16,
               ),
               itemBuilder: (context, index) {
-                final cibo = risultati.foods[index];
+                final cibo = risultati[index];
                 return RigaAlimento(
                   alimento: cibo,
                   onTap: () async {

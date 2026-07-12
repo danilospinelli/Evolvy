@@ -11,7 +11,7 @@ class AvatarCondiviso extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chosenColor = context.watch<Avatar_ViewModel>().user?.chosen_color ?? 0;
+    final chosenColor = context.watch<Avatar_ViewModel>().user?.chosenColor ?? 0;
 
     return Align(
       alignment: Alignment.bottomRight,

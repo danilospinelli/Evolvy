@@ -61,7 +61,7 @@ class _ChallengeCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      challenge.title,
+                      challenge.testo,
                       style: TextStyle(
                         fontSize: 15,
                         decoration: completed

@@ -9,8 +9,8 @@ class FoodRepository {
   }
 
   Future<List<FoodModel>> getCibo(String nomeCibo) async {
-    final foodJson = await _foodService.getCiboService(nomeCibo: nomeCibo);
-    List<FoodModel> foodList=foodJson.map((json) => FoodModel.fromJson(json)).toList();
+    final foodJson = await _foodService.getCiboService(nomeCibo: nomeCibo) as List;
+    List<FoodModel> foodList = foodJson.map((json) => FoodModel.fromJson(json as Map<String, dynamic>)).toList();
     return foodList;
   }
 }

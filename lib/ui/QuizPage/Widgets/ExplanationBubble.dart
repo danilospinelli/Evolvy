@@ -12,8 +12,6 @@ class ExplanationBubble extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      // TODO: RISOLVI OVERFLOW DI AVATAR
-      // MARGINI -----------------------------------------------
       margin: const EdgeInsets.fromLTRB(12, 0, 100, 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -61,10 +59,14 @@ class ExplanationBubble extends StatelessWidget {
           SizedBox(
             width: 70,
             height: 70,
-            child: AvatarCondiviso(
-              messaggio: '',
-              onTap: () {} // TODO: TOCCO MASCOTTE
-            )
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.bottomRight,
+              child: AvatarCondiviso(
+                messaggio: '',
+                onTap: () {} // TODO: TOCCO MASCOTTE
+              ),
+            ),
           ),
         ],
       ),
