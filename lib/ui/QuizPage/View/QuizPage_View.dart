@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/QuizProgressBar.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/QuestionCard.dart';
-import 'package:flutter_application_1/ui/QuizPage/Widgets/ExplanationBubble.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/NextQuestionButton.dart';
+import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 
 class QuizPage_View extends StatelessWidget {
   const QuizPage_View({super.key});
@@ -56,7 +56,17 @@ class QuizPage_View extends StatelessWidget {
               children: [
                 const QuizProgressBar(),
                 const QuestionCard(),
-                if (vm.answered) const ExplanationBubble(),
+                if (vm.answered)
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(12, 0, 0, 12),
+                    child: AvatarCondiviso(
+                      titolo: 'SPIEGAZIONE',
+                      messaggio: vm.spiegazione,
+                      dimensioneAvatar: 90,
+                      larghezzaMassimaMessaggio: double.infinity,
+                      onTap: () {} // TODO: TOCCO MASCOTTE
+                    ),
+                  ),
                 if (vm.answered) const NextQuestionButton(),
               ],
             ),

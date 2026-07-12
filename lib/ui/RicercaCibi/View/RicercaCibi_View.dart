@@ -68,24 +68,19 @@ class _RicercaViewState extends State<RicercaView> {
             const SizedBox(height: 24),
 
             Expanded(
-              flex: 3,
               child: ListaRisultati(
                 viewModel: _viewModel,
                 mealType: widget.mealType,
               ),
             ),
 
-            Expanded(
-              flex: 1,
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: AvatarCondiviso(
-                  messaggio: "Ciao!, cerchiamo qualcosa da mangiare!",
-                  onTap: () {
-                    // TODO: TOCCO MASCOTTE
-                  },
-                ),
-              ),
+            const SizedBox(height: 12),
+
+            AvatarCondiviso(
+              messaggio: "Ciao!, cerchiamo qualcosa da mangiare!",
+              onTap: () {
+                // TODO: TOCCO MASCOTTE
+              },
             ),
           ],
         ),
