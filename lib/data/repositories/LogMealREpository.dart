@@ -2,55 +2,54 @@ import '../../domain/models/LogMealModel.dart';
 import '../services/LogMealService.dart';
 
 class LogMealRepository {
-  late final LogMealService logmealservice;
+  late final LogMealService _logmealservice;
 
   
   LogMealRepository(){
-    this.logmealservice=LogMealService();
+    this._logmealservice=LogMealService();
   }
 
 
-  // metodi che la repository espone al di fuori
-  Future<LogMeal> getPastiGiornalieri(int utenteId, DateTime data) async {
-    final mealJson = await logmealservice.getPastiGiornalieriService(
+  Future<LogMealModel> getPastiGiornalieri(int utenteId, DateTime data) async {
+    final mealJson = await _logmealservice.getPastiGiornalieriService(
       utenteId: utenteId,
       data: data,
     );
-    return LogMeal.fromJson(mealJson);
+    return LogMealModel.fromJson(mealJson);
   }
 
   Future<void> removeCibo({
-    required int id_utente,
+    required int idUtente,
     required DateTime data,
     required String meal,
-    required String nome_cibo,
+    required String nomeCibo,
     required double quantita,
   }) async {
-    await logmealservice.removeCiboService(
-      id_utente: id_utente,
+    await _logmealservice.removeCiboService(
+      idUtente: idUtente,
       data: data,
       meal: meal,
-      nome_cibo: nome_cibo,
+      nomeCibo: nomeCibo,
       quantita: quantita,
     );
   }
 
   Future<void> addCibo({
-    required int id_utente,
+    required int idUtente,
     required DateTime data,
     required String meal,
-    required String nome_cibo,
+    required String nomeCibo,
     required double quantita,
     required double calorie,
     required double carboidrati,
     required double proteine,
     required double grassi,
   }) async {
-    await logmealservice.addCiboService(
-      id_utente: id_utente,
+    await _logmealservice.addCiboService(
+      idUtente: idUtente,
       data: data,
       meal: meal,
-      nome_cibo: nome_cibo,
+      nomeCibo: nomeCibo,
       quantita: quantita,
       calorie: calorie,
       carboidrati: carboidrati,

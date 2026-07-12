@@ -89,6 +89,7 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimento_View> {
                         child: InputQuantita(
                           controller: _textController,
                           onChanged: _viewModel.aggiornaQuantita,
+                          maxValue: _viewModel.maxQuantita,
                         ),
                       ),
                       const SizedBox(width: 12),

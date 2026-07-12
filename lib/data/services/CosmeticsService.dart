@@ -1,18 +1,19 @@
+/*
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CosmeticsService {
-  late final SupabaseClient client;
+  late final SupabaseClient _client;
 
   CosmeticsService() {
-    this.client = Supabase.instance.client;
+    this._client = Supabase.instance.client;
   }
   //restituisce una lista dei path edi cosmetici, evidenziando quelli gia acquistati
   //e quelli non ancora acquistati, e quello equipagiato
-  Future<dynamic> getCosmeticsService({required int id_utente}) async {
+  Future<dynamic> getCosmeticsService({required int idUtente}) async {
     try {
-      final response = await client.rpc(
+      final response = await _client.rpc(
         'get_cosmetics_utente',
-        params: {'p_utente_id': id_utente},
+        params: {'p_utente_id': idUtente},
       );
       return response;
     } catch (e) {
@@ -23,11 +24,11 @@ class CosmeticsService {
   //aggiorna il database con il cosmetico acquistato
   //e quelli non ancora acquistati, e quello equipagiato
   //e restituisce la lista aggiornata dei cosmetici
-  Future<dynamic> buyCosmeticsService({required int id_utente, required int id_cosmetico}) async {
+  Future<dynamic> buyCosmeticsService({required int idUtente, required int idCosmetico}) async {
     try {
-      final response = await client.rpc(
+      final response = await _client.rpc(
         'buy_cosmetic',
-        params: {'p_utente_id': id_utente, 'p_cosmetico_id': id_cosmetico},
+        params: {'p_utente_id': idUtente, 'p_cosmetico_id': idCosmetico},
       );
       return response;
     } catch (e) {
@@ -37,11 +38,11 @@ class CosmeticsService {
 
   //aggiorna il database con il cosmetico equipaggiato
   //e restituisce la lista aggiornata dei cosmetici
-  Future<dynamic> equipCosmeticsService({required int id_utente, required int id_cosmetico}) async {
+  Future<dynamic> equipCosmeticsService({required int idUtente, required int idCosmetico}) async {
     try {
-      final response = await client.rpc(
+      final response = await _client.rpc(
         'equip_cosmetic',
-        params: {'p_utente_id': id_utente, 'p_cosmetico_id': id_cosmetico},
+        params: {'p_utente_id': idUtente, 'p_cosmetico_id': idCosmetico},
       );
       return response;
     } catch (e) {
@@ -52,3 +53,4 @@ class CosmeticsService {
 
 
 }
+*/

@@ -36,21 +36,9 @@ class QuizModel {
         value2: json['check2'] as bool,
         value3: json['check3'] as bool,
         spiegazione: json['spiegazione'] as String,
-        // se la RPC non restituisce ancora questo campo, di default lo trattiamo come non risposto
         risposto: json['risposto'] as bool? ?? false
     );
 
-  }
-}
-
-class QuizModelList {
-  final List<QuizModel> quizzes;
-
-  QuizModelList({required this.quizzes});
-
-  factory QuizModelList.fromJson(List<dynamic> jsonList) {
-    List<QuizModel> quizzes = jsonList.map((json) => QuizModel.fromJson(json)).toList();
-    return QuizModelList(quizzes: quizzes);
   }
 }
 

@@ -1,3 +1,4 @@
+/*
 import 'package:flutter_application_1/data/services/CosmeticsService.dart';
 import 'package:flutter_application_1/domain/models/CosmeticModel.dart';
 
@@ -36,3 +37,4 @@ class CosmeticsRepository {
   }
 
 }
+*/

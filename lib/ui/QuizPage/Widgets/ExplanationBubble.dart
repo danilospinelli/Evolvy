@@ -10,7 +10,7 @@ class ExplanationBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<QuizPage_ViewModel>();
-    final chosenColor = context.watch<Avatar_ViewModel>().user?.chosen_color ?? 0;
+    final chosenColor = context.watch<Avatar_ViewModel>().user?.chosenColor ?? 0;
 
     return Container(
       width: double.infinity,

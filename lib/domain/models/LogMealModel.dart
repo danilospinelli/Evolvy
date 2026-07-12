@@ -33,13 +33,13 @@ class LoggedFood {
   }
 }
 
-class LogMeal {
+class LogMealModel {
   List<LoggedFood> colazione = [];
   List<LoggedFood> pranzo = [];
   List<LoggedFood> cena = [];
   List<LoggedFood> spuntino = [];
 
-  LogMeal({
+  LogMealModel({
     required this.colazione,
     required this.pranzo,
     required this.cena,
@@ -47,20 +47,12 @@ class LogMeal {
   });
 
   //converte i json in logmeal
-  factory LogMeal.fromJson(Map<String, dynamic> json) {
-    return LogMeal(
-      colazione: (json['colazione'] as List<dynamic>)
-          .map((item) => LoggedFood.fromJson(item as Map<String, dynamic>))
-          .toList(),
-      pranzo: (json['pranzo'] as List<dynamic>)
-          .map((item) => LoggedFood.fromJson(item as Map<String, dynamic>))
-          .toList(),
-      cena: (json['cena'] as List<dynamic>)
-          .map((item) => LoggedFood.fromJson(item as Map<String, dynamic>))
-          .toList(),
-      spuntino: (json['spuntino'] as List<dynamic>)
-          .map((item) => LoggedFood.fromJson(item as Map<String, dynamic>))
-          .toList(),
+  factory LogMealModel.fromJson(Map<String, dynamic> json) {
+    return LogMealModel(
+      colazione: (json['colazione'] as List<dynamic>).map((item) => LoggedFood.fromJson(item as Map<String, dynamic>)).toList(),
+      pranzo: (json['pranzo'] as List<dynamic>).map((item) => LoggedFood.fromJson(item as Map<String, dynamic>)).toList(),
+      cena: (json['cena'] as List<dynamic>).map((item) => LoggedFood.fromJson(item as Map<String, dynamic>)).toList(),
+      spuntino: (json['spuntino'] as List<dynamic>).map((item) => LoggedFood.fromJson(item as Map<String, dynamic>)).toList(),
     );
   }
 }

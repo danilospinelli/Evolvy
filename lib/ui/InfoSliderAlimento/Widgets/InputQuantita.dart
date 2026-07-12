@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InputQuantita extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
+  final double maxValue;
 
   const InputQuantita({
     super.key,
     required this.controller,
     required this.onChanged,
+    required this.maxValue,
   });
 
   @override
@@ -15,6 +18,7 @@ class InputQuantita extends StatelessWidget {
     return TextField(
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [_MaxValueInputFormatter(maxValue)],
       style: const TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.bold,
@@ -43,5 +47,24 @@ class InputQuantita extends StatelessWidget {
       ),
       onChanged: onChanged,
     );
+  }
+}
+
+// Impedisce di digitare un valore superiore a [max]: se il nuovo testo
+// supera la soglia, la modifica viene rifiutata e resta il valore precedente.
+class _MaxValueInputFormatter extends TextInputFormatter {
+  final double max;
+
+  _MaxValueInputFormatter(this.max);
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+    final value = double.tryParse(newValue.text.replaceAll(',', '.'));
+    if (value != null && value > max) return oldValue;
+    return newValue;
   }
 }

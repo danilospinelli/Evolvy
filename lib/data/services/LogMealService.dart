@@ -2,29 +2,21 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LogMealService {
 
-  late final SupabaseClient client;
+  late final SupabaseClient _client;
 
   LogMealService(){
-    this.client = Supabase.instance.client;
+    this._client = Supabase.instance.client;
   }
 
 
-  //formatta la data nel formato corretto
-  String dateFormatter(DateTime data) {
-    final y = data.year.toString().padLeft(4, '0');
-    final m = data.month.toString().padLeft(2, '0');
-    final d = data.day.toString().padLeft(2, '0');
-    return '$y-$m-$d';
-  }
+
 
   // Recupera i pasti giornalieri per un utente e una data specifica
-  Future<dynamic> getPastiGiornalieriService({
-    required int utenteId,
-    required DateTime data,
+  Future<dynamic> getPastiGiornalieriService({required int utenteId,required DateTime data,
   }) async {
     final dateParam = dateFormatter(data);
     try {
-      final response = await client.rpc(
+      final response = await _client.rpc(
         'get_pasti_giornalieri',
         params: {'p_utente_id': utenteId, 'p_data': dateParam},
       );
@@ -36,21 +28,21 @@ class LogMealService {
 
   // rimuove un cibo specifico da un pasto per un utente e una data specifica
   Future<void> removeCiboService({
-    required int id_utente,
+    required int idUtente,
     required DateTime data,
     required String meal,
-    required String nome_cibo,
+    required String nomeCibo,
     required double quantita,
   }) async {
     final dateParam = dateFormatter(data);
     try {
-      await client.rpc(
+      await _client.rpc(
         'elimina_log_pasto',
         params: {
-          'p_id_utente': id_utente,
+          'p_id_utente': idUtente,
           'p_data': dateParam,
           'p_meal': meal,
-          'p_nome_cibo': nome_cibo,
+          'p_nome_cibo': nomeCibo,
           'p_quantita': quantita,
         },
       );
@@ -61,10 +53,10 @@ class LogMealService {
 
   // aggiunge un cibo specifico a un pasto per un utente e una data specifica
   Future<void> addCiboService({
-    required int id_utente,
+    required int idUtente,
     required DateTime data,
     required String meal,
-    required String nome_cibo,
+    required String nomeCibo,
     required double quantita,
     required double calorie,
     required double carboidrati,
@@ -73,13 +65,13 @@ class LogMealService {
   }) async {
     final dateParam = dateFormatter(data);
     try {
-      await client.rpc(
+      await _client.rpc(
         'aggiungi_log_pasto',
         params: {
-          'p_id_utente': id_utente,
+          'p_id_utente': idUtente,
           'p_data': dateParam,
           'p_meal': meal,
-          'p_nome_cibo': nome_cibo,
+          'p_nome_cibo': nomeCibo,
           'p_quantita': quantita,
           'p_calorie': calorie,
           'p_carboidrati': carboidrati,
@@ -92,3 +84,12 @@ class LogMealService {
     }
   }
 }
+
+
+  //formatta la data nel formato corretto
+  String dateFormatter(DateTime data) {
+    final y = data.year.toString().padLeft(4, '0');
+    final m = data.month.toString().padLeft(2, '0');
+    final d = data.day.toString().padLeft(2, '0');
+    return '$y-$m-$d';
+  }

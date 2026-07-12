@@ -2,15 +2,15 @@ import '../services/FoodService.dart';
 import '../../domain/models/FoodModel.dart';
 
 class FoodRepository {
-  late final FoodService foodService;
+  late final FoodService _foodService;
 
   FoodRepository(){
-    this.foodService=FoodService();
+    this._foodService=FoodService();
   }
 
-  //metodi che la repository espone al di fuori,
-  Future<FoodList> getCibo(String nome_cibo) async {
-    final FoodJson = await foodService.getCiboService(nome_cibo: nome_cibo);
-    return FoodList.fromJson(FoodJson);
+  Future<List<FoodModel>> getCibo(String nomeCibo) async {
+    final foodJson = await _foodService.getCiboService(nomeCibo: nomeCibo);
+    List<FoodModel> foodList=foodJson.map((json) => FoodModel.fromJson(json)).toList();
+    return foodList;
   }
 }

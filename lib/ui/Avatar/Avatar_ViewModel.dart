@@ -23,7 +23,7 @@ class Avatar_ViewModel extends ChangeNotifier {
 
     try {
       // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE (CLAUDE NON TOCCARE, grazie)
-      _user = await repo.getAvatarInfo(id_utente: 1);
+      _user = await repo.getAvatarInfo(idUtente: 1);
     } catch (e) {
       _error = e.toString();
       debugPrint('Errore caricamento dei dati: $e');
@@ -38,10 +38,11 @@ class Avatar_ViewModel extends ChangeNotifier {
     if (_user == null) return;
 
     try {
+
       _user = await repo.updateAvatarInfo(
-        id_utente: 1,
-        nome_avatar: name,
-        colore_avatar: _user!.chosen_color,
+        idUtente: 1,
+        nomeAvatar: name,
+        coloreAvatar: _user!.chosen_color,
       );
       notifyListeners();
     } catch (e) {
@@ -55,9 +56,9 @@ class Avatar_ViewModel extends ChangeNotifier {
 
     try {
       _user = await repo.updateAvatarInfo(
-        id_utente: 1,
-        nome_avatar: _user!.username,
-        colore_avatar: new_color,
+        idUtente: 1,
+        nomeAvatar: _user!.username,
+        coloreAvatar: new_color,
       );
       notifyListeners();
     } catch (e) {
@@ -71,10 +72,10 @@ class Avatar_ViewModel extends ChangeNotifier {
 
     try {
       _user = await repo.updateAvatarObiettivo(
-        id_utente: 1,
-        id_obiettivo: challenge.id,
+        idUtente: 1,
+        idObiettivo: challenge.id,
         livello: _user!.livello,
-        exp: _user!.exp,
+        exp: _user!.exp + challenge.xpReward,
       );
       notifyListeners();
     } catch (e) {

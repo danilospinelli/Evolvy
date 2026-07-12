@@ -1,19 +1,20 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AvatarService {
-  late final SupabaseClient client;
+  
+  late final SupabaseClient _client;
 
   AvatarService() {
-    this.client = Supabase.instance.client;
+    this._client = Supabase.instance.client;
   }
 
 
   //restituisce tutte le informazione per la pagina avatar
-  Future<dynamic> getAvatarInfoService({required int id_utente}) async {
+  Future<dynamic> getAvatarInfoService({required int idUtente}) async {
     try {
-      final response = await client.rpc(
+      final response = await _client.rpc(
         'get_dati_avatar',
-        params: {'p_utente_id': id_utente},
+        params: {'p_utente_id': idUtente},
       );
       return response;
     } catch (e) {
@@ -21,12 +22,12 @@ class AvatarService {
     }
   }
 
-  //restituisce tutte le informazione per la pagina avatar
-  Future<dynamic> updateAvatarInfoService({required int id_utente, required String nome_avatar, required int colore_avatar}) async {
+  //aggiorna i dati dell'avatar e restituisce le informazioni aggiornate
+  Future<dynamic> updateAvatarInfoService({required int idUtente, required String nomeAvatar, required int coloreAvatar}) async {
     try {
-      final response = await client.rpc(
+      final response = await _client.rpc(
         'update_dati_avatar',
-        params: {'p_utente_id': id_utente, 'p_nome_avatar': nome_avatar, 'p_colore_avatar': colore_avatar},
+        params: {'p_utente_id': idUtente, 'p_nome_avatar': nomeAvatar, 'p_colore_avatar': coloreAvatar},
       );
       return response;
     } catch (e) {
@@ -34,13 +35,13 @@ class AvatarService {
     }
   }
 
-  //aggiorna il database con l'obiettivo completato e restituisce la lista aggiornata degli obiettivi
-  //e fa le varie operazioni che ne posono derivare
-  Future<dynamic> updateAvatarObbietivoService({required int id_utente,required String id_obiettivo,required int livello,required int exp}) async {
+
+  //aggiorna i dati dell'avatar relati agli obiettivi e restituisce le informazioni aggiornate
+  Future<dynamic> updateAvatarObbietivoService({required int idUtente,required String idObiettivo,required int livello,required int exp}) async {
     try {
-      final response = await client.rpc(
+      final response = await _client.rpc(
         'completa_obietivi',
-        params: {'p_utente_id': id_utente, 'p_id_obiettivo': id_obiettivo, 'p_livello': livello, 'p_exp': exp},
+        params: {'p_utente_id': idUtente, 'p_id_obiettivo': idObiettivo, 'p_livello': livello, 'p_exp': exp},
       );
       return response;
     } catch (e) {

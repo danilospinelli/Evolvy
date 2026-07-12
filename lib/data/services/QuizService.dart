@@ -1,17 +1,18 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class QuizService {
-  late final SupabaseClient client;
+  late final SupabaseClient _client;
 
   QuizService(){
-    this.client = Supabase.instance.client;
+    this._client = Supabase.instance.client;
   }
 
-    Future<dynamic> getQuizService({required int id_utente}) async {
+    //Recupera i quiz per un utente specifico
+    Future<dynamic> getQuizService({required int idUtente}) async {
         try {
-        final response = await client.rpc(
+        final response = await _client.rpc(
             'get_quiz_utente',
-            params: {'p_utente_id': id_utente},
+            params: {'p_utente_id': idUtente},
         );
         return response;
         } catch (e) {
@@ -19,11 +20,12 @@ class QuizService {
         }
     }
 
-    Future<dynamic> checkQuizService({required int id_quiz, required int id_utente, required int exp_guadagnata}) async {
+    //Invia la risposta al quiz e aggiorna l'esperienza dell'utente
+    Future<dynamic> checkQuizService({required int idQuiz, required int idUtente, required int exp_guadagnata}) async {
         try {
-        final response = await client.rpc(
+        final response = await _client.rpc(
             'rispondi_quiz',
-            params: {'p_utente_id': id_utente, 'p_id_quiz': id_quiz, 'p_exp_guadagnata': exp_guadagnata}
+            params: {'p_utente_id': idUtente, 'p_id_quiz': idQuiz, 'p_exp_guadagnata': exp_guadagnata}
         );
         return response;
         } catch (e) {

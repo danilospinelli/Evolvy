@@ -1,4 +1,4 @@
-class Food {
+class FoodModel {
   String? nome;
   double? kcalper100;
   double? protper100;
@@ -6,7 +6,7 @@ class Food {
   double? grasper100;
   double? sodper100;
 
-  Food({
+  FoodModel({
     this.nome,
     this.kcalper100,
     this.protper100,
@@ -15,8 +15,8 @@ class Food {
     this.sodper100,
   });
 
-  factory Food.fromJson(Map<String, dynamic> json) {
-    return Food(
+  factory FoodModel.fromJson(Map<String, dynamic> json) {
+    return FoodModel(
       nome: json['nome'] as String?,
       kcalper100: (json['kcalper100'] as num?)?.toDouble(),
       protper100: (json['protper100'] as num?)?.toDouble(),
@@ -27,16 +27,4 @@ class Food {
   }
 }
 
-class FoodList {
-  List<Food> foods;
 
-  FoodList({required this.foods});
-
-  factory FoodList.fromJson(List<dynamic> json) {
-    return FoodList(
-      foods: json
-          .map((item) => Food.fromJson(item as Map<String, dynamic>))
-          .toList(),
-    );
-  }
-}

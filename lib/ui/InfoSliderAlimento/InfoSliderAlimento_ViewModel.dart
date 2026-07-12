@@ -5,6 +5,9 @@ import 'package:flutter_application_1/domain/models/LogMealModel.dart';
 class InfoSliderAlimento_ViewModel extends ChangeNotifier {
   final Food alimento;
 
+  // Quantità massima inseribile, espressa in grammi/millilitri
+  static const double _maxQuantitaGrammi = 9999;
+
   var _quantitaInserita = 0.0;
   var _unitaMisura = "g";
   final List<String> unitaDisponibili = ['g', 'ml', 'kg', 'l'];
@@ -13,6 +16,12 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
 
   double get quantita => _quantitaInserita;
   String get unita => _unitaMisura;
+
+  // Massimo inseribile nell'unità di misura attualmente selezionata
+  // (per kg/l va diviso per 1000 perché _quantitaBaseNormalizzata moltiplica per 1000)
+  double get maxQuantita => (_unitaMisura == 'kg' || _unitaMisura == 'l')
+      ? _maxQuantitaGrammi / 1000
+      : _maxQuantitaGrammi;
 
   double get _quantitaBaseNormalizzata {
     if (_unitaMisura == 'kg' || _unitaMisura == 'l') {
