@@ -5,6 +5,7 @@ import 'package:flutter_application_1/ui/QuizPage/Widgets/QuizProgressBar.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/QuestionCard.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/NextQuestionButton.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
+import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
 
 class QuizPage_View extends StatelessWidget {
   const QuizPage_View({super.key});
@@ -78,6 +79,7 @@ class QuizPage_View extends StatelessWidget {
       appBar: AppBar(
         title: const Text('QUIZ'),
         centerTitle: true,
+        leading: const FrecciaIndietro(),
       ),
       body: body
     );
