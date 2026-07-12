@@ -39,10 +39,11 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimento_View> {
     super.initState();
     _viewModel = InfoSliderAlimento_ViewModel(alimento: widget.ciboSelezionato);
     if (widget.ciboGiaLoggato != null) {
-      final vecchiaQuantita = widget.ciboGiaLoggato!.quantita;
+      // Il campo accetta solo interi: mostriamo la quantità senza decimali
+      final vecchiaQuantita = widget.ciboGiaLoggato!.quantita.round().toString();
 
-      _textController = TextEditingController(text: vecchiaQuantita.toString());
-      _viewModel.aggiornaQuantita(vecchiaQuantita.toString());
+      _textController = TextEditingController(text: vecchiaQuantita);
+      _viewModel.aggiornaQuantita(vecchiaQuantita);
     } else {
       _textController = TextEditingController();
     }
