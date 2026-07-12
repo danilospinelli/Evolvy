@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/repositories/QuizRepository.dart';
 import 'package:flutter_application_1/domain/models/QuizModel.dart';
+import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 
 class QuizPage_ViewModel extends ChangeNotifier {
   final QuizRepository repo = QuizRepository();
@@ -66,8 +67,10 @@ class QuizPage_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Salva la risposta scelta dall'utente e la invia al backend con l'exp guadagnata
-  void selectAnswer(int index) {
+  // Salva la risposta scelta dall'utente e la invia al backend con i totali aggiornati.
+  // L'avatar arriva dalla View perché la RPC 'completa_quiz_giornaliero' vuole livello,
+  // exp e monete già calcolati, e il calcolo del level up vive in Avatar_ViewModel.
+  void selectAnswer(int index, Avatar_ViewModel avatarVM) {
     if (answered) return;
     _selectedIndex = index;
     _currentQuiz!.risposta = true;
@@ -75,14 +78,24 @@ class QuizPage_ViewModel extends ChangeNotifier {
 
     final quiz = _currentQuiz;
     if (quiz == null) return;
+
     final expGuadagnata = isCorrect(index) ? _expPerCorrectAnswer : 0;
-    _submitAnswer(quiz.id, expGuadagnata);
+    // no-op se la risposta è sbagliata (exp 0); la risposta va comunque registrata
+    avatarVM.aggiornaExp(expGuadagnata);
+
+    final avatar = avatarVM.user;
+    if (avatar == null) {
+      debugPrint('Avatar non ancora caricato: risposta non inviata');
+      return;
+    }
+    _submitAnswer(quiz.id, avatar.exp, avatar.livello, avatar.monete);
   }
 
-  // Invia al backend la singola risposta appena data
-  Future<void> _submitAnswer(int idQuiz, int expGuadagnata) async {
+  // Invia al backend la singola risposta appena data.
+  // livello, exp e monete sono tutti totali assoluti, coerentemente con la RPC degli obiettivi.
+  Future<void> _submitAnswer(int idQuiz, int exp, int livello, int monete) async {
     try {
-      await repo.checkQuiz(idQuiz, _currentUserId, expGuadagnata);
+      await repo.checkQuiz(idQuiz, _currentUserId, exp, livello, monete);
     } catch (e) {
       debugPrint('Errore invio risposta quiz: $e');
     }

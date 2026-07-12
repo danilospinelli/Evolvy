@@ -31,6 +31,25 @@ class AvatarModel {
     );
   }
 
+  AvatarModel copyWith({
+    String? username,
+    int? livello,
+    int? exp,
+    int? monete,
+    int? streak,
+    int? chosenColor,
+    List<Obiettivo>? obiettivi,
+  }) {
+    return AvatarModel(
+      username: username ?? this.username,
+      livello: livello ?? this.livello,
+      exp: exp ?? this.exp,
+      monete: monete ?? this.monete,
+      streak: streak ?? this.streak,
+      chosenColor: chosenColor ?? this.chosenColor,
+      obiettivi: obiettivi ?? this.obiettivi,
+    );
+  }
 
 }
 

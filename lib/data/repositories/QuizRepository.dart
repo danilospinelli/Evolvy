@@ -16,7 +16,8 @@ class QuizRepository {
   }
   
 
-  Future<void> checkQuiz(int idQuiz, int idUtente, int expGuadagnata) async {
-    await _quizService.checkQuizService(idQuiz: idQuiz, idUtente: idUtente, exp_guadagnata: expGuadagnata);
+  //livello, exp e monete sono totali assoluti, non incrementi
+  Future<void> checkQuiz(int idQuiz, int idUtente, int exp, int livello, int monete) async {
+    await _quizService.checkQuizService(idQuiz: idQuiz, idUtente: idUtente, exp: exp, livello: livello, monete: monete);
   }
 }

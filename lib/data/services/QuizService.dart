@@ -20,12 +20,18 @@ class QuizService {
         }
     }
 
-    //Invia la risposta al quiz e aggiorna l'esperienza dell'utente
-    Future<dynamic> checkQuizService({required int idQuiz, required int idUtente, required int exp_guadagnata}) async {
+    //Invia la risposta al quiz e aggiorna l'esperienza dell'utente.
+    //livello, exp e monete sono TOTALI assoluti gia' calcolati dal viewmodel, non incrementi
+    Future<dynamic> checkQuizService({required int idQuiz, required int idUtente, required int exp, required int livello, required int monete}) async {
         try {
         final response = await _client.rpc(
-            'rispondi_quiz',
-            params: {'p_utente_id': idUtente, 'p_id_quiz': idQuiz, 'p_exp_guadagnata': exp_guadagnata}
+            'completa_quiz_giornaliero',
+            params: {
+              'p_utente_id': idUtente,
+              'p_id_quiz': idQuiz,
+              'p_nuovo_livello': livello,
+              'p_nuovo_exp': exp,
+              'p_monete_totali': monete}
         );
         return response;
         } catch (e) {

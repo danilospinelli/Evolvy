@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.dart';
+import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 
 class AnswerButton extends StatelessWidget {
   const AnswerButton({
@@ -40,7 +41,9 @@ class AnswerButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
-          onTap: vm.answered ? null : () => vm.selectAnswer(index),
+          onTap: vm.answered
+              ? null
+              : () => vm.selectAnswer(index, context.read<Avatar_ViewModel>()),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
             decoration: BoxDecoration(
