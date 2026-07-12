@@ -10,8 +10,9 @@ class NavigationBarWidget extends StatelessWidget {
     return NavigationBar(
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-        NavigationDestination(icon: Icon(Icons.fireplace), label: 'Avatar'),
-        NavigationDestination(icon: Icon(Icons.settings), label: 'Global Ranking'),
+        NavigationDestination(icon: Icon(Icons.trending_up), label: 'Progressi'),
+        NavigationDestination(icon: Icon(Icons.local_fire_department), label: 'Avatar'),
+        NavigationDestination(icon: Icon(Icons.emoji_events), label: 'Global Ranking'),
       ],
       selectedIndex: context.watch<MainScreen_ViewModel>().currentPageIndex,
       onDestinationSelected: (int index) {
