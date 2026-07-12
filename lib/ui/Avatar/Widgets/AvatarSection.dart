@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 import 'package:flutter_application_1/domain/AvatarColors.dart';
-import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
-import 'package:flutter_application_1/ui/Shop/Shop_View.dart';
+import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
+import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
+import 'package:flutter_application_1/ui/Shop/View/Shop_View.dart';
 
-/// Blocco centrale: avatar + icona shop, e riga di selezione colore mascotte.
+/// Blocco centrale: avatar, icona shop, selezione colore mascotte.
 class AvatarSection extends StatelessWidget {
   const AvatarSection({
     super.key,
@@ -18,7 +19,7 @@ class AvatarSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Solo la mascotte (senza fumetto), con l'icona shop in alto a destra
+        // Mascotte, con l'icona shop in alto a destra
         Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.center,
@@ -26,9 +27,9 @@ class AvatarSection extends StatelessWidget {
             SizedBox(
               width: 190,
               height: 190,
-              child: Image.asset(
-                avatarSprite(user.chosen_color),
-                fit: BoxFit.contain,
+              child: AvatarCondiviso(
+                messaggio: '', 
+                onTap: () {} // TODO: TOCCO MASCOTTE
               ),
             ),
             Positioned(
@@ -49,7 +50,7 @@ class AvatarSection extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             'Colore mascotte:',
-            style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
         const SizedBox(height: 6),

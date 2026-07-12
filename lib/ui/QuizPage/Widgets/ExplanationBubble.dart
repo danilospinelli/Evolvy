@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_application_1/ui/QuizPage/QuizPage_ViewModel.dart';
-import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
-import 'package:flutter_application_1/domain/AvatarColors.dart';
+import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.dart';
+import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 
 class ExplanationBubble extends StatelessWidget {
   const ExplanationBubble({super.key});
@@ -10,11 +9,12 @@ class ExplanationBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<QuizPage_ViewModel>();
-    final chosenColor = context.watch<Avatar_ViewModel>().user?.chosenColor ?? 0;
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      // TODO: RISOLVI OVERFLOW DI AVATAR
+      // MARGINI -----------------------------------------------
+      margin: const EdgeInsets.fromLTRB(12, 0, 100, 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -61,10 +61,10 @@ class ExplanationBubble extends StatelessWidget {
           SizedBox(
             width: 70,
             height: 70,
-            child: Image.asset(
-              avatarSprite(chosenColor),
-              fit: BoxFit.contain,
-            ),
+            child: AvatarCondiviso(
+              messaggio: '',
+              onTap: () {} // TODO: TOCCO MASCOTTE
+            )
           ),
         ],
       ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/MealType_Enum.dart';
-import 'package:flutter_application_1/ui/Homepage/Homepage_ViewModel.dart';
+import 'package:flutter_application_1/ui/Homepage/ViewModel/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
-import 'package:flutter_application_1/ui/InfoSliderAlimento/InfoSliderAlimento_View.dart';
+import 'package:flutter_application_1/ui/InfoSliderAlimento/View/InfoSliderAlimento_View.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:provider/provider.dart';
 

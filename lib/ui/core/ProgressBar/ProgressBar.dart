@@ -47,18 +47,19 @@ class ProgressBar extends StatelessWidget {
           : null,
 
       child: valueOnSide
-          // Layout compatto: label sopra, barra con il valore in piccolo a destra
+          // valueOnSide = true -> versione compatta
           ? Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                if(label.isNotEmpty)
+                  Text(
+                   label,
+                    style: const TextStyle(
+                      fontSize: 22,
+                     fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
                 const SizedBox(height: 16),
                 Row(
                   children: [
@@ -76,20 +77,20 @@ class ProgressBar extends StatelessWidget {
                 ),
               ],
             )
-          // Layout originale: valore grande al centro sopra la barra
+          // valueOnSide = false -> versione estesa
           : Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
-                Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                if(label.isNotEmpty)
+                  Text(
+                   label,
+                   textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
 
                 const SizedBox(height: 28),
 

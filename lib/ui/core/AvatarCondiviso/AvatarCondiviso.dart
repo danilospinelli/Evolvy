@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/AvatarColors.dart';
-import 'package:flutter_application_1/ui/Avatar/Avatar_ViewModel.dart';
+import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 
 class AvatarCondiviso extends StatelessWidget {
   final String messaggio;
@@ -19,11 +19,11 @@ class AvatarCondiviso extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Container(
-            constraints: const BoxConstraints(maxWidth: 220),
-
-            margin: const EdgeInsets.only(bottom: 80.0, right: 12.0),
-            padding: const EdgeInsets.symmetric(
+          if(messaggio.isNotEmpty)
+            Container(
+              constraints: const BoxConstraints(maxWidth: 220),
+              margin: const EdgeInsets.only(bottom: 80.0, right: 12.0),
+              padding: const EdgeInsets.symmetric(
               horizontal: 20.0,
               vertical: 16.0,
             ),
