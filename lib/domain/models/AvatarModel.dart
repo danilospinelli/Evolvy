@@ -21,6 +21,7 @@ class AvatarModel {
 
   factory AvatarModel.fromJson(Map<String, dynamic> json) {
     return AvatarModel(
+<<<<<<< HEAD
       username: json['username'] as String,
       livello: (json['livello'] as num).toInt(),
       exp: (json['exp'] as num).toInt(),
@@ -32,6 +33,19 @@ class AvatarModel {
   }
 
 
+=======
+      username: _asString(json['username']),
+      livello: _asInt(json['livello']),
+      exp: _asInt(json['exp']),
+      monete: _asInt(json['monete']),
+      streak: _asInt(json['streak']),
+      chosen_color: _asInt(json['chosen_color']),
+      obiettivi: (json['obiettivi_giornalieri'] as List<dynamic>? ?? [])
+          .map((o) => Obiettivo.fromMap(o as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+>>>>>>> origin/main
 }
 
 class Obiettivo {
@@ -49,6 +63,7 @@ class Obiettivo {
 
   factory Obiettivo.fromMap(Map<String, dynamic> json) {
     return Obiettivo(
+<<<<<<< HEAD
       id: (json['id_obiettivo'] as num).toInt(),
       testo: (json['testo'] as String),
       xpReward: (json['exp_obiettivo'] as num).toInt(),
@@ -56,3 +71,22 @@ class Obiettivo {
     );
   }
 }
+=======
+      id: _asString(json['id']),
+      title: _asString(json['testo']),
+      xpReward: _asInt(json['exp_obiettivo']),
+      completed: _asBool(json['completato']),
+    );
+  }
+}
+
+String _asString(dynamic value) => value?.toString() ?? '';
+
+int _asInt(dynamic value) => value.toInt(); 
+
+bool _asBool(dynamic value) {
+  if (value is bool) return value;
+  final s = value?.toString().toLowerCase();
+  return s == 'true' || s == 't' || s == '1';
+}
+>>>>>>> origin/main
