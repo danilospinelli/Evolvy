@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/core/MainScreen/ViewModel/MainScreen_ViewModel.dart';
 import 'package:flutter_application_1/ui/core/MainScreen/Widgets/NavigationBarWidget.dart';
 import 'package:flutter_application_1/ui/Homepage/View/Homepage_View.dart';
-import 'package:flutter_application_1/ui/QuizPage/View/QuizPage_View.dart';
 import 'package:flutter_application_1/ui/Avatar/View/Avatar_View.dart';
 import 'package:flutter_application_1/ui/GlobalRanking/View/GlobalRanking_View.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +14,9 @@ class MainScreen_View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Lista delle pagine per IndexedStack
-    final pages = [ 
+    // La QuizPage non è più una tab: ci si arriva dalla mascotte in Homepage
+    final pages = [
       const Homepage_View(),
-      const QuizPage_View(),
       const Avatar_View(),
       const GlobalRanking_View(),
     ];

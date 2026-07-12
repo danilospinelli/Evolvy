@@ -26,6 +26,20 @@ class Avatar_ViewModel extends ChangeNotifier {
     }
   }
 
+  /// Ricarica i dati dal DB senza mostrare lo spinner.
+  /// Serve perché l'avatar può cambiare da altre schermate (es. l'exp guadagnata
+  /// nel quiz): la pagina resta viva nell'IndexedStack e altrimenti mostrerebbe
+  /// dati vecchi. Teniamo a video i valori attuali finché non arrivano i nuovi.
+  Future<void> refresh() async {
+    try {
+      // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+      _user = await repo.getAvatarInfo(idUtente: 1);
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Errore aggiornamento dati avatar: $e');
+    }
+  }
+
   /// Aggiorna username di AvatarModel in uso
   Future<void> editName(String name) async {
     if (_user == null) return;
