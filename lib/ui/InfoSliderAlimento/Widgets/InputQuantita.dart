@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InputQuantita extends StatelessWidget {
   final TextEditingController controller;
@@ -14,7 +15,12 @@ class InputQuantita extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      keyboardType: TextInputType.number,
+      // Solo numeri interi, al massimo 4 cifre: il valore non può superare 9999
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(4),
+      ],
       style: const TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.bold,
