@@ -17,13 +17,11 @@ class AnswerButton extends StatelessWidget {
     final vm = context.watch<QuizPage_ViewModel>();
 
     final bool isSelected = vm.selectedIndex == index;
-    final bool showResult = vm.answered && (isSelected || vm.isCorrect(index));
+    final bool showResult = vm.answered; //&& (isSelected || vm.isCorrect(index));
 
     Color backgroundColor = Colors.white;
     Color borderColor = Colors.grey.shade300;
 
-
-    // TODO: PUZZA, STATEFUL? MA HA SENSO CHE RIMANDI AL PADRE (CONTENITORE DELLA DMANDA) PERCHE POI CAMBIANO ACHE GLI ALTRI
     if (showResult) {
       if (vm.isCorrect(index)) {
         backgroundColor = Colors.green.shade50;

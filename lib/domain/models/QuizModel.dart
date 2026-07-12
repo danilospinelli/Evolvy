@@ -8,7 +8,7 @@ class QuizModel {
   final bool value2;
   final bool value3;
   final String spiegazione;
-  final bool risposta;
+  bool risposta = false;
 
   QuizModel({
     required this.id,
@@ -20,7 +20,7 @@ class QuizModel {
     required this.value2,
     required this.value3,
     required this.spiegazione,
-    required this.risposta
+    required this.risposta,
   });
 
 
