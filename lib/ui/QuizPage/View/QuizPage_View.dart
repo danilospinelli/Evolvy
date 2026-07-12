@@ -17,18 +17,7 @@ class QuizPage_View extends StatelessWidget {
 
     if (vm.isLoading) {
       body = const Center(child: CircularProgressIndicator());
-    } else if (vm.error != null) {
-            body = Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Text(
-                  vm.error!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              ),
-            );
-          } else if (vm.totalQuestions == 0) {
+    } else if (vm.totalQuestions == 0) {
             body = const Center(
               child: Padding(
                 padding: EdgeInsets.all(24),
@@ -67,14 +56,6 @@ class QuizPage_View extends StatelessWidget {
               children: [
                 const QuizProgressBar(),
                 const QuestionCard(),
-                if (vm.submitError != null)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                    child: Text(
-                      'Errore nel salvataggio della risposta: ${vm.submitError}',
-                      style: const TextStyle(color: Colors.red, fontSize: 13),
-                    ),
-                  ),
                 if (vm.answered) const ExplanationBubble(),
                 if (vm.answered) const NextQuestionButton(),
               ],
