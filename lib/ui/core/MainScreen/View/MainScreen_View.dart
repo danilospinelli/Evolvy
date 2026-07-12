@@ -3,6 +3,7 @@ import 'package:flutter_application_1/ui/core/MainScreen/ViewModel/MainScreen_Vi
 import 'package:flutter_application_1/ui/core/MainScreen/Widgets/NavigationBarWidget.dart';
 import 'package:flutter_application_1/ui/Homepage/View/Homepage_View.dart';
 import 'package:flutter_application_1/ui/Avatar/View/Avatar_View.dart';
+import 'package:flutter_application_1/ui/Progress/View/Progress_View.dart';
 import 'package:flutter_application_1/ui/GlobalRanking/View/GlobalRanking_View.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ class MainScreen_View extends StatelessWidget {
     // La QuizPage non è più una tab: ci si arriva dalla mascotte in Homepage
     final pages = [
       const Homepage_View(),
+      const Progress_View(),
       const Avatar_View(),
       const GlobalRanking_View(),
     ];

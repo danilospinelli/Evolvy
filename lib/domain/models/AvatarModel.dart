@@ -30,8 +30,6 @@ class AvatarModel {
       obiettivi: (json['obiettivi_giornalieri'] as List<dynamic>).map((o) => Obiettivo.fromMap(o as Map<String, dynamic>)).toList(),
     );
   }
-
-
 }
 
 class Obiettivo {

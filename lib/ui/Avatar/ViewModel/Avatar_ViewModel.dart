@@ -90,18 +90,18 @@ class Avatar_ViewModel extends ChangeNotifier {
   }
 
   // Aggiunge expGuadagnata a _user e chiama il metodo di controllo di aumento di livello 
-  Future<void> aggiornaExp(int expGuadagnata){
+  void aggiornaExp(int expGuadagnata){
 
   }
 
   // Verifica se l'utente ha superato la soglia di lvl*10 con la sua exp, ed in caso affermativo
   // aumenta il livello, modula l'exp e dà 5 monete all'utente
-  Future<void> levelUp(){
+  void levelUp(){
 
   }
 
   // Gestisce l'aumento della streak corrente
-  Future<void> aumentaStreak(){
+  void aumentaStreak(){
 
   }
 }
