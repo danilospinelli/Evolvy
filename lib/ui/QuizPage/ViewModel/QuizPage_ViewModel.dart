@@ -67,29 +67,26 @@ class QuizPage_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Metodo per quando l'utente seleziona una risposta di un Quiz: marca il Quiz come risposto e
-  // se la risposta era corretta dà l'exp
-  // TODO: PARAMETRO VIEWMODEL POSSIBILE???
-  void selectAnswer(int index, Avatar_ViewModel avatarVM) {
-    if (answered) return;
+
+  // Completa la domanda corrente rispondendo con l'opzione [index]: prima accredita
+  // all'avatar l'exp del quiz (con eventuale level up e monete), poi registra la
+  // risposta sul db. L'avatar arriva dalla View perché il calcolo del level up
+  // vive in Avatar_ViewModel.
+  Future<void> completaQuiz(int index, Avatar_ViewModel avatarVM) async {
+    final quiz = _currentQuiz;
+    if (quiz == null || quiz.risposta) return;
+
     _selectedIndex = index;
-    _currentQuiz!.risposta = true;
+    quiz.risposta = true;
     notifyListeners();
 
-    final quiz = _currentQuiz;
-    if (quiz == null) return;
+    // exp solo se la risposta è corretta; quella sbagliata va comunque registrata
+    if (isCorrect(index)) {
+      await avatarVM.aumentaExp(_expPerCorrectAnswer);
+    }
 
-    final expGuadagnata = isCorrect(index) ? _expPerCorrectAnswer : 0;
-    avatarVM.aggiornaExp(expGuadagnata);
-
-    final avatar = avatarVM.user!;
-    _submitAnswer(quiz.id, avatar.exp, avatar.livello, avatar.monete);
-  }
-
-  // Invia al backend la singola risposta appena data
-  Future<void> _submitAnswer(int idQuiz, int exp, int livello, int monete) async {
     try {
-      await repo.checkQuiz(idQuiz, _currentUserId, exp, livello, monete);
+      await repo.checkQuiz(quiz.id, _currentUserId);
     } catch (e) {
       debugPrint('Errore invio risposta quiz: $e');
     }

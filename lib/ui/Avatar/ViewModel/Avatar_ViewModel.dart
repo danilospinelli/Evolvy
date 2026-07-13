@@ -36,15 +36,20 @@ class Avatar_ViewModel extends ChangeNotifier {
   Future<void> editName(String name) async {
     if (_user == null) return;
 
+    // aggiorno subito lo stato locale: senza questo la UI ridisegna
+    // gli stessi identici dati e a schermo non cambia niente
+    _user = _user!.copyWith(username: name);
+    notifyListeners();
+
     try {
-      _user = await repo.updateAvatarInfo(
+      await repo.updateAvatarInfo(
         idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
         nomeAvatar: name,
         coloreAvatar: _user!.chosenColor,
       );
-      notifyListeners();
     } catch (e) {
       debugPrint('Errore aggiornamento nome: $e');
+      notifyListeners();
     }
   }
 
@@ -52,65 +57,86 @@ class Avatar_ViewModel extends ChangeNotifier {
   Future<void> aggiornaColore(int new_color) async {
     if (_user == null) return;
 
+    _user = _user!.copyWith(chosenColor: new_color);
+    notifyListeners();
+
     try {
-      _user = await repo.updateAvatarInfo(
+      await repo.updateAvatarInfo(
         idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
         nomeAvatar: _user!.username,
         coloreAvatar: new_color,
       );
-      notifyListeners();
     } catch (e) {
       debugPrint('Errore aggiornamento colore: $e');
+      notifyListeners();
     }
   }
 
-  // Setta come completato l'obiettivo challenge e agggiungi le sue exp all'utente
-  Future<void> completaObiettivo(Obiettivo challenge) async {
-    if (_user == null) return;
+  // Aggiunge a _user l'exp guadagnata da una fonte qualsiasi (quiz, obiettivo, ...),
+  // calcola quanti livelli sono stati superati, le monete guadagnate e l'exp residua
+  // dal raggiungimento dell'ultimo livello, poi salva i nuovi totali sul db.
+  Future<void> aumentaExp(int expGuadagnata) async {
+    if (_user == null || expGuadagnata <= 0) return;
 
-    aggiornaExp(challenge.xpReward);
+    // tengo lo stato precedente: se il salvataggio fallisce ci torno indietro
+    final precedente = _user!;
+
+    int livello = precedente.livello;
+    int exp = precedente.exp + expGuadagnata;
+    int monete = precedente.monete;
+
+    // while e non if: una singola ricompensa può far salire più livelli insieme.
+    // livello > 0 evita il loop infinito se il db restituisse livello 0 (soglia 0).
+    while (livello > 0 && exp >= livello * _expPerLivello) {
+      exp -= livello * _expPerLivello;
+      livello += 1;
+      monete += _monetePerLevelUp;
+    }
+
+    // mostro subito i nuovi valori, poi li persisto
+    _user = precedente.copyWith(livello: livello, exp: exp, monete: monete);
+    notifyListeners();
 
     try {
-      _user = await repo.updateAvatarObiettivo(
+      await repo.aggiornaDatiAvatar(
         idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
-        idObiettivo: challenge.id,
-        livello: _user!.livello,
-        exp: _user!.exp,
-        monete: _user!.monete,
+        livello: livello,
+        exp: exp,
+        monete: monete,
       );
+    } catch (e) {
+      debugPrint('Errore aggiornamento exp: $e');
+      // il calcolo locale non è stato persistito: torno ai valori precedenti
+      _user = precedente;
       notifyListeners();
+    }
+  }
+
+
+
+  // Completa un obiettivo giornaliero: prima accredita l'exp dell'obiettivo
+  // (con eventuale level up e monete), poi lo segna come completato sul db.
+  Future<void> completaObiettivo(Obiettivo obiettivo) async {
+    if (_user == null || obiettivo.completed) return;
+
+    await aumentaExp(obiettivo.xpReward);
+
+    final obiettivi = List<Obiettivo>.of(_user!.obiettivi);
+    final i = obiettivi.indexWhere((o) => o.id == obiettivo.id);
+    obiettivi[i] = obiettivi[i].copyWith(completed: true);
+
+    _user = _user!.copyWith(obiettivi: obiettivi);
+    notifyListeners();
+
+    try {
+      await repo.completaObiettivoAvatar(
+        idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+        idObiettivo: obiettivo.id,
+      );
     } catch (e) {
       debugPrint('Errore completamento obiettivo: $e');
+      notifyListeners();
     }
-  }
-
-  // Aggiunge expGuadagnata a _user e chiama il metodo di controllo di aumento di livello
-  void aggiornaExp(int expGuadagnata) {
-    if (_user == null) return;
-
-    _user = _user!.copyWith(exp: _user!.exp + expGuadagnata);
-    // notifyListeners() fatto in levelUp()
-    levelUp();
-  }
-
-  // Verifica se l'utente ha superato la soglia di lvl*10 con la sua exp, ed in caso affermativo
-  // aumenta il livello, modula l'exp e dà 5 monete all'utente
-  void levelUp() {
-    if (_user == null) return;
-
-    var copia = _user!;
-
-    // while e non if: una singola ricompensa può far salire più livelli insieme
-    while (copia.exp >= copia.livello * _expPerLivello) {
-      copia = copia.copyWith(
-        livello: copia.livello + 1,
-        exp: copia.exp - copia.livello * _expPerLivello,
-        monete: copia.monete + _monetePerLevelUp,
-      );
-    }
-
-    _user = copia;
-    notifyListeners();
   }
 
   // Gestisce l'aumento della streak corrente

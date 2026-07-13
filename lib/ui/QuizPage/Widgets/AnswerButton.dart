@@ -43,7 +43,7 @@ class AnswerButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
           onTap: vm.answered
               ? null
-              : () => vm.selectAnswer(index, context.read<Avatar_ViewModel>()),
+              : () => vm.completaQuiz(index, context.read<Avatar_ViewModel>()),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
             decoration: BoxDecoration(
