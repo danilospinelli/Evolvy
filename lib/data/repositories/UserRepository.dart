@@ -9,7 +9,7 @@ class UserRepository {
     this._userService=UserService();
   }
 
-  Future<dynamic> getUserInfo({required int idUtente}) async {
+  Future<UserModel> getUserMacro({required int idUtente}) async {
     final userJson = await _userService.getUserMacroService(idUtente: idUtente,);
     return UserModel.fromJson(userJson);
   }

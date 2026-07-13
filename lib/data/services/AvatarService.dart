@@ -38,7 +38,7 @@ class AvatarService {
 
   //aggiorna i dati dell'avatar relati agli obiettivi e restituisce le informazioni aggiornate
   //livello, exp e monete sono tutti totali assoluti gia' calcolati dal viewmodel
-  Future<dynamic> updateAvatarObbietivoService({required int idUtente,required int idObiettivo,required int livello,required int exp,required int monete}) async {
+  Future<dynamic> updateAvatarObiettivoService({required int idUtente,required int idObiettivo,required int livello,required int exp,required int monete}) async {
     try {
       final response = await _client.rpc(
         'completa_obiettivo_giornaliero',

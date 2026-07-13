@@ -32,7 +32,7 @@ class DailyRecap extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
 
-          // MACRONUTRIENTI + SUGGERIMENTI affiancati (stessa altezza)
+          // MACRONUTRIENTI + SUGGERIMENTI
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -52,7 +52,7 @@ class DailyRecap extends StatelessWidget {
 
           const SizedBox(height: 18),
 
-          // SEZIONE CALORIE (barra senza il riquadro azzurro, valore in piccolo a destra)
+          // SEZIONE CALORIE
           ProgressBar(
             current: vm.obtainedMacros(MacroType_Enum.Calorie, vm.allFoods),
             goal: vm.dailyMacroGoal(MacroType_Enum.Calorie, vm.allFoods),

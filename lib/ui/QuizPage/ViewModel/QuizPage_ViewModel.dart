@@ -6,7 +6,7 @@ import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart'
 class QuizPage_ViewModel extends ChangeNotifier {
   final QuizRepository repo = QuizRepository();
 
-  // TODO: sostituire con l'id dell'utente autenticato quando sarà disponibile un sistema di auth
+  // TODO: GESTIRE DINAMICAMENTE L'UTENTE
   static const int _currentUserId = 1;
   static const int _expPerCorrectAnswer = 2;
 
@@ -67,9 +67,9 @@ class QuizPage_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Salva la risposta scelta dall'utente e la invia al backend con i totali aggiornati.
-  // L'avatar arriva dalla View perché la RPC 'completa_quiz_giornaliero' vuole livello,
-  // exp e monete già calcolati, e il calcolo del level up vive in Avatar_ViewModel.
+  // Metodo per quando l'utente seleziona una risposta di un Quiz: marca il Quiz come risposto e
+  // se la risposta era corretta dà l'exp
+  // TODO: PARAMETRO VIEWMODEL POSSIBILE???
   void selectAnswer(int index, Avatar_ViewModel avatarVM) {
     if (answered) return;
     _selectedIndex = index;
@@ -80,19 +80,13 @@ class QuizPage_ViewModel extends ChangeNotifier {
     if (quiz == null) return;
 
     final expGuadagnata = isCorrect(index) ? _expPerCorrectAnswer : 0;
-    // no-op se la risposta è sbagliata (exp 0); la risposta va comunque registrata
     avatarVM.aggiornaExp(expGuadagnata);
 
-    final avatar = avatarVM.user;
-    if (avatar == null) {
-      debugPrint('Avatar non ancora caricato: risposta non inviata');
-      return;
-    }
+    final avatar = avatarVM.user!;
     _submitAnswer(quiz.id, avatar.exp, avatar.livello, avatar.monete);
   }
 
-  // Invia al backend la singola risposta appena data.
-  // livello, exp e monete sono tutti totali assoluti, coerentemente con la RPC degli obiettivi.
+  // Invia al backend la singola risposta appena data
   Future<void> _submitAnswer(int idQuiz, int exp, int livello, int monete) async {
     try {
       await repo.checkQuiz(idQuiz, _currentUserId, exp, livello, monete);
