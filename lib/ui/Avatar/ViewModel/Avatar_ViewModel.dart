@@ -38,33 +38,28 @@ class Avatar_ViewModel extends ChangeNotifier {
     }
   }
 
-  /// Ricarica i dati dal DB senza mostrare lo spinner.
-  /// Serve perché l'avatar può cambiare da altre schermate (es. l'exp guadagnata
-  /// nel quiz): la pagina resta viva nell'IndexedStack e altrimenti mostrerebbe
-  /// dati vecchi. Teniamo a video i valori attuali finché non arrivano i nuovi.
-  Future<void> refresh() async {
-    try {
-      // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
-      _user = await repo.getAvatarInfo(idUtente: 1);
-      notifyListeners();
-    } catch (e) {
-      debugPrint('Errore aggiornamento dati avatar: $e');
-    }
-  }
+
 
   /// Aggiorna username di AvatarModel in uso
   Future<void> editName(String name) async {
     if (_user == null) return;
 
+    // aggiorno subito lo stato locale: senza questo la UI ridisegna
+    // gli stessi identici dati e a schermo non cambia niente
+    _user = _user!.copyWith(username: name);
+    notifyListeners();
+
     try {
-      _user = await repo.updateAvatarInfo(
+      await repo.updateAvatarInfo(
         idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
         nomeAvatar: name,
         coloreAvatar: _user!.chosenColor,
       );
-      notifyListeners();
+      _errore = null;
     } catch (e) {
       debugPrint('Errore aggiornamento nome: $e');
+      _errore = e.toString();
+      notifyListeners();
     }
   }
 
@@ -72,70 +67,101 @@ class Avatar_ViewModel extends ChangeNotifier {
   Future<void> aggiornaColore(int new_color) async {
     if (_user == null) return;
 
+    _user = _user!.copyWith(chosenColor: new_color);
+    notifyListeners();
+
     try {
-      _user = await repo.updateAvatarInfo(
+      await repo.updateAvatarInfo(
         idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
         nomeAvatar: _user!.username,
         coloreAvatar: new_color,
       );
-      notifyListeners();
+      _errore = null;
     } catch (e) {
       debugPrint('Errore aggiornamento colore: $e');
+      _errore = e.toString();
+      notifyListeners();
     }
   }
 
-  // Setta come completato l'obiettivo challenge e agggiungi le sue exp all'utente
-  Future<void> completaObiettivo(Obiettivo challenge) async {
-    if (_user == null) return;
+ 
 
-    // Applica exp ed eventuale level up in locale, così da inviare al backend i
-    // totali già calcolati (livello, exp, monete) come richiesto dalla RPC.
-    aggiornaExp(challenge.xpReward);
+ 
+
+  
+
+  // Aggiunge a _user l'exp guadagnata da una fonte qualsiasi (quiz, obiettivo, ...),
+  // calcola quanti livelli sono stati superati, le monete guadagnate e l'exp residua
+  // dal raggiungimento dell'ultimo livello, poi salva i nuovi totali sul db.
+  Future<void> aumentaExp(int expGuadagnata) async {
+    if (_user == null || expGuadagnata <= 0) return;
+
+    // tengo lo stato precedente: se il salvataggio fallisce ci torno indietro
+    final precedente = _user!;
+
+    int livello = precedente.livello;
+    int exp = precedente.exp + expGuadagnata;
+    int monete = precedente.monete;
+
+    // while e non if: una singola ricompensa può far salire più livelli insieme.
+    // livello > 0 evita il loop infinito se il db restituisse livello 0 (soglia 0).
+    while (livello > 0 && exp >= livello * _expPerLivello) {
+      exp -= livello * _expPerLivello;
+      livello += 1;
+      monete += _monetePerLevelUp;
+    }
+
+    // mostro subito i nuovi valori, poi li persisto
+    _user = precedente.copyWith(livello: livello, exp: exp, monete: monete);
+    notifyListeners();
 
     try {
-      _user = await repo.updateAvatarObiettivo(
-        idUtente: 1,
-        idObiettivo: challenge.id,
-        livello: _user!.livello,
-        exp: _user!.exp,
-        monete: _user!.monete,
+      await repo.aggiornaDatiAvatar(
+        idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+        livello: livello,
+        exp: exp,
+        monete: monete,
       );
       _errore = null;
+    } catch (e) {
+      debugPrint('Errore aggiornamento exp: $e');
+      _errore = e.toString();
+      // il calcolo locale non è stato persistito: torno ai valori precedenti
+      _user = precedente;
       notifyListeners();
+    }
+  }
+
+
+
+  // Completa un obiettivo giornaliero: prima accredita l'exp dell'obiettivo
+  // (con eventuale level up e monete), poi lo segna come completato sul db.
+  Future<void> completaObiettivo(Obiettivo obiettivo) async {
+    if (_user == null || obiettivo.completed) return;
+
+    await aumentaExp(obiettivo.xpReward);
+    // aumentaExp ha fallito e ha gia' valorizzato _errore: non segno come
+    // completato un obiettivo la cui exp non e' stata accreditata
+    if (_errore != null) return;
+
+    final obiettivi = List<Obiettivo>.of(_user!.obiettivi);
+    final i = obiettivi.indexWhere((o) => o.id == obiettivo.id);
+    obiettivi[i] = obiettivi[i].copyWith(completed: true);
+
+    _user = _user!.copyWith(obiettivi: obiettivi);
+    notifyListeners();
+
+    try {
+      await repo.completaObiettivoAvatar(
+        idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+        idObiettivo: obiettivo.id,
+      );
+      _errore = null;
     } catch (e) {
       debugPrint('Errore completamento obiettivo: $e');
       _errore = e.toString();
-      // il calcolo locale non è stato persistito: riallineo con il DB
-      await refresh();
+      notifyListeners();
     }
-  }
-
-  // Aggiunge expGuadagnata a _user e chiama il metodo di controllo di aumento di livello
-  void aggiornaExp(int expGuadagnata) {
-    if (_user == null || expGuadagnata <= 0) return;
-
-    _user = _user!.copyWith(exp: _user!.exp + expGuadagnata);
-    levelUp(); // notifica lui i listener
-  }
-
-  // Verifica se l'utente ha superato la soglia di lvl*10 con la sua exp, ed in caso affermativo
-  // aumenta il livello, modula l'exp e dà 5 monete all'utente
-  void levelUp() {
-    if (_user == null) return;
-
-    var aggiornato = _user!;
-
-    // while e non if: una singola ricompensa può far salire più livelli insieme
-    while (aggiornato.exp >= aggiornato.livello * _expPerLivello) {
-      aggiornato = aggiornato.copyWith(
-        livello: aggiornato.livello + 1,
-        exp: aggiornato.exp - aggiornato.livello * _expPerLivello,
-        monete: aggiornato.monete + _monetePerLevelUp,
-      );
-    }
-
-    _user = aggiornato;
-    notifyListeners();
   }
 
   // Gestisce l'aumento della streak corrente

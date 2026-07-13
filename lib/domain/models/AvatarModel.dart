@@ -74,4 +74,18 @@ class Obiettivo {
       completed: (json['completato'] as bool),
     );
   }
+
+  Obiettivo copyWith({
+    int? id,
+    String? testo,
+    int? xpReward,
+    bool? completed,
+  }) {
+    return Obiettivo(
+      id: id ?? this.id,
+      testo: testo ?? this.testo,
+      xpReward: xpReward ?? this.xpReward,
+      completed: completed ?? this.completed,
+    );
+  }
 }

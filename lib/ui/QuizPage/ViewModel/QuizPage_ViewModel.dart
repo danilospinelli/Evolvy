@@ -67,35 +67,26 @@ class QuizPage_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Salva la risposta scelta dall'utente e la invia al backend con i totali aggiornati.
-  // L'avatar arriva dalla View perché la RPC 'completa_quiz_giornaliero' vuole livello,
-  // exp e monete già calcolati, e il calcolo del level up vive in Avatar_ViewModel.
-  void selectAnswer(int index, Avatar_ViewModel avatarVM) {
-    if (answered) return;
+
+  // Completa la domanda corrente rispondendo con l'opzione [index]: prima accredita
+  // all'avatar l'exp del quiz (con eventuale level up e monete), poi registra la
+  // risposta sul db. L'avatar arriva dalla View perché il calcolo del level up
+  // vive in Avatar_ViewModel.
+  Future<void> completaQuiz(int index, Avatar_ViewModel avatarVM) async {
+    final quiz = _currentQuiz;
+    if (quiz == null || quiz.risposta) return;
+
     _selectedIndex = index;
-    _currentQuiz!.risposta = true;
+    quiz.risposta = true;
     notifyListeners();
 
-    final quiz = _currentQuiz;
-    if (quiz == null) return;
-
-    final expGuadagnata = isCorrect(index) ? _expPerCorrectAnswer : 0;
-    // no-op se la risposta è sbagliata (exp 0); la risposta va comunque registrata
-    avatarVM.aggiornaExp(expGuadagnata);
-
-    final avatar = avatarVM.user;
-    if (avatar == null) {
-      debugPrint('Avatar non ancora caricato: risposta non inviata');
-      return;
+    // exp solo se la risposta è corretta; quella sbagliata va comunque registrata
+    if (isCorrect(index)) {
+      await avatarVM.aumentaExp(_expPerCorrectAnswer);
     }
-    _submitAnswer(quiz.id, avatar.exp, avatar.livello, avatar.monete);
-  }
 
-  // Invia al backend la singola risposta appena data.
-  // livello, exp e monete sono tutti totali assoluti, coerentemente con la RPC degli obiettivi.
-  Future<void> _submitAnswer(int idQuiz, int exp, int livello, int monete) async {
     try {
-      await repo.checkQuiz(idQuiz, _currentUserId, exp, livello, monete);
+      await repo.checkQuiz(quiz.id, _currentUserId);
     } catch (e) {
       debugPrint('Errore invio risposta quiz: $e');
     }

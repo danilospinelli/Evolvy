@@ -14,15 +14,18 @@ class AvatarRepository {
     return AvatarModel.fromJson(avatarJson);
   }
 
-  Future<dynamic> updateAvatarInfo({required int idUtente, required String nomeAvatar, required int coloreAvatar}) async {
-    final avatarJson = await _avatarService.updateAvatarInfoService(idUtente: idUtente, nomeAvatar: nomeAvatar, coloreAvatar: coloreAvatar);
-    return AvatarModel.fromJson(avatarJson);
+  Future<void> updateAvatarInfo({required int idUtente, required String nomeAvatar, required int coloreAvatar}) async {
+    await _avatarService.updateAvatarInfoService(idUtente: idUtente, nomeAvatar: nomeAvatar, coloreAvatar: coloreAvatar);
   }
 
-  Future<dynamic> updateAvatarObiettivo({required int idUtente,required int idObiettivo,required int livello,required int exp,required int monete}) async {
-    final avatarJson = await _avatarService.updateAvatarObbietivoService(idUtente: idUtente, idObiettivo: idObiettivo, livello: livello, exp: exp, monete: monete);
-    return AvatarModel.fromJson(avatarJson);
+  Future<void> completaObiettivoAvatar({required int idUtente,required int idObiettivo}) async {
+      await _avatarService.completaObbietivoAvatarService(idUtente: idUtente, idObiettivo: idObiettivo);
+  }
+
+  Future<void> aggiornaDatiAvatar({required int idUtente, required int livello, required int exp, required int monete}) async {
+    await _avatarService.aggiornaDatiAvatarService(idUtente: idUtente, livello: livello, exp: exp, monete: monete);
   }
 
 
 }
+
