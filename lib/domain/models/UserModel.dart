@@ -1,14 +1,12 @@
 class UserModel {
-  int? proteine;
-  int? carboidrati;
-  int? grassi;
-  // calorie = proteine*4 + carboidrati*4 + grassi*9
-  int? get calorie => (proteine ?? 0)*4 + (carboidrati ?? 0)*4 + (grassi ?? 0)*9;
+  final int proteine;
+  final int carboidrati;
+  final int grassi;
 
   UserModel({
-    this.proteine,
-    this.carboidrati,
-    this.grassi,
+    required this.proteine,
+    required this.carboidrati,
+    required this.grassi,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +16,21 @@ class UserModel {
       grassi: (json['grassi'] as num).toInt(),
     );
   }
+
+  int? get calorie => (proteine )*4 + (carboidrati )*4 + (grassi )*9;
+
+  UserModel copyWith({
+    int? proteine,
+    int? carboidrati,
+    int? grassi,
+  }) {
+    return UserModel(
+      proteine: proteine ?? this.proteine,
+      carboidrati: carboidrati ?? this.carboidrati,
+      grassi: grassi ?? this.grassi,
+    );
+  }
+
 }
 
 

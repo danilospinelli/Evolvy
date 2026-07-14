@@ -3,7 +3,9 @@ import 'package:flutter_application_1/data/repositories/AvatarRepository.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 
 class Avatar_ViewModel extends ChangeNotifier {
-  final AvatarRepository repo = AvatarRepository();
+  final AvatarRepository repo=AvatarRepository();
+
+  // se non viene passata una repository (es. nei test), usa quella reale
 
   // Moltiplicatore per livello epr decidere la solgia di exp necessaria per il prossimo livello
   static const int expPerLivello = 10;

@@ -9,12 +9,10 @@ class AvatarRepository {
     this._avatarService=AvatarService();
   }
 
-  Future<dynamic> getAvatarInfo({required int idUtente}) async {
+  Future<AvatarModel> getAvatarInfo({required int idUtente}) async {
     final avatarJson = await _avatarService.getAvatarInfoService(idUtente: idUtente,);
     return AvatarModel.fromJson(avatarJson);
   }
-
-
 
   Future<void> updateNomeAvatar({required int idUtente, required String nomeAvatar}) async {
     await _avatarService.updateNomeAvatarService(idUtente: idUtente, nomeAvatar: nomeAvatar);
@@ -23,6 +21,7 @@ class AvatarRepository {
   Future<void> updateColoreAvatar({required int idUtente, required int coloreAvatar}) async {
     await _avatarService.updateColoreAvatarService(idUtente: idUtente, coloreAvatar: coloreAvatar);
   }
+  
   Future<void> completaObiettivoAvatar({required int idUtente,required int idObiettivo}) async {
       await _avatarService.completaObbietivoAvatarService(idUtente: idUtente, idObiettivo: idObiettivo);
   }

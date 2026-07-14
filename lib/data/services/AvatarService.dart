@@ -10,7 +10,7 @@ class AvatarService {
 
 
   //restituisce tutte le informazione per la pagina avatar
-  Future<Map<String, dynamic>> getAvatarInfoService({required int idUtente}) async {
+  Future<dynamic> getAvatarInfoService({required int idUtente}) async {
     try {
       final response = await _client.rpc(
         'get_dati_avatar',
@@ -45,7 +45,8 @@ class AvatarService {
       throw Exception('Errore durante l\'aggiornamento dell\' colore: $e');
     }
   }
-  //aggiorna lo stato dell obbiettivo giornaliero e restituisce le informazioni 
+  
+  //aggiorna lo stato dell obbiettivo giornaliero
   Future<void> completaObbietivoAvatarService({required int idUtente,required int idObiettivo,}) async {
     try {
       await _client.rpc(
@@ -60,7 +61,7 @@ class AvatarService {
     }
   }
 
-  //funzione per aggiornare i dati dell'avatar (livello, exp, monete)
+  //funzione per aggiornare i dati dell'avatar:livello, exp, monete
   Future<void> aggiornaDatiAvatarService({required int idUtente, required int livello, required int exp, required int monete}) async {
     try {
       await _client.rpc(

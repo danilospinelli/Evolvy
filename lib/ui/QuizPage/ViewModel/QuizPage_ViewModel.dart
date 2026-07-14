@@ -76,24 +76,32 @@ class QuizPage_ViewModel extends ChangeNotifier {
     final quiz = _currentQuiz;
     if (quiz == null || quiz.risposta) return 0;
 
+    // tengo lo stato precedente: se il salvataggio fallisce ci torno indietro
+    final precedente = quiz;
+    final i = _currentIndex;
+
+    // mostro subito la risposta selezionata, poi la persisto
     _selectedIndex = index;
-    quiz.risposta = true;
+    _quizzes[i] = quiz.copyWith(risposta: true);
     notifyListeners();
-
-    int nLivelli = 0;
-
-    // exp solo se la risposta è corretta; quella sbagliata va comunque registrata
-    if (isCorrect(index)) {
-      nLivelli = await avatarVM.aumentaExp(expPerCorrectAnswer);
-    }
 
     try {
       await repo.checkQuiz(quiz.id, _currentUserId);
     } catch (e) {
       debugPrint('Errore invio risposta quiz: $e');
+      // la risposta non è stata registrata: la domanda torna disponibile
+      _quizzes[i] = precedente;
+      _selectedIndex = null;
+      notifyListeners();
+      return 0;
     }
-    notifyListeners();
-    return nLivelli;
+
+    // exp solo dopo che la risposta è sul db, altrimenti un errore di rete
+    // la lascerebbe rifattibile e l'utente incasserebbe l'exp due volte.
+    // La risposta sbagliata viene comunque registrata, ma non dà exp.
+    if (!isCorrect(index)) return 0;
+
+    return avatarVM.aumentaExp(expPerCorrectAnswer);
   }
 
   // Passa alla domanda successiva della sessione, o la conclude se era l'ultima

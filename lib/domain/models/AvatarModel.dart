@@ -27,7 +27,7 @@ class AvatarModel {
       monete: (json['monete'] as num).toInt(),
       streak: (json['streak'] as num).toInt(),
       chosenColor: (json['chosen_color'] as num).toInt(),
-      obiettivi: (json['obiettivi_giornalieri'] as List<dynamic>).map((o) => Obiettivo.fromMap(o as Map<String, dynamic>)).toList(),
+      obiettivi: (json['obiettivi_giornalieri'] as List<dynamic>).map((o) => Obiettivo.fromJson(o as Map<String, dynamic>)).toList(),
     );
   }
 
@@ -66,7 +66,7 @@ class Obiettivo {
     this.completed = false,
   });
 
-  factory Obiettivo.fromMap(Map<String, dynamic> json) {
+  factory Obiettivo.fromJson(Map<String, dynamic> json) {
     return Obiettivo(
       id: (json['id_obiettivo'] as num).toInt(),
       testo: (json['testo'] as String),

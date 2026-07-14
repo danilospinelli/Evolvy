@@ -59,7 +59,10 @@ class InsertedFood extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(food.toString(), style: const TextStyle(fontSize: 16)),
+                Text(
+                  '${food.nome}  ${food.quantita.round()} g  ${food.calorie.round()} kcal',
+                  style: const TextStyle(fontSize: 16),
+                ),
 
                 IconButton(
                   onPressed: () async {

@@ -41,11 +41,6 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
     return (base / 100) * _quantitaBaseNormalizzata;
   }
 
-  double get sodCalcolati {
-    final base = alimento.sodper100 ?? 0.0;
-    return (base / 100) * _quantitaBaseNormalizzata;
-  }
-
   void aggiornaQuantita(String testo) {
     if (testo.trim().isEmpty) {
       _quantitaInserita = 0.0;

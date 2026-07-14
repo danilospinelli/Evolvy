@@ -18,7 +18,9 @@ class Homepage_ViewModel extends ChangeNotifier {
     cena: [],
     spuntino: [],
   );
-  UserModel user = new UserModel(); // TODO: TOGLI
+  late UserModel _user;
+
+  
   String _dailyTip = '⭐ Aggiungi il primo alimento del giorno!';
 
   bool get isLoading => _isLoading;
@@ -43,7 +45,7 @@ class Homepage_ViewModel extends ChangeNotifier {
         DateTime.parse('2026-04-28'),
       );
       updateDailyTip(allFoods);
-      user = await repoUser.getUserMacro(idUtente: 1); // TODO: GESTIRE DINAMICAMENTE L'UTENTE
+      _user = await repoUser.getUserMacro(idUtente: 1); // TODO: GESTIRE DINAMICAMENTE L'UTENTE
     } catch (e) {
       debugPrint('Errore caricamento log pasti: $e');
     } finally {
@@ -176,13 +178,13 @@ class Homepage_ViewModel extends ChangeNotifier {
   double dailyMacroGoal(MacroType_Enum macro) {
     switch(macro) {
       case MacroType_Enum.Calorie:
-        return (user.calorie ?? 0) as double;
+        return (_user.calorie) as double;
       case MacroType_Enum.Carboidrati:
-        return (user.carboidrati ?? 0) as double;
+        return (_user.carboidrati) as double;
       case MacroType_Enum.Proteine:
-        return (user.proteine ?? 0) as double;
+        return (_user.proteine) as double;
       case MacroType_Enum.Grassi:
-        return (user.grassi ?? 0) as double;
+        return (_user.grassi) as double;
     }
   }
 

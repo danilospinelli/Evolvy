@@ -3,8 +3,8 @@ import 'package:flutter_application_1/data/repositories/FoodRepository.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 
 class RicercaCibi_ViewModel extends ChangeNotifier {
-  final FoodRepository _foodRepository;
-  RicercaCibi_ViewModel() : _foodRepository = FoodRepository();
+  
+  final FoodRepository _foodRepository= FoodRepository();
 
   List<FoodModel>? _risultati;
   var _isLoading = false;

@@ -13,4 +13,6 @@ class FoodRepository {
     List<FoodModel> foodList = foodJson.map((json) => FoodModel.fromJson(json as Map<String, dynamic>)).toList();
     return foodList;
   }
+
+
 }

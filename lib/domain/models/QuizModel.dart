@@ -8,7 +8,7 @@ class QuizModel {
   final bool value2;
   final bool value3;
   final String spiegazione;
-  bool risposta = false;
+  final bool risposta;
 
   QuizModel({
     required this.id,
@@ -39,6 +39,33 @@ class QuizModel {
         risposta: json['risposto'] as bool? ?? false
     );
 
+  }
+
+
+  QuizModel copyWith({
+    int? id,
+    String? question,
+    String? answers1,
+    String? answers2,
+    String? answers3,
+    bool? value1,
+    bool? value2,
+    bool? value3,
+    String? spiegazione,
+    bool? risposta,
+  }) {
+    return QuizModel(
+      id: id ?? this.id,
+      question: question ?? this.question,
+      answers1: answers1 ?? this.answers1,
+      answers2: answers2 ?? this.answers2,
+      answers3: answers3 ?? this.answers3,
+      value1: value1 ?? this.value1,
+      value2: value2 ?? this.value2,
+      value3: value3 ?? this.value3,
+      spiegazione: spiegazione ?? this.spiegazione,
+      risposta: risposta ?? this.risposta,
+    );
   }
 }
 

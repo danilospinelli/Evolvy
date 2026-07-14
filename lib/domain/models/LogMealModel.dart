@@ -1,38 +1,3 @@
-class LoggedFood {
-  String nome;
-  double quantita;
-  double calorie;
-  double carboidrati;
-  double proteine;
-  double grassi;
-
-  LoggedFood({
-    required this.nome,
-    required this.quantita,
-    required this.calorie,
-    required this.carboidrati,
-    required this.proteine,
-    required this.grassi,
-  });
-
-  //converte i json in loggedfood
-  factory LoggedFood.fromJson(Map<String, dynamic> json) {
-    return LoggedFood(
-      nome: json['nome'] as String,
-      quantita: (json['quantita'] as num).toDouble(),
-      calorie: (json['calorie'] as num).toDouble(),
-      carboidrati: (json['carboidrati'] as num).toDouble(),
-      proteine: (json['proteine'] as num).toDouble(),
-      grassi: (json['grassi'] as num).toDouble(),
-    );
-  }
-
-  @override
-  String toString(){
-    return "$nome $quantita g $calorie kcal";
-  }
-}
-
 class LogMealModel {
   List<LoggedFood> colazione = [];
   List<LoggedFood> pranzo = [];
@@ -56,3 +21,38 @@ class LogMealModel {
     );
   }
 }
+
+
+
+class LoggedFood {
+  final String nome;
+  final double quantita;
+  final double calorie;
+  final double carboidrati;
+  final double proteine;
+  final double grassi;
+
+  LoggedFood({
+    required this.nome,
+    required this.quantita,
+    required this.calorie,
+    required this.carboidrati,
+    required this.proteine,
+    required this.grassi,
+  });
+
+  //converte i json in loggedfood
+  factory LoggedFood.fromJson(Map<String, dynamic> json) {
+    return LoggedFood(
+      nome: json['nome'] as String,
+      quantita: (json['quantita'] as num).toDouble(),
+      calorie: (json['calorie'] as num).toDouble(),
+      carboidrati: (json['carboidrati'] as num).toDouble(),
+      proteine: (json['proteine'] as num).toDouble(),
+      grassi: (json['grassi'] as num).toDouble(),
+    );
+  }
+
+
+}
+
