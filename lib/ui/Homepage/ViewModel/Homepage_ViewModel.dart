@@ -173,16 +173,16 @@ class Homepage_ViewModel extends ChangeNotifier {
 }
 
   // Ritorna i macro goal giornalieri
-  double dailyMacroGoal(MacroType_Enum macro, List<LoggedFood> foods) {
+  double dailyMacroGoal(MacroType_Enum macro) {
     switch(macro) {
       case MacroType_Enum.Calorie:
-        return user.calorie as double;
+        return (user.calorie ?? 0) as double;
       case MacroType_Enum.Carboidrati:
-        return user.carboidrati as double;
+        return (user.carboidrati ?? 0) as double;
       case MacroType_Enum.Proteine:
-        return user.proteine as double;
+        return (user.proteine ?? 0) as double;
       case MacroType_Enum.Grassi:
-        return user.grassi as double;
+        return (user.grassi ?? 0) as double;
     }
   }
 

@@ -8,7 +8,7 @@ class QuizPage_ViewModel extends ChangeNotifier {
 
   // TODO: GESTIRE DINAMICAMENTE L'UTENTE
   static const int _currentUserId = 1;
-  static const int _expPerCorrectAnswer = 2;
+  static const int expPerCorrectAnswer = 2;
 
   // Stato
   bool _isLoading = false;
@@ -82,7 +82,7 @@ class QuizPage_ViewModel extends ChangeNotifier {
 
     // exp solo se la risposta è corretta; quella sbagliata va comunque registrata
     if (isCorrect(index)) {
-      await avatarVM.aumentaExp(_expPerCorrectAnswer);
+      await avatarVM.aumentaExp(expPerCorrectAnswer);
     }
 
     try {

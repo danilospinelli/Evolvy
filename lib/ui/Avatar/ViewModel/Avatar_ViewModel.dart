@@ -75,20 +75,24 @@ class Avatar_ViewModel extends ChangeNotifier {
   // Aggiunge a _user l'exp guadagnata da una fonte qualsiasi (quiz, obiettivo, ...),
   // calcola quanti livelli sono stati superati, le monete guadagnate e l'exp residua
   // dal raggiungimento dell'ultimo livello, poi salva i nuovi totali sul db.
-  Future<void> aumentaExp(int expGuadagnata) async {
-    if (_user == null || expGuadagnata <= 0) return;
+  Future<bool> aumentaExp(int expGuadagnata) async {
+    if (_user == null || expGuadagnata <= 0) return false;
 
     // tengo lo stato precedente: se il salvataggio fallisce ci torno indietro
     final precedente = _user!;
+    int livelloIniziale = precedente.livello;
 
     int livello = precedente.livello;
     int exp = precedente.exp + expGuadagnata;
     int monete = precedente.monete;
 
+    // GESTIONE LIVELLO --------------------------------------------------------------------
+
     // while e non if: una singola ricompensa può far salire più livelli insieme.
     // livello > 0 evita il loop infinito se il db restituisse livello 0 (soglia 0).
     while (livello > 0 && exp >= livello * _expPerLivello) {
       exp -= livello * _expPerLivello;
+      // exp %= livello * _expPerLivello;
       livello += 1;
       monete += _monetePerLevelUp;
     }
@@ -104,11 +108,13 @@ class Avatar_ViewModel extends ChangeNotifier {
         exp: exp,
         monete: monete,
       );
+      return livello > livelloIniziale;
     } catch (e) {
       debugPrint('Errore aggiornamento exp: $e');
       // il calcolo locale non è stato persistito: torno ai valori precedenti
       _user = precedente;
       notifyListeners();
+      return false;
     }
   }
 

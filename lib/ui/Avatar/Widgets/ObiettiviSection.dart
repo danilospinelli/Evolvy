@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
+import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
 
 class ObiettiviSection extends StatelessWidget {
   const ObiettiviSection({
@@ -39,10 +40,14 @@ class _ChallengeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.read<Avatar_ViewModel>();
     final completed = challenge.completed;
 
     return InkWell(
-      onTap: completed ? null : () => context.read<Avatar_ViewModel>().completaObiettivo(challenge),
+      onTap: completed ? null : ()  {
+        vm.completaObiettivo(challenge);
+        SnackBarInfo.xpGain(context, challenge.xpReward);
+      },
       borderRadius: BorderRadius.circular(30),
       child: Row(
         children: [
