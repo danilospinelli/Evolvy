@@ -5,49 +5,57 @@ import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 class Avatar_ViewModel extends ChangeNotifier {
   final AvatarRepository repo = AvatarRepository();
 
-  // Moltiplicatore per livello epr decidere la solgia di exp necessaria per il prossimo livello
   static const int expPerLivello = 10;
-  // Monete regalate ad ogni passaggio di livello
   static const int monetePerLevelUp = 5;
 
   AvatarModel? _user;
   AvatarModel? get user => _user;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  // FLAG DI CARICAMENTO SPECIFICI
+  bool _isLoadingProfile = false;
+  bool get isLoadingProfile => _isLoadingProfile;
+
+  bool _isUpdatingColor = false;
+  bool get isUpdatingColor => _isUpdatingColor;
+
+  bool _isUpdatingObjective = false;
+  bool get isUpdatingObjective => _isUpdatingObjective;
+
+  // Il getter generico ora controlla se c'è un caricamento bloccante iniziale
+  bool get isLoading => _isLoadingProfile && _user == null;
 
   /// Carica profilo utente e sfide giornaliere dal database
   Future<void> initialize() async {
-    _isLoading = true;
+    _isLoadingProfile = true;
     notifyListeners();
     try {
-      // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
       _user = await repo.getAvatarInfo(idUtente: 1);
     } catch (e) {
       debugPrint('Errore caricamento dei dati: $e');
     } finally {
-      _isLoading = false;
+      _isLoadingProfile = false;
       notifyListeners();
     }
   }
-
 
   // Aggiorna username di AvatarModel in uso
   Future<void> editName(String name) async {
     if (_user == null) return;
 
-    // aggiorno subito lo stato locale: senza questo la UI ridisegna
-    // gli stessi identici dati e a schermo non cambia niente
     _user = _user!.copyWith(username: name);
     notifyListeners();
 
+    _isLoadingProfile = true;
+    notifyListeners();
     try {
       await repo.updateNomeAvatar(
-        idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+        idUtente: 1, 
         nomeAvatar: name,
       );
     } catch (e) {
       debugPrint('Errore aggiornamento nome: $e');
+    } finally {
+      _isLoadingProfile = false;
       notifyListeners();
     }
   }
@@ -59,24 +67,25 @@ class Avatar_ViewModel extends ChangeNotifier {
     _user = _user!.copyWith(chosenColor: new_color);
     notifyListeners();
 
+    _isUpdatingColor = true;
+    notifyListeners();
     try {
       await repo.updateColoreAvatar(
-        idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+        idUtente: 1, 
         coloreAvatar: new_color,
       );
     } catch (e) {
       debugPrint('Errore aggiornamento colore: $e');
+    } finally {
+      _isUpdatingColor = false;
       notifyListeners();
     }
   }
 
-  // Aggiunge a _user l'exp guadagnata da una fonte qualsiasi (quiz, obiettivo, ...),
-  // calcola quanti livelli sono stati superati, le monete guadagnate e l'exp residua
-  // dal raggiungimento dell'ultimo livello, poi salva i nuovi totali sul db.
+  // Gestione dell'esperienza
   Future<int> aumentaExp(int expGuadagnata) async {
     if (_user == null || expGuadagnata <= 0) return 0;
 
-    // tengo lo stato precedente: se il salvataggio fallisce ci torno indietro
     final precedente = _user!;
     int livelloIniziale = precedente.livello;
 
@@ -84,23 +93,20 @@ class Avatar_ViewModel extends ChangeNotifier {
     int exp = precedente.exp + expGuadagnata;
     int monete = precedente.monete;
 
-    // GESTIONE LIVELLO --------------------------------------------------------------------
-
-    // while e non if: una singola ricompensa può far salire più livelli insieme.
-    // livello > 0 evita il loop infinito se il db restituisse livello 0 (soglia 0).
     while (livello > 0 && exp >= livello * expPerLivello) {
       exp -= livello * expPerLivello;
       livello += 1;
       monete += monetePerLevelUp;
     }
 
-    // mostro subito i nuovi valori, poi li persisto
     _user = precedente.copyWith(livello: livello, exp: exp, monete: monete);
     notifyListeners();
 
+    _isLoadingProfile = true;
+    notifyListeners();
     try {
       await repo.aggiornaDatiAvatar(
-        idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+        idUtente: 1, 
         livello: livello,
         exp: exp,
         monete: monete,
@@ -108,17 +114,16 @@ class Avatar_ViewModel extends ChangeNotifier {
       return livello - livelloIniziale;
     } catch (e) {
       debugPrint('Errore aggiornamento exp: $e');
-      // il calcolo locale non è stato persistito: torno ai valori precedenti
       _user = precedente;
       notifyListeners();
       return 0;
+    } finally {
+      _isLoadingProfile = false;
+      notifyListeners();
     }
   }
 
-
-
-  // Completa un obiettivo giornaliero: prima accredita l'exp dell'obiettivo
-  // (con eventuale level up e monete), poi lo segna come completato sul db.
+  // Completa un obiettivo giornaliero
   Future<int> completaObiettivo(Obiettivo obiettivo) async {
     if (_user == null || obiettivo.completed) return 0;
 
@@ -129,26 +134,25 @@ class Avatar_ViewModel extends ChangeNotifier {
     obiettivi[i] = obiettivi[i].copyWith(completed: true);
 
     _user = _user!.copyWith(obiettivi: obiettivi);
+    _isUpdatingObjective = true;
     notifyListeners();
-
     try {
       await repo.completaObiettivoAvatar(
-        idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
+        idUtente: 1, 
         idObiettivo: obiettivo.id,
       );
       return nLivelli;
     } catch (e) {
       debugPrint('Errore completamento obiettivo: $e');
-      notifyListeners();
       return 0;
+    } finally {
+      _isUpdatingObjective = false;
+      notifyListeners();
     }
   }
 
-  // Gestisce l'aumento della streak corrente
-  // TODO: DARE UN SENSO A STREAK
   void aumentaStreak() {
     if (_user == null) return;
-
     _user = _user!.copyWith(streak: _user!.streak + 1);
     notifyListeners();
   }

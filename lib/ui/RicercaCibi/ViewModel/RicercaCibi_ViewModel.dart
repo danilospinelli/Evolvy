@@ -4,6 +4,9 @@ import 'package:flutter_application_1/domain/models/FoodModel.dart';
 
 class RicercaCibi_ViewModel extends ChangeNotifier {
   final FoodRepository _foodRepository;
+  // Gestione del controller nel ViewModel
+  final TextEditingController searchController = TextEditingController();
+
   RicercaCibi_ViewModel() : _foodRepository = FoodRepository();
 
   List<FoodModel>? _risultati;
@@ -12,9 +15,17 @@ class RicercaCibi_ViewModel extends ChangeNotifier {
   List<FoodModel>? get risultati => _risultati;
   bool get isLoading => _isLoading;
 
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> cercaCibi(String query) async {
     _isLoading = true;
     if (query.trim().isEmpty) {
+      _isLoading = false;
+      notifyListeners();
       return;
     }
     notifyListeners();
@@ -23,7 +34,7 @@ class RicercaCibi_ViewModel extends ChangeNotifier {
       final dati = await _foodRepository.getCibo(query);
       _risultati = dati;
     } catch (e) {
-      print('Errore durante la ricerca dei cibi: $e');
+      debugPrint('Errore durante la ricerca dei cibi: $e');
     } finally {
       _isLoading = false;
       notifyListeners();

@@ -81,7 +81,6 @@ class Homepage_ViewModel extends ChangeNotifier {
   }
 
   // Aggiunge un cibo al pasto specificato, aggiornando sia lo stato locale che la repository
-  // TODO: gestire la data dinamicamente: fai il metodo loadLogMealByDate che prende in input la data e lo chiami con la data di oggi
   Future<void> addFood(
     MealType_Enum mealType,
     LoggedFood food,
@@ -91,9 +90,13 @@ class Homepage_ViewModel extends ChangeNotifier {
     updateDailyTip(allFoods);
     notifyListeners();
     // Aggiorna il Database
+    _isLoading = true;
+      notifyListeners();
     try {
       await repoLogMeal.addCibo(
+        // TODO: GESTIRE USER DINAMICAMENTE
         idUtente: 1,
+        // TODO: gestire la data dinamicamente: fai il metodo loadLogMealByDate che prende in input la data e lo chiami con la data di oggi
         data: DateTime.parse('2026-04-28'),
         meal: mealType.toString().split('.').last.toLowerCase(),
         nomeCibo: food.nome,
@@ -110,6 +113,9 @@ class Homepage_ViewModel extends ChangeNotifier {
       notifyListeners();
       debugPrint('Errore aggiunta cibo: $e');
       rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -124,6 +130,8 @@ class Homepage_ViewModel extends ChangeNotifier {
     updateDailyTip(allFoods);
     notifyListeners();
     // Aggiorna il Database
+    _isLoading = true;
+    notifyListeners();
     try {
       await repoLogMeal.removeCibo(
         idUtente: 1,
@@ -132,6 +140,8 @@ class Homepage_ViewModel extends ChangeNotifier {
         nomeCibo: food.nome,
         quantita: food.quantita,
       );
+      _isLoading = false;
+      notifyListeners();
     } catch (e) {
       // Rollback sulla lista locale se c'è un errore nel Database
       _addFoodToLocal(mealType, food);
@@ -139,7 +149,8 @@ class Homepage_ViewModel extends ChangeNotifier {
       notifyListeners();
       debugPrint('Errore rimozione cibo: $e');
       rethrow;
-    }
+    } _isLoading = true;
+      notifyListeners();
   }
 
   // Rimuove un cibo solo dalla lista locale

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/View/InfoSliderAlimento_View.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/ViewModel/RicercaCibi_ViewModel.dart';
-import 'RigaAlimento.dart';
+import 'package:flutter_application_1/ui/RicercaCibi/Widgets/RigaAlimento.dart';
+import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
 class ListaRisultati extends StatelessWidget {
   final RicercaCibi_ViewModel viewModel;
@@ -31,11 +32,12 @@ class ListaRisultati extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24.0),
+        // ListenableBuilder è come Consumer
         child: ListenableBuilder(
           listenable: viewModel,
           builder: (context, child) {
             if (viewModel.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CaricamentoCircolare());
             }
 
             final risultati = viewModel.risultati;

@@ -3,13 +3,27 @@ import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
 
 class InfoSliderAlimento_ViewModel extends ChangeNotifier {
-  final FoodModel alimento;
+  // Gestione del controller nel ViewModel
+  final TextEditingController textController = TextEditingController();
 
   var _quantitaInserita = 0.0;
   var _unitaMisura = "g";
   final List<String> unitaDisponibili = ['g', 'ml', 'kg', 'l'];
 
-  InfoSliderAlimento_ViewModel({required this.alimento});
+  // Inizializzazione del controller
+  void init(LoggedFood? ciboGiaLoggato) {
+    if (ciboGiaLoggato != null) {
+      final vecchiaQuantita = ciboGiaLoggato.quantita.round().toString();
+      textController.text = vecchiaQuantita;
+      aggiornaQuantita(vecchiaQuantita);
+    }
+  }
+  // Pulizia del controller
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
 
   double get quantita => _quantitaInserita;
   String get unita => _unitaMisura;
@@ -21,28 +35,23 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
     return _quantitaInserita;
   }
 
-  int get kcalCalcolate {
+  int calcolaKcal(FoodModel alimento) {
     final base = alimento.kcalper100 ?? 0.0;
     return ((base / 100) * _quantitaBaseNormalizzata).round();
   }
 
-  double get protCalcolate {
+  double calcolaProt(FoodModel alimento) {
     final base = alimento.protper100 ?? 0.0;
     return (base / 100) * _quantitaBaseNormalizzata;
   }
 
-  double get carbCalcolate {
+  double calcolaCarb(FoodModel alimento) {
     final base = alimento.carbper100 ?? 0.0;
     return (base / 100) * _quantitaBaseNormalizzata;
   }
 
-  double get grasCalcolati {
+  double calcolaGras(FoodModel alimento) {
     final base = alimento.grasper100 ?? 0.0;
-    return (base / 100) * _quantitaBaseNormalizzata;
-  }
-
-  double get sodCalcolati {
-    final base = alimento.sodper100 ?? 0.0;
     return (base / 100) * _quantitaBaseNormalizzata;
   }
 
@@ -62,14 +71,14 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
     }
   }
 
-  LoggedFood generaCiboLoggato() {
+  LoggedFood generaCiboLoggato(FoodModel alimento) {
     return LoggedFood(
       nome: alimento.nome ?? 'alimento sconosciuto',
       quantita: _quantitaBaseNormalizzata,
-      calorie: kcalCalcolate.toDouble(),
-      carboidrati: carbCalcolate,
-      proteine: protCalcolate,
-      grassi: grasCalcolati,
+      calorie: calcolaKcal(alimento).toDouble(),
+      carboidrati: calcolaCarb(alimento),
+      proteine: calcolaProt(alimento),
+      grassi: calcolaGras(alimento),
     );
   }
 }

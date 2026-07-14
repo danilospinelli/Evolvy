@@ -5,8 +5,8 @@ import 'package:flutter_application_1/domain/AvatarColors.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 import 'package:flutter_application_1/ui/Shop/View/Shop_View.dart';
+import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
-/// Blocco centrale: avatar, icona shop, selezione colore mascotte.
 class AvatarSection extends StatelessWidget {
   const AvatarSection({
     super.key,
@@ -17,6 +17,8 @@ class AvatarSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<Avatar_ViewModel>();
+
     return Column(
       children: [
         // Mascotte, con l'icona shop in alto a destra
@@ -27,9 +29,11 @@ class AvatarSection extends StatelessWidget {
             SizedBox(
               width: 240,
               height: 240,
-              child: AvatarCondiviso(
-                dimensioneAvatar: 240, 
-              ),
+              child: vm.isUpdatingColor ? 
+                const Center(child: CaricamentoCircolare()) : 
+                const AvatarCondiviso(
+                  dimensioneAvatar: 240, 
+                ),
             ),
             Positioned(
               top: 0,
@@ -45,7 +49,7 @@ class AvatarSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 20),
-        Align(
+        const Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Colore mascotte:',

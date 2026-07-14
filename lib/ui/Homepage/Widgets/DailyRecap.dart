@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/Homepage/ViewModel/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/domain/MacroType_Enum.dart';
 import 'package:flutter_application_1/domain/MacroColors.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/core/ProgressBar/ProgressBar.dart';
+import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
 class DailyRecap extends StatelessWidget {
   const DailyRecap({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Usiamo il .watch perché ad ogni cambiamento, tutti i widget devono modificarsi (rebuild totale)
     final vm = context.watch<Homepage_ViewModel>();
 
     return Container(
@@ -39,7 +39,7 @@ class DailyRecap extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: _macroBox(vm),
+                  child: _macroBox(context, vm),
                 ),
                 const SizedBox(width: 18),
                 Expanded(
@@ -53,21 +53,24 @@ class DailyRecap extends StatelessWidget {
           const SizedBox(height: 18),
 
           // SEZIONE CALORIE
-          ProgressBar(
-            current: vm.obtainedMacros(MacroType_Enum.Calorie, vm.allFoods),
-            goal: vm.dailyMacroGoal(MacroType_Enum.Calorie),
-            label: 'Calorie',
-            abbr: 'kcal',
-            showBackground: true,
-            valueOnSide: false,
-          ),
+          if(vm.isLoading)
+            CaricamentoCircolare()
+          else
+            ProgressBar(
+              current: vm.obtainedMacros(MacroType_Enum.Calorie, vm.allFoods),
+              goal: vm.dailyMacroGoal(MacroType_Enum.Calorie),
+              label: 'Calorie',
+              abbr: 'kcal',
+              showBackground: true,
+              valueOnSide: false,
+            ),
         ],
       ),
     );
   }
 
   // BOX MACRONUTRIENTI -------------------------------------------------------------------------
-  Widget _macroBox(Homepage_ViewModel vm) {
+  Widget _macroBox(BuildContext context, Homepage_ViewModel vm) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -95,6 +98,7 @@ class DailyRecap extends StatelessWidget {
             (meal) => Column(
               children: [
                 _macroTile(
+                  context, 
                   label: meal.toString().split('.').last,
                   value: vm.obtainedMacros(meal, vm.allFoods).toString(),
                   goal: vm.dailyMacroGoal(meal).toString(),
@@ -145,14 +149,16 @@ class DailyRecap extends StatelessWidget {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    vm.dailyTip,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.black87,
-                      fontSize: 15,
+                  child: vm.isLoading ? 
+                    CaricamentoCircolare() :
+                    Text(
+                      vm.dailyTip,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
                 ),
               ),
             ),
@@ -164,12 +170,14 @@ class DailyRecap extends StatelessWidget {
 
   // Metodo che restituisce un widget con un certo macronutriente e i grammi assunti/obiettivo
   // Si è scelto di non fare una nuova classe extends StatelessWidget perché è un widget molto semplice e utilizzato solo qui, quindi una funzione è più che sufficiente
-  Widget _macroTile({
+  Widget _macroTile(
+    BuildContext context, {
     required String label,
     required String value,
     required String goal,
     required Color color,
   }) {
+    final vm = context.watch<Homepage_ViewModel>();
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 14,
@@ -205,7 +213,10 @@ class DailyRecap extends StatelessWidget {
             ),
           ),
 
-          Text(
+          if(vm.isLoading)
+            CaricamentoCircolare()
+          else
+            Text(
             '$value g / $goal g',
             style: const TextStyle(
               fontSize: 15,

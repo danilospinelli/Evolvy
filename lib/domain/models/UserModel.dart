@@ -1,4 +1,6 @@
 class UserModel {
+  // TODO: GESTIONE SU SUPABASE
+  int? userID;
   int? proteine;
   int? carboidrati;
   int? grassi;

@@ -7,7 +7,6 @@ import 'package:flutter_application_1/ui/QuizPage/View/QuizPage_View.dart';
 
 class Homepage_View extends StatelessWidget {
   const Homepage_View({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
