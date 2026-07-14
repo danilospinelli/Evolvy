@@ -44,9 +44,9 @@ class _ChallengeCard extends StatelessWidget {
     final completed = challenge.completed;
 
     return InkWell(
-      onTap: completed ? null : ()  {
-        vm.completaObiettivo(challenge);
-        SnackBarInfo.xpGain(context, challenge.xpReward);
+      onTap: completed ? null : () async {
+        int nLivelli = await vm.completaObiettivo(challenge);
+        SnackBarInfo.xpGain(context, challenge.xpReward, nLivelli);
       },
       borderRadius: BorderRadius.circular(30),
       child: Row(

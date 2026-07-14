@@ -5,7 +5,6 @@ import 'package:flutter_application_1/domain/AvatarColors.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 import 'package:flutter_application_1/ui/Shop/View/Shop_View.dart';
-import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
 
 /// Blocco centrale: avatar, icona shop, selezione colore mascotte.
 class AvatarSection extends StatelessWidget {
@@ -29,9 +28,7 @@ class AvatarSection extends StatelessWidget {
               width: 240,
               height: 240,
               child: AvatarCondiviso(
-                messaggio: '', 
                 dimensioneAvatar: 240, 
-                onTap: () {} // TODO: TOCCO MASCOTTE
               ),
             ),
             Positioned(

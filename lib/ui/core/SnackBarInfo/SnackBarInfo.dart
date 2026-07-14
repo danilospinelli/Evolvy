@@ -46,12 +46,12 @@ class SnackBarInfo extends SnackBar {
     // accumula = False -> ripulisce le SnackBar e mostra solo l'ultima
     required bool accumula,
   }) {
-    // 1. Svuota la coda delle SnackBar (evita accumulo)
+    // Svuota la coda delle SnackBar (evita accumulo)
     if(!accumula){
       ScaffoldMessenger.of(context).clearSnackBars();
     }
 
-    // 2. Mostra la SnackBar
+    // Mostra la SnackBar
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBarInfo._(
         message: message,
@@ -61,9 +61,8 @@ class SnackBarInfo extends SnackBar {
     );
   }
 
-  static void xpGain(BuildContext context, int xpGuadagnata) async {
-    final vm = context.read<Avatar_ViewModel>();
-
+  static void xpGain(BuildContext context, int xpGuadagnata, int nLivelli) async {
+    // SnackBar Exp
     SnackBarInfo.show(
       context,
       message: 'Punti esperienza guadagnati: +$xpGuadagnata EXP',
@@ -72,14 +71,22 @@ class SnackBarInfo extends SnackBar {
       accumula: true,
     );
 
-    bool haLivellato = await vm.aumentaExp(xpGuadagnata);
-
-    if (context.mounted && haLivellato) {
+    if (nLivelli > 0) {
+      // SnackBar livello
       SnackBarInfo.show(
         context,
-        message: 'Aumento di Livello!',
+        message: nLivelli == 1 ? 'Sei aumentato di Livello!' : 'Sei aumentato di $nLivelli Livelli!',
         icon: Icons.upgrade,
         color: const Color.fromARGB(255, 34, 153, 38),
+        accumula: true,
+      );
+      // SnackBar monete
+      int nMonete = Avatar_ViewModel.monetePerLevelUp * nLivelli;
+      SnackBarInfo.show(
+        context,
+        message: 'Hai guadagnato $nMonete monete',
+        icon: Icons.monetization_on_rounded,
+        color: Colors.yellow,
         accumula: true,
       );
     }

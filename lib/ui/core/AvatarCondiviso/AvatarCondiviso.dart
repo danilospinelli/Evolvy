@@ -4,7 +4,7 @@ import 'package:flutter_application_1/domain/AvatarColors.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 
 class AvatarCondiviso extends StatelessWidget {
-  final String messaggio;
+  final String? messaggio;
   final String? titolo;
   final double dimensioneAvatar;
   final double larghezzaMassimaMessaggio;
@@ -12,7 +12,7 @@ class AvatarCondiviso extends StatelessWidget {
 
   const AvatarCondiviso({
     super.key,
-    required this.messaggio,
+    this.messaggio,
     this.titolo,
     this.dimensioneAvatar = 180,
     this.larghezzaMassimaMessaggio = 220,
@@ -29,7 +29,7 @@ class AvatarCondiviso extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if(messaggio.isNotEmpty)
+          if(messaggio != null)
             Flexible(
               child: Container(
                 constraints: BoxConstraints(maxWidth: larghezzaMassimaMessaggio),
@@ -73,7 +73,7 @@ class AvatarCondiviso extends StatelessWidget {
                     const SizedBox(height: 6),
                   ],
                   Text(
-                    messaggio,
+                    messaggio!,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black87,
@@ -86,7 +86,8 @@ class AvatarCondiviso extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: onTap,
+            // Se onTap non è definito non fa niente
+            onTap: onTap ?? () {},
             child: SizedBox(
               width: dimensioneAvatar,
               height: dimensioneAvatar,

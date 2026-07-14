@@ -6,9 +6,9 @@ class Avatar_ViewModel extends ChangeNotifier {
   final AvatarRepository repo = AvatarRepository();
 
   // Moltiplicatore per livello epr decidere la solgia di exp necessaria per il prossimo livello
-  static const int _expPerLivello = 10;
+  static const int expPerLivello = 10;
   // Monete regalate ad ogni passaggio di livello
-  static const int _monetePerLevelUp = 5;
+  static const int monetePerLevelUp = 5;
 
   AvatarModel? _user;
   AvatarModel? get user => _user;
@@ -75,8 +75,8 @@ class Avatar_ViewModel extends ChangeNotifier {
   // Aggiunge a _user l'exp guadagnata da una fonte qualsiasi (quiz, obiettivo, ...),
   // calcola quanti livelli sono stati superati, le monete guadagnate e l'exp residua
   // dal raggiungimento dell'ultimo livello, poi salva i nuovi totali sul db.
-  Future<bool> aumentaExp(int expGuadagnata) async {
-    if (_user == null || expGuadagnata <= 0) return false;
+  Future<int> aumentaExp(int expGuadagnata) async {
+    if (_user == null || expGuadagnata <= 0) return 0;
 
     // tengo lo stato precedente: se il salvataggio fallisce ci torno indietro
     final precedente = _user!;
@@ -90,11 +90,10 @@ class Avatar_ViewModel extends ChangeNotifier {
 
     // while e non if: una singola ricompensa può far salire più livelli insieme.
     // livello > 0 evita il loop infinito se il db restituisse livello 0 (soglia 0).
-    while (livello > 0 && exp >= livello * _expPerLivello) {
-      exp -= livello * _expPerLivello;
-      // exp %= livello * _expPerLivello;
+    while (livello > 0 && exp >= livello * expPerLivello) {
+      exp -= livello * expPerLivello;
       livello += 1;
-      monete += _monetePerLevelUp;
+      monete += monetePerLevelUp;
     }
 
     // mostro subito i nuovi valori, poi li persisto
@@ -108,13 +107,13 @@ class Avatar_ViewModel extends ChangeNotifier {
         exp: exp,
         monete: monete,
       );
-      return livello > livelloIniziale;
+      return livello - livelloIniziale;
     } catch (e) {
       debugPrint('Errore aggiornamento exp: $e');
       // il calcolo locale non è stato persistito: torno ai valori precedenti
       _user = precedente;
       notifyListeners();
-      return false;
+      return 0;
     }
   }
 
@@ -122,10 +121,10 @@ class Avatar_ViewModel extends ChangeNotifier {
 
   // Completa un obiettivo giornaliero: prima accredita l'exp dell'obiettivo
   // (con eventuale level up e monete), poi lo segna come completato sul db.
-  Future<void> completaObiettivo(Obiettivo obiettivo) async {
-    if (_user == null || obiettivo.completed) return;
+  Future<int> completaObiettivo(Obiettivo obiettivo) async {
+    if (_user == null || obiettivo.completed) return 0;
 
-    await aumentaExp(obiettivo.xpReward);
+    int nLivelli = await aumentaExp(obiettivo.xpReward);
 
     final obiettivi = List<Obiettivo>.of(_user!.obiettivi);
     final i = obiettivi.indexWhere((o) => o.id == obiettivo.id);
@@ -139,9 +138,11 @@ class Avatar_ViewModel extends ChangeNotifier {
         idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
         idObiettivo: obiettivo.id,
       );
+      return nLivelli;
     } catch (e) {
       debugPrint('Errore completamento obiettivo: $e');
       notifyListeners();
+      return 0;
     }
   }
 
