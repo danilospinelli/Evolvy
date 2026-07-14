@@ -50,10 +50,9 @@ class Avatar_ViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await repo.updateAvatarInfo(
+      await repo.updateNomeAvatar(
         idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
         nomeAvatar: name,
-        coloreAvatar: _user!.chosenColor,
       );
       _errore = null;
     } catch (e) {
@@ -71,9 +70,8 @@ class Avatar_ViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await repo.updateAvatarInfo(
+      await repo.updateColoreAvatar(
         idUtente: 1, // TODO: GESTIRE DINAMICAMENTE L'ID UTENTE
-        nomeAvatar: _user!.username,
         coloreAvatar: new_color,
       );
       _errore = null;
