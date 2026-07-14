@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
+import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
 class ObiettiviSection extends StatelessWidget {
   const ObiettiviSection({
@@ -14,6 +15,8 @@ class ObiettiviSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<Avatar_ViewModel>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,12 +25,17 @@ class ObiettiviSection extends StatelessWidget {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
-        for (final challenge in challenges) ...[
-          _ChallengeCard(
-            challenge: challenge,
-          ),
-          const SizedBox(height: 12),
-        ],
+
+        // Mostra il caricamento degli obiettivi solo se isUpdatingObjective è vero
+        if (vm.isUpdatingObjective)
+          const Center(child: CaricamentoCircolare())
+        else
+          for (final challenge in challenges) ...[
+            _ChallengeCard(
+              challenge: challenge,
+            ),
+            const SizedBox(height: 12),
+          ],
       ],
     );
   }
@@ -46,7 +54,9 @@ class _ChallengeCard extends StatelessWidget {
     return InkWell(
       onTap: completed ? null : () async {
         int nLivelli = await vm.completaObiettivo(challenge);
-        SnackBarInfo.xpGain(context, challenge.xpReward, nLivelli);
+        if (context.mounted) {
+          SnackBarInfo.xpGain(context, challenge.xpReward, nLivelli);
+        }
       },
       borderRadius: BorderRadius.circular(30),
       child: Row(

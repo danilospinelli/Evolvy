@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/Homepage/ViewModel/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/View/RicercaCibi_View.dart';
 import 'package:flutter_application_1/ui/Homepage/Widgets/InsertedFood.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
 class MealBox extends StatefulWidget {
   const MealBox({super.key, required this.mealType});
@@ -105,7 +106,7 @@ class _MealBox_ViewState extends State<MealBox> {
                   final foods = vm.foodsByMeal(widget.mealType);
 
                   return vm.isLoading
-                      ? const Center(child: CircularProgressIndicator())
+                      ? const Center(child: CaricamentoCircolare())
                       : foods.isEmpty
                           ? const Text('Nessun cibo caricato')
                           : Column(

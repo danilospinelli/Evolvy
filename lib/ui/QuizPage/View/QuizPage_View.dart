@@ -6,6 +6,7 @@ import 'package:flutter_application_1/ui/QuizPage/Widgets/QuestionCard.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/NextQuestionButton.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
+import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
 class QuizPage_View extends StatelessWidget {
   const QuizPage_View({super.key});
@@ -17,7 +18,7 @@ class QuizPage_View extends StatelessWidget {
     Widget body;
 
     if (vm.isLoading) {
-      body = const Center(child: CircularProgressIndicator());
+      body = const Center(child: CaricamentoCircolare());
     } else if (vm.totalQuestions == 0) {
             body = const Center(
               child: Padding(
