@@ -2,7 +2,8 @@ class UserModel {
   int? proteine;
   int? carboidrati;
   int? grassi;
-
+  // calorie = proteine*4 + carboidrati*4 + grassi*9
+  int? get calorie => (proteine ?? 0)*4 + (carboidrati ?? 0)*4 + (grassi ?? 0)*9;
 
   UserModel({
     this.proteine,

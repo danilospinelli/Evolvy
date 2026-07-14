@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
+import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
 
 class AnswerButton extends StatelessWidget {
   const AnswerButton({
@@ -43,7 +44,13 @@ class AnswerButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
           onTap: vm.answered
               ? null
-              : () => vm.completaQuiz(index, context.read<Avatar_ViewModel>()),
+              : () async {
+                  int nLivelli = await vm.completaQuiz(index, context.read<Avatar_ViewModel>());
+                  if (vm.isCorrect(index)) {
+                    // Mostra SnackBar per Exp
+                    SnackBarInfo.xpGain(context, QuizPage_ViewModel.expPerCorrectAnswer, nLivelli);
+                  }
+                },
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
             decoration: BoxDecoration(

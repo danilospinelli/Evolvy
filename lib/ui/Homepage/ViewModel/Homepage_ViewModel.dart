@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/data/repositories/LogMealRepository.dart';
+import 'package:flutter_application_1/data/repositories/UserRepository.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
+import 'package:flutter_application_1/domain/models/UserModel.dart';
 import 'package:flutter_application_1/domain/MacroType_Enum.dart';
 
 class Homepage_ViewModel extends ChangeNotifier {
-  final LogMealRepository repo = LogMealRepository();
+  final LogMealRepository repoLogMeal = LogMealRepository();
+  final UserRepository repoUser = UserRepository();
 
   // Stato condiviso da più widget
   bool _isLoading = false;
@@ -15,6 +18,7 @@ class Homepage_ViewModel extends ChangeNotifier {
     cena: [],
     spuntino: [],
   );
+  UserModel user = new UserModel(); // TODO: TOGLI
   String _dailyTip = '⭐ Aggiungi il primo alimento del giorno!';
 
   bool get isLoading => _isLoading;
@@ -34,11 +38,12 @@ class Homepage_ViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      logMeal = await repo.getPastiGiornalieri(
+      logMeal = await repoLogMeal.getPastiGiornalieri(
         1,
         DateTime.parse('2026-04-28'),
       );
       updateDailyTip(allFoods);
+      user = await repoUser.getUserMacro(idUtente: 1); // TODO: GESTIRE DINAMICAMENTE L'UTENTE
     } catch (e) {
       debugPrint('Errore caricamento log pasti: $e');
     } finally {
@@ -87,7 +92,7 @@ class Homepage_ViewModel extends ChangeNotifier {
     notifyListeners();
     // Aggiorna il Database
     try {
-      await repo.addCibo(
+      await repoLogMeal.addCibo(
         idUtente: 1,
         data: DateTime.parse('2026-04-28'),
         meal: mealType.toString().split('.').last.toLowerCase(),
@@ -120,7 +125,7 @@ class Homepage_ViewModel extends ChangeNotifier {
     notifyListeners();
     // Aggiorna il Database
     try {
-      await repo.removeCibo(
+      await repoLogMeal.removeCibo(
         idUtente: 1,
         data: DateTime.parse('2026-04-28'),
         meal: mealType.toString().split('.').last.toLowerCase(),
@@ -168,9 +173,17 @@ class Homepage_ViewModel extends ChangeNotifier {
 }
 
   // Ritorna i macro goal giornalieri
-  // TODO: caricare i goal dall'oggetto del dominio User (preso da MainScreen_ViewAModel (?))
-  double dailyMacroGoal(MacroType_Enum macro, List<LoggedFood> foods) {
-    return 0.0;
+  double dailyMacroGoal(MacroType_Enum macro) {
+    switch(macro) {
+      case MacroType_Enum.Calorie:
+        return (user.calorie ?? 0) as double;
+      case MacroType_Enum.Carboidrati:
+        return (user.carboidrati ?? 0) as double;
+      case MacroType_Enum.Proteine:
+        return (user.proteine ?? 0) as double;
+      case MacroType_Enum.Grassi:
+        return (user.grassi ?? 0) as double;
+    }
   }
 
   // Aggiorna il daily tip in base ai macro consumati finora

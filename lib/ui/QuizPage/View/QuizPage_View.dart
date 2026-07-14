@@ -65,7 +65,6 @@ class QuizPage_View extends StatelessWidget {
                       messaggio: vm.spiegazione,
                       dimensioneAvatar: 90,
                       larghezzaMassimaMessaggio: double.infinity,
-                      onTap: () {} // TODO: TOCCO MASCOTTE
                     ),
                   ),
                 if (vm.answered) const NextQuestionButton(),

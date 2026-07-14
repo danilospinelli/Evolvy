@@ -51,6 +51,7 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimento_View> {
 
   @override
   Widget build(BuildContext context) {
+    // ListenableBuilder è come Consumer
     return ListenableBuilder(
       listenable: _viewModel,
       builder: (context, _) {
@@ -173,10 +174,6 @@ class _InfoSliderAlimentoViewState extends State<InfoSliderAlimento_View> {
                     // MASCOTTE, sotto la tabella
                     AvatarCondiviso(
                       messaggio: "Guarda come cambiano i valori!",
-                      onTap: () {
-                        // TODO: AGGIUNGERE PIU AVANTI TOCCO Mascotte
-                        print("Mascotte toccata nella pagina Info");
-                      },
                     ),
                   ],
                 ),

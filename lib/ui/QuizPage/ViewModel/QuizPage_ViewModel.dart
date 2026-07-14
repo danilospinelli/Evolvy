@@ -6,9 +6,9 @@ import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart'
 class QuizPage_ViewModel extends ChangeNotifier {
   final QuizRepository repo = QuizRepository();
 
-  // TODO: sostituire con l'id dell'utente autenticato quando sarà disponibile un sistema di auth
+  // TODO: GESTIRE DINAMICAMENTE L'UTENTE
   static const int _currentUserId = 1;
-  static const int _expPerCorrectAnswer = 2;
+  static const int expPerCorrectAnswer = 2;
 
   // Stato
   bool _isLoading = false;
@@ -72,17 +72,19 @@ class QuizPage_ViewModel extends ChangeNotifier {
   // all'avatar l'exp del quiz (con eventuale level up e monete), poi registra la
   // risposta sul db. L'avatar arriva dalla View perché il calcolo del level up
   // vive in Avatar_ViewModel.
-  Future<void> completaQuiz(int index, Avatar_ViewModel avatarVM) async {
+  Future<int> completaQuiz(int index, Avatar_ViewModel avatarVM) async {
     final quiz = _currentQuiz;
-    if (quiz == null || quiz.risposta) return;
+    if (quiz == null || quiz.risposta) return 0;
 
     _selectedIndex = index;
     quiz.risposta = true;
     notifyListeners();
 
+    int nLivelli = 0;
+
     // exp solo se la risposta è corretta; quella sbagliata va comunque registrata
     if (isCorrect(index)) {
-      await avatarVM.aumentaExp(_expPerCorrectAnswer);
+      nLivelli = await avatarVM.aumentaExp(expPerCorrectAnswer);
     }
 
     try {
@@ -91,6 +93,7 @@ class QuizPage_ViewModel extends ChangeNotifier {
       debugPrint('Errore invio risposta quiz: $e');
     }
     notifyListeners();
+    return nLivelli;
   }
 
   // Passa alla domanda successiva della sessione, o la conclude se era l'ultima

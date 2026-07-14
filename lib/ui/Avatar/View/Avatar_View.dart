@@ -34,23 +34,6 @@ class Avatar_View extends StatelessWidget {
       );
     }
 
-    // Mostra l'errore della RPC invece di lasciarlo morire in un debugPrint
-    final errore = vm.errore;
-    if (errore != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!context.mounted) return;
-        vm.consumaErrore();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errore),
-            backgroundColor: Colors.red.shade700,
-            duration: const Duration(seconds: 10),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      });
-    }
-
     final user = vm.user!;
     return Scaffold(
       body: ListView(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/MealType_Enum.dart';
-import 'package:flutter_application_1/ui/Homepage/View/Homepage_View.dart';
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/ViewModel/RicercaCibi_ViewModel.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarCode.dart';
@@ -78,9 +77,6 @@ class _RicercaViewState extends State<RicercaView> {
 
             AvatarCondiviso(
               messaggio: "Ciao!, cerchiamo qualcosa da mangiare!",
-              onTap: () {
-                // TODO: TOCCO MASCOTTE
-              },
             ),
           ],
         ),
