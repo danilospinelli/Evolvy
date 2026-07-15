@@ -5,6 +5,7 @@ import 'package:flutter_application_1/data/repositories/UserRepository.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
 import 'package:flutter_application_1/domain/models/UserModel.dart';
 import 'package:flutter_application_1/domain/MacroType_Enum.dart';
+import 'package:flutter_application_1/domain/models/FoodModel.dart';
 
 class Homepage_ViewModel extends ChangeNotifier {
   final LogMealRepository repoLogMeal = LogMealRepository();
@@ -154,6 +155,20 @@ class Homepage_ViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+  // Ricostruisce i valori nutrizionali per 100g partendo da un cibo loggato.
+  // Pura logica matematica isolata dal contesto grafico.
+  FoodModel resetValori(LoggedFood food) {
+    // Se la quantità è nulla, assumiamo 100g di base
+    final moltiplicatore = (food.quantita ?? 100) / 100;
+    
+    return FoodModel(
+      nome: food.nome,
+      kcalper100: (food.calorie ?? 0) / moltiplicatore,
+      carbper100: (food.carboidrati ?? 0) / moltiplicatore,
+      protper100: (food.proteine ?? 0) / moltiplicatore,
+      grasper100: (food.grassi ?? 0) / moltiplicatore,
+    );
   }
 
   // Rimuove un cibo solo dalla lista locale

@@ -3,7 +3,6 @@ import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/Homepage/ViewModel/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/View/InfoSliderAlimento_View.dart';
-import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:provider/provider.dart';
 
 class InsertedFood extends StatelessWidget {
@@ -26,23 +25,10 @@ class InsertedFood extends StatelessWidget {
         elevation: 5,
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
-
-          //HO MODIFICATO IL METODO PER PERMETTERE DI TORNARE ALL INFOVIEW. POSSIBILE MODIFICA TRAMITE FUNZIONE SQL!!
-          //POICHE QUI FACCIO DLETE INSERT
-          // In futuro, il Data Layer (Supabase) dovrebbe esporre una funzione RPC dedicata
-          // alla modifica (es. 'modifica_log_pasto' tramite SQL UPDATE o UPSERT).
-          // Quando quella funzione sarà pronta, si potrà eliminare questo blocco di cancellazione
-          // e fare una singola chiamata asincrona per garantire l'atomicità dell'operazione.
-          // TODO: metterlo nel ViewModel
           onTap: () async {
-            final moltiplicatore = (food.quantita ?? 100) / 100;
-            final foodRicostruito = FoodModel(
-              nome: food.nome,
-              kcalper100: (food.calorie ?? 0) / moltiplicatore,
-              carbper100: (food.carboidrati ?? 0) / moltiplicatore,
-              protper100: (food.proteine ?? 0) / moltiplicatore,
-              grasper100: (food.grassi ?? 0) / moltiplicatore,
-            );
+            final foodRicostruito = context
+                .read<Homepage_ViewModel>()
+                .resetValori(food);
             await Navigator.push(
               context,
               MaterialPageRoute(
