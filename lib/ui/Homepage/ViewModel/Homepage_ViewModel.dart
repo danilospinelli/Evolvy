@@ -19,7 +19,6 @@ class Homepage_ViewModel extends ChangeNotifier {
     spuntino: [],
   );
   late UserModel _user;
-
   
   String _dailyTip = '⭐ Aggiungi il primo alimento del giorno!';
 
@@ -45,7 +44,7 @@ class Homepage_ViewModel extends ChangeNotifier {
         DateTime.parse('2026-04-28'),
       );
       updateDailyTip(allFoods);
-      _user = await repoUser.getUserMacro(idUtente: 1); // TODO: GESTIRE DINAMICAMENTE L'UTENTE
+      _user = await repoUser.getUserMacro(idUtente: 1);
     } catch (e) {
       debugPrint('Errore caricamento log pasti: $e');
     } finally {
@@ -142,8 +141,6 @@ class Homepage_ViewModel extends ChangeNotifier {
         nomeCibo: food.nome,
         quantita: food.quantita,
       );
-      _isLoading = false;
-      notifyListeners();
     } catch (e) {
       // Rollback sulla lista locale se c'è un errore nel Database
       _addFoodToLocal(mealType, food);
@@ -151,8 +148,10 @@ class Homepage_ViewModel extends ChangeNotifier {
       notifyListeners();
       debugPrint('Errore rimozione cibo: $e');
       rethrow;
-    } _isLoading = true;
+    } finally {
+      _isLoading = false;
       notifyListeners();
+    }
   }
 
   // Rimuove un cibo solo dalla lista locale
@@ -189,13 +188,13 @@ class Homepage_ViewModel extends ChangeNotifier {
   double dailyMacroGoal(MacroType_Enum macro) {
     switch(macro) {
       case MacroType_Enum.Calorie:
-        return (_user.calorie) as double;
+        return (_user.calorie ?? 0).toDouble();
       case MacroType_Enum.Carboidrati:
-        return (_user.carboidrati) as double;
+        return (_user.carboidrati ?? 0).toDouble();
       case MacroType_Enum.Proteine:
-        return (_user.proteine) as double;
+        return (_user.proteine ?? 0).toDouble();
       case MacroType_Enum.Grassi:
-        return (_user.grassi) as double;
+        return (_user.grassi ?? 0).toDouble();
     }
   }
 
