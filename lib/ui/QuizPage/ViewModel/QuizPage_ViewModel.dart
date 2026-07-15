@@ -28,11 +28,14 @@ class QuizPage_ViewModel extends ChangeNotifier {
   bool get isLastQuestion => _currentIndex >= _quizzes.length - 1;
   int? get selectedIndex => _selectedIndex;
 
-  QuizModel? get _currentQuiz =>
-      _quizzes.isEmpty ? null : _quizzes[_currentIndex];
+  QuizModel? get _currentQuiz =>_quizzes.isEmpty ? null : _quizzes[_currentIndex];
+  
   String get question => _currentQuiz?.question ?? '';
   String get spiegazione => _currentQuiz?.spiegazione ?? '';
   bool get answered => _currentQuiz?.risposta ?? false;
+
+
+
   // Restituisce le risposte della domanda corrente come lista di record (testo + correttezza)
   List<({String text, bool correct})> get answers {
     final quiz = _currentQuiz;
@@ -44,6 +47,8 @@ class QuizPage_ViewModel extends ChangeNotifier {
     ];
   }
   // True se l'indice della risposta selezionata è quello della risposta corretta
+ 
+ 
   bool isCorrect(int index) => answers[index].correct;
 
 

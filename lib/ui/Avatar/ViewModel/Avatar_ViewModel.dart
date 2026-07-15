@@ -3,9 +3,9 @@ import 'package:flutter_application_1/data/repositories/AvatarRepository.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 
 class Avatar_ViewModel extends ChangeNotifier {
+  
+  
   final AvatarRepository repo=AvatarRepository();
-
-  // se non viene passata una repository (es. nei test), usa quella reale
 
   static const int expPerLivello = 10;
   static const int monetePerLevelUp = 5;
@@ -25,6 +25,8 @@ class Avatar_ViewModel extends ChangeNotifier {
 
   // Il getter generico ora controlla se c'è un caricamento bloccante iniziale
   bool get isLoading => _isLoadingProfile && _user == null;
+
+  
 
   /// Carica profilo utente e sfide giornaliere dal database
   Future<void> initialize() async {
@@ -84,6 +86,8 @@ class Avatar_ViewModel extends ChangeNotifier {
     }
   }
 
+
+  //TODO verificare perche restituisce il livello gaudaganto spin lo sapevi?
   // Gestione dell'esperienza
   Future<int> aumentaExp(int expGuadagnata) async {
     if (_user == null || expGuadagnata <= 0) return 0;
