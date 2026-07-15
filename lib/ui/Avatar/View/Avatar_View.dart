@@ -13,8 +13,8 @@ class Avatar_View extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<Avatar_ViewModel>();
 
-    // Caricamento iniziale a schermo intero (SOLO se user è null)
-    if (vm.isLoadingProfile && vm.user == null) {
+    // Caricamento iniziale a schermo intero (finché non ho i dati, a prescindere da isLoadingProfile)
+    if (vm.user == null) {
       return const Scaffold(
         body: Center(
           child: CaricamentoCircolare(),
@@ -22,21 +22,7 @@ class Avatar_View extends StatelessWidget {
       );
     }
 
-    // Caricamento fallito o dati assenti
-    if (vm.user == null) {
-      return const Scaffold(
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.all(24),
-            child: Text(
-              'Impossibile caricare i dati del profilo.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-        ),
-      );
-    }
+
 
     final user = vm.user!;
     return Scaffold(

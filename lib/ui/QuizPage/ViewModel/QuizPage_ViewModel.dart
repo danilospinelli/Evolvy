@@ -12,8 +12,9 @@ class QuizPage_ViewModel extends ChangeNotifier {
 
   // Stato
   bool _isLoading = false;
-  // Lista dei 5 quiz giornalieri
-  List<QuizModel> _quizzes = [];
+  // Lista dei 5 quiz giornalieri. null = non ancora caricata con successo
+  // (primo giro, o caricamento fallito); [] = caricata e vuota per davvero.
+  List<QuizModel>? _quizzes;
   // Indice della domanda (da 0 a 4)
   int _currentIndex = 0;
   // Indice della risposta selezionata (da 0 a 2)
@@ -22,13 +23,15 @@ class QuizPage_ViewModel extends ChangeNotifier {
   bool _finished = false;
 
   bool get isLoading => _isLoading;
+  bool get hasError => !_isLoading && _quizzes == null;
   bool get finished => _finished;
-  int get totalQuestions => _quizzes.length;
+  int get totalQuestions => _quizzes?.length ?? 0;
   int get currentQuestionNumber => _currentIndex + 1;
-  bool get isLastQuestion => _currentIndex >= _quizzes.length - 1;
+  bool get isLastQuestion => _currentIndex >= totalQuestions - 1;
   int? get selectedIndex => _selectedIndex;
 
-  QuizModel? get _currentQuiz =>_quizzes.isEmpty ? null : _quizzes[_currentIndex];
+  QuizModel? get _currentQuiz =>
+      (_quizzes == null || _quizzes!.isEmpty) ? null : _quizzes![_currentIndex];
   
   String get question => _currentQuiz?.question ?? '';
   String get spiegazione => _currentQuiz?.spiegazione ?? '';
@@ -87,7 +90,7 @@ class QuizPage_ViewModel extends ChangeNotifier {
 
     // mostro subito la risposta selezionata, poi la persisto
     _selectedIndex = index;
-    _quizzes[i] = quiz.copyWith(risposta: true);
+    _quizzes![i] = quiz.copyWith(risposta: true);
     notifyListeners();
 
     try {
@@ -95,7 +98,7 @@ class QuizPage_ViewModel extends ChangeNotifier {
     } catch (e) {
       debugPrint('Errore invio risposta quiz: $e');
       // la risposta non è stata registrata: la domanda torna disponibile
-      _quizzes[i] = precedente;
+      _quizzes![i] = precedente;
       _selectedIndex = null;
       notifyListeners();
       return 0;

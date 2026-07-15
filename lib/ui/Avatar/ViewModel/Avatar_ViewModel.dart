@@ -23,10 +23,7 @@ class Avatar_ViewModel extends ChangeNotifier {
   bool _isUpdatingObjective = false;
   bool get isUpdatingObjective => _isUpdatingObjective;
 
-  // Il getter generico ora controlla se c'è un caricamento bloccante iniziale
-  bool get isLoading => _isLoadingProfile && _user == null;
 
-  
 
   /// Carica profilo utente e sfide giornaliere dal database
   Future<void> initialize() async {
