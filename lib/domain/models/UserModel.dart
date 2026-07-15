@@ -9,6 +9,7 @@ class UserModel {
     required this.grassi,
   });
 
+  // userId è hardcoded per ora
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       proteine: (json['proteine'] as num).toDouble(),
@@ -17,7 +18,11 @@ class UserModel {
     );
   }
 
+<<<<<<< HEAD
   double? get calorie => (proteine )*4 + (carboidrati )*4 + (grassi )*9;
+=======
+  int get calorie => (proteine)*4 + (carboidrati)*4 + (grassi)*9;
+>>>>>>> b1acc5c8f9fade2688bdad67cd0757d05739edca
 
   UserModel copyWith({
     double? proteine,

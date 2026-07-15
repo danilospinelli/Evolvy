@@ -39,12 +39,12 @@ class DailyRecap extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: _macroBox(context, vm),
+                  child: _MacroBox(vm: vm),
                 ),
                 const SizedBox(width: 18),
                 Expanded(
                   flex: 2,
-                  child: _tipsBox(vm),
+                  child: _TipsBox(vm: vm),
                 ),
               ],
             ),
@@ -68,20 +68,29 @@ class DailyRecap extends StatelessWidget {
       ),
     );
   }
+}
 
-  // BOX MACRONUTRIENTI -------------------------------------------------------------------------
-  Widget _macroBox(BuildContext context, Homepage_ViewModel vm) {
+
+// Sezione macro
+class _MacroBox extends StatelessWidget {
+  final Homepage_ViewModel vm;
+
+  const _MacroBox({
+    super.key,
+    required this.vm,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.orange.shade50,
         borderRadius: BorderRadius.circular(18),
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-
           const Text(
             'Macronutrienti',
             style: TextStyle(
@@ -89,43 +98,54 @@ class DailyRecap extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-
           const SizedBox(height: 18),
-          // Cicla su tutti i macro e crea un tile per ognuno, tranne per "Calorie"
-          ...MacroType_Enum.values
-          .where((meal) => meal != MacroType_Enum.Calorie)
-          .map(
-            (meal) => Column(
-              children: [
-                _macroTile(
-                  context, 
-                  label: meal.toString().split('.').last,
-                  value: vm.obtainedMacros(meal, vm.allFoods).toString(),
-                  goal: vm.dailyMacroGoal(meal).toString(),
-                  color: macroColor(meal),
+
+          if(vm.isLoading)
+            CaricamentoCircolare()
+          else
+            ...MacroType_Enum.values
+              .where((meal) => meal != MacroType_Enum.Calorie)
+              .map(
+                (meal) => Column(
+                  children: [
+                    _MacroTile(
+                      vm: vm,
+                      label: meal.toString().split('.').last,
+                      value: vm.obtainedMacros(meal, vm.allFoods).toString(),
+                      goal: vm.dailyMacroGoal(meal).toString(),
+                      color: macroColor(meal), // Assicurati che questo metodo sia accessibile globalmente o passalo
+                    ),
+                    const SizedBox(height: 14),
+                  ],
                 ),
-                const SizedBox(height: 14),
-              ],
-            )
-          )
+              ),
         ],
       ),
     );
   }
+}
 
-  // BOX SUGGERIMENTI ---------------------------------------------------------------------------
-  Widget _tipsBox(Homepage_ViewModel vm) {
+
+// Sezione suggerimenti
+class _TipsBox extends StatelessWidget {
+  final Homepage_ViewModel vm;
+
+  const _TipsBox({
+    super.key,
+    required this.vm,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.green.shade50,
         borderRadius: BorderRadius.circular(18),
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-
           const Text(
             'Suggerimenti',
             style: TextStyle(
@@ -133,9 +153,7 @@ class DailyRecap extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-
           const SizedBox(height: 16),
-
           Expanded(
             child: Container(
               width: double.infinity,
@@ -149,16 +167,16 @@ class DailyRecap extends StatelessWidget {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: vm.isLoading ? 
-                    CaricamentoCircolare() :
-                    Text(
-                      vm.dailyTip,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 15,
-                      ),
-                    ),
+                  child: vm.isLoading
+                      ? const CaricamentoCircolare()
+                      : Text(
+                          vm.dailyTip,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontSize: 15,
+                          ),
+                        ),
                 ),
               ),
             ),
@@ -167,31 +185,39 @@ class DailyRecap extends StatelessWidget {
       ),
     );
   }
+}
 
-  // Metodo che restituisce un widget con un certo macronutriente e i grammi assunti/obiettivo
-  // Si è scelto di non fare una nuova classe extends StatelessWidget perché è un widget molto semplice e utilizzato solo qui, quindi una funzione è più che sufficiente
-  Widget _macroTile(
-    BuildContext context, {
-    required String label,
-    required String value,
-    required String goal,
-    required Color color,
-  }) {
-    final vm = context.watch<Homepage_ViewModel>();
+
+// Singolo blocchetto per le macro
+class _MacroTile extends StatelessWidget {
+  final Homepage_ViewModel vm;
+  final String label;
+  final String value;
+  final String goal;
+  final Color color;
+
+  const _MacroTile({
+    super.key,
+    required this.vm,
+    required this.label,
+    required this.value,
+    required this.goal,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 14,
         vertical: 12,
       ),
-
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
       ),
-
       child: Row(
         children: [
-
           Container(
             width: 14,
             height: 14,
@@ -200,9 +226,7 @@ class DailyRecap extends StatelessWidget {
               shape: BoxShape.circle,
             ),
           ),
-
           const SizedBox(width: 12),
-
           Expanded(
             child: Text(
               label,
@@ -212,11 +236,7 @@ class DailyRecap extends StatelessWidget {
               ),
             ),
           ),
-
-          if(vm.isLoading)
-            CaricamentoCircolare()
-          else
-            Text(
+          Text(
             '$value g / $goal g',
             style: const TextStyle(
               fontSize: 15,
