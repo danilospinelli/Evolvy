@@ -156,7 +156,7 @@ class Homepage_ViewModel extends ChangeNotifier {
   }
   // Ricostruisce i valori nutrizionali per 100g partendo da un cibo loggato.
   // Pura logica matematica isolata dal contesto grafico.
-  FoodModel reconstructFoodForEditing(LoggedFood food) {
+  FoodModel resetValori(LoggedFood food) {
     // Se la quantità è nulla, assumiamo 100g di base
     final moltiplicatore = (food.quantita ?? 100) / 100;
     

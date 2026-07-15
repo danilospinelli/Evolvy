@@ -28,7 +28,7 @@ class InsertedFood extends StatelessWidget {
           onTap: () async {
             final foodRicostruito = context
                 .read<Homepage_ViewModel>()
-                .reconstructFoodForEditing(food);
+                .resetValori(food);
             await Navigator.push(
               context,
               MaterialPageRoute(
