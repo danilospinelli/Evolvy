@@ -19,11 +19,11 @@ class Homepage_ViewModel extends ChangeNotifier {
     cena: [],
     spuntino: [],
   );
-  late UserModel _user;
+  UserModel? _user;
   
   String _dailyTip = '⭐ Aggiungi il primo alimento del giorno!';
 
-  bool get isLoading => _isLoading;
+  bool get isLoading => _isLoading || _user == null;
   // Restituisce una lista di LoggedFood con tutti i cibi caricati nel giorno corrente
   List<LoggedFood> get allFoods => [
         ...logMeal.colazione,
@@ -51,6 +51,8 @@ class Homepage_ViewModel extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+
+
     }
   }
 
@@ -203,13 +205,13 @@ class Homepage_ViewModel extends ChangeNotifier {
   double dailyMacroGoal(MacroType_Enum macro) {
     switch(macro) {
       case MacroType_Enum.Calorie:
-        return (_user.calorie ?? 0).toDouble();
+        return (_user?.calorie ?? 0).toDouble();
       case MacroType_Enum.Carboidrati:
-        return (_user.carboidrati ?? 0).toDouble();
+        return (_user?.carboidrati ?? 0).toDouble();
       case MacroType_Enum.Proteine:
-        return (_user.proteine ?? 0).toDouble();
+        return (_user?.proteine ?? 0).toDouble();
       case MacroType_Enum.Grassi:
-        return (_user.grassi ?? 0).toDouble();
+        return (_user?.grassi ?? 0).toDouble();
     }
   }
 
