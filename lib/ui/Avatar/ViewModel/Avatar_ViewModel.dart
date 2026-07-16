@@ -24,7 +24,6 @@ class Avatar_ViewModel extends ChangeNotifier {
   bool get isUpdatingObjective => _isUpdatingObjective;
 
 
-
   /// Carica profilo utente e sfide giornaliere dal database
   Future<void> initialize() async {
     _isLoadingProfile = true;
@@ -79,7 +78,6 @@ class Avatar_ViewModel extends ChangeNotifier {
     }
   }
 
-
   // Gestione dell'esperienza
   Future<int> aumentaExp(int expGuadagnata) async {
     if (_user == null || expGuadagnata <= 0) return 0;
@@ -117,7 +115,7 @@ class Avatar_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Completa un obiettivo giornaliero
+  //Completa un obiettivo giornaliero
   Future<int> completaObiettivo(Obiettivo obiettivo) async {
     if (_user == null || obiettivo.completed) return 0;
 
@@ -145,9 +143,5 @@ class Avatar_ViewModel extends ChangeNotifier {
     }
   }
 
-  void aumentaStreak() {
-    if (_user == null) return;
-    _user = _user!.copyWith(streak: _user!.streak + 1);
-    notifyListeners();
-  }
+
 }

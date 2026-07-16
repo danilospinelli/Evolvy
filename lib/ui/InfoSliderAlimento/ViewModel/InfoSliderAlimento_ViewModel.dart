@@ -54,15 +54,13 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
     return (base / 100) * _quantitaBaseNormalizzata;
   }
 
+  // Aggiorna la quantità inserita
   void aggiornaQuantita(String testo) {
-    if (testo.trim().isEmpty) {
-      _quantitaInserita = 0.0;
-    } else {
-      _quantitaInserita = double.tryParse(testo.replaceAll(',', '.')) ?? 0.0;
-    }
+    _quantitaInserita = double.tryParse(testo) ?? 0.0;
     notifyListeners();
   }
 
+  // Cambia l'unità di misura selezionata
   void cambiaUnita(String? nuovaUnita) {
     if (nuovaUnita != null && nuovaUnita != _unitaMisura) {
       _unitaMisura = nuovaUnita;
@@ -70,7 +68,7 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
     }
   }
 
-  
+  // trasforma un foodmodel in un loggedfood
   LoggedFood generaCiboLoggato(FoodModel alimento) {
     return LoggedFood(
       nome: alimento.nome,

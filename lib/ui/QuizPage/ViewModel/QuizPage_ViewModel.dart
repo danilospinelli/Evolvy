@@ -6,15 +6,15 @@ import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart'
 class QuizPage_ViewModel extends ChangeNotifier {
   final QuizRepository repo = QuizRepository();
 
-  // TODO: GESTIRE DINAMICAMENTE L'UTENTE
   static const int _currentUserId = 1;
   static const int expPerCorrectAnswer = 2;
 
   // Stato
   bool _isLoading = false;
+  
   // Lista dei 5 quiz giornalieri. null = non ancora caricata con successo
-  // (primo giro, o caricamento fallito); [] = caricata e vuota per davvero.
   List<QuizModel>? _quizzes;
+  
   // Indice della domanda (da 0 a 4)
   int _currentIndex = 0;
   // Indice della risposta selezionata (da 0 a 2)
@@ -33,8 +33,7 @@ class QuizPage_ViewModel extends ChangeNotifier {
   bool get isLastQuestion => _currentIndex >= totalQuestions - 1;
   int? get selectedIndex => _selectedIndex;
 
-  QuizModel? get _currentQuiz =>
-      (_quizzes == null || _quizzes!.isEmpty) ? null : _quizzes![_currentIndex];
+  QuizModel? get _currentQuiz =>(_quizzes == null || _quizzes!.isEmpty) ? null : _quizzes![_currentIndex];
   
   String get question => _currentQuiz?.question ?? '';
   String get spiegazione => _currentQuiz?.spiegazione ?? '';
@@ -42,7 +41,7 @@ class QuizPage_ViewModel extends ChangeNotifier {
 
 
 
-  // Restituisce le risposte della domanda corrente come lista di record (testo + correttezza)
+  //Restituisce le risposte della domanda corrente come lista (testo + correttezza)
   List<({String text, bool correct})> get answers {
     final quiz = _currentQuiz;
     if (quiz == null) return [];
@@ -52,11 +51,9 @@ class QuizPage_ViewModel extends ChangeNotifier {
       (text: quiz.answers3, correct: quiz.value3),
     ];
   }
-  // True se l'indice della risposta selezionata è quello della risposta corretta
- 
- 
-  bool isCorrect(int index) => answers[index].correct;
 
+  //restituisce True se l'indice della risposta selezionata è quello della risposta corretta
+  bool isCorrect(int index) => answers[index].correct;
 
   // Carica le domande del quiz giornaliero dell'utente dal repository
   Future<void> initialize({int idUtente = _currentUserId}) async {
@@ -79,20 +76,14 @@ class QuizPage_ViewModel extends ChangeNotifier {
   }
 
 
-  // Completa la domanda corrente rispondendo con l'opzione [index]: prima accredita
-  // all'avatar l'exp del quiz (con eventuale level up e monete), poi registra la
-  // risposta sul db. L'avatar arriva dalla View perché il calcolo del level up
-  // vive in Avatar_ViewModel.
+  // Invia la risposta selezionata al backend e aggiorna l'avatar con l'exp guadagnata
   Future<int> completaQuiz(int index, Avatar_ViewModel avatarVM) async {
     final quiz = _currentQuiz;
-    // _isSubmitting blocca il doppio tap: la domanda risulta risposta solo a
-    // scrittura conclusa, quindi fino ad allora quiz.risposta non fa da guardia.
+
     if (quiz == null || quiz.risposta || _isSubmitting) return 0;
 
     final i = _currentIndex;
 
-    // prima persisto, poi marco la domanda come risposta: se la scrittura
-    // fallisce la domanda resta disponibile senza bisogno di disfare nulla
     _isSubmitting = true;
     notifyListeners();
     try {
@@ -109,15 +100,13 @@ class QuizPage_ViewModel extends ChangeNotifier {
     _quizzes![i] = quiz.copyWith(risposta: true);
     notifyListeners();
 
-    // exp solo dopo che la risposta è sul db, altrimenti un errore di rete
-    // la lascerebbe rifattibile e l'utente incasserebbe l'exp due volte.
-    // La risposta sbagliata viene comunque registrata, ma non dà exp.
+
     if (!isCorrect(index)) return 0;
 
     return avatarVM.aumentaExp(expPerCorrectAnswer);
   }
 
-  // Passa alla domanda successiva della sessione, o la conclude se era l'ultima
+  // Passa alla domanda successiva
   void nextQuestion() {
     if (isLastQuestion) {
       _finished = true;

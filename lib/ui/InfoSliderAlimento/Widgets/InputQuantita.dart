@@ -38,8 +38,7 @@ class _InputQuantitaState extends State<InputQuantita> {
   Widget build(BuildContext context) {
     return TextField(
       controller: _controller,
-      // Abilita esplicitamente la punteggiatura sulla tastiera del telefono
-      keyboardType: const TextInputType.numberWithOptions(decimal: true), 
+      keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(4),
