@@ -207,14 +207,14 @@ class Homepage_ViewModel extends ChangeNotifier {
   // Pura logica matematica isolata dal contesto grafico.
   FoodModel resetValori(LoggedFood food) {
     // Se la quantità è nulla, assumiamo 100g di base
-    final moltiplicatore = (food.quantita ?? 100) / 100;
+    final moltiplicatore = (food.quantita) / 100;
     
     return FoodModel(
       nome: food.nome,
-      kcalper100: (food.calorie ?? 0) / moltiplicatore,
-      carbper100: (food.carboidrati ?? 0) / moltiplicatore,
-      protper100: (food.proteine ?? 0) / moltiplicatore,
-      grasper100: (food.grassi ?? 0) / moltiplicatore,
+      kcalper100: (food.calorie) / moltiplicatore,
+      carbper100: (food.carboidrati) / moltiplicatore,
+      protper100: (food.proteine) / moltiplicatore,
+      grasper100: (food.grassi) / moltiplicatore,
     );
   }
 
