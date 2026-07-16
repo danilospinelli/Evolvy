@@ -84,7 +84,6 @@ class Avatar_ViewModel extends ChangeNotifier {
   }
 
 
-  //TODO verificare perche restituisce il livello gaudaganto spin lo sapevi?
   // Gestione dell'esperienza
   Future<int> aumentaExp(int expGuadagnata) async {
     if (_user == null || expGuadagnata <= 0) return 0;

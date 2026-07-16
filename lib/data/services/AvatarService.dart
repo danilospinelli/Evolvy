@@ -57,7 +57,7 @@ class AvatarService {
         },
       );
     } catch (e) {
-      throw Exception('Errore durante l\'aggiornamento dell\'avatar: $e');
+      throw Exception('Errore durante l\'aggiornamento dell\'obbietivo: $e');
     }
   }
 
@@ -74,7 +74,7 @@ class AvatarService {
         },
       );
     } catch (e) {
-      throw Exception('Errore durante il recupero dell\'avatar: $e');
+      throw Exception('Errore durante il cambiamento dei dati: $e');
     }
   }
 

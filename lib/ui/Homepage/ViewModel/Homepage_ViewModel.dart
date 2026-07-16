@@ -156,6 +156,53 @@ class Homepage_ViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+  
+  
+  
+  
+  
+  
+  
+  // Aggiorna un cibo già loggato con nuovi valori, aggiornando sia lo stato locale che la repository
+  // TODO: gestire la data dinamicamente: fai il metodo loadLogMealByDate che prende in input la data e lo chiami con la data di oggi
+  Future<void> updateFood(
+    MealType_Enum mealType,
+    LoggedFood oldFood,
+    LoggedFood newFood,
+  ) async {
+    // Aggiorna la lista locale
+    _updateFoodInLocal(mealType, oldFood, newFood);
+    updateDailyTip(allFoods);
+    notifyListeners();
+    // Aggiorna il Database
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await repoLogMeal.updateCibo(
+        // TODO: GESTIRE USER DINAMICAMENTE
+        idUtente: 1,
+        data: DateTime.parse('2026-04-28'),
+        meal: mealType.toString().split('.').last.toLowerCase(),
+        nomeCibo: newFood.nome,
+        quantita: newFood.quantita,
+        calorie: newFood.calorie,
+        carboidrati: newFood.carboidrati,
+        proteine: newFood.proteine,
+        grassi: newFood.grassi,
+      );
+    } catch (e) {
+      // Rollback sulla lista locale se c'è un errore nel Database
+      _updateFoodInLocal(mealType, newFood, oldFood);
+      updateDailyTip(allFoods);
+      notifyListeners();
+      debugPrint('Errore aggiornamento cibo: $e');
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   // Ricostruisce i valori nutrizionali per 100g partendo da un cibo loggato.
   // Pura logica matematica isolata dal contesto grafico.
   FoodModel resetValori(LoggedFood food) {
@@ -179,6 +226,19 @@ class Homepage_ViewModel extends ChangeNotifier {
   // Aggiunge un cibo solo dalla lista locale
   void _addFoodToLocal(MealType_Enum mealType, LoggedFood food) {
     foodsByMeal(mealType).add(food);
+  }
+
+  // Sostituisce un cibo con uno aggiornato solo nella lista locale, mantenendone la posizione
+  void _updateFoodInLocal(
+    MealType_Enum mealType,
+    LoggedFood oldFood,
+    LoggedFood newFood,
+  ) {
+    final foods = foodsByMeal(mealType);
+    final index = foods.indexOf(oldFood);
+    if (index != -1) {
+      foods[index] = newFood;
+    }
   }
 
   // SEZIONE DAILYRECAP -----------------------------------------------------------------------------

@@ -82,15 +82,17 @@ class InfoSliderAlimento_View extends StatelessWidget {
                             onPressed: () async {
                               final homepageVM = context.read<Homepage_ViewModel>();
                               
-                              if (ciboGiaLoggato != null) {
-                                await homepageVM.removeFood(
-                                  mealType: mealType,
-                                  food: ciboGiaLoggato!,
-                                );
-                              }
-                              
                               final insertingFood = viewModel.generaCiboLoggato(ciboSelezionato);
-                              await homepageVM.addFood(mealType, insertingFood);
+
+                              if (ciboGiaLoggato != null) {
+                                await homepageVM.updateFood(
+                                  mealType,
+                                  ciboGiaLoggato!,
+                                  insertingFood,
+                                );
+                              } else {
+                                await homepageVM.addFood(mealType, insertingFood);
+                              }
                               
                               if (!context.mounted) return; // TODO: CAMBIA, ATTENZIONE ALLO STACK
                               Navigator.popUntil(context, (route) => route.isFirst);
