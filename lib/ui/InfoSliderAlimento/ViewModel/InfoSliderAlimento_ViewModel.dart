@@ -4,9 +4,8 @@ import 'package:flutter_application_1/domain/models/LogMealModel.dart';
 
 class InfoSliderAlimento_ViewModel extends ChangeNotifier {
   // Gestione del controller nel ViewModel
-  final TextEditingController textController = TextEditingController();
-
-  var _quantitaInserita = 0.0;
+  
+  var _quantitaInserita = 100.0;
   var _unitaMisura = "g";
   final List<String> unitaDisponibili = ['g', 'ml', 'kg', 'l'];
 
@@ -14,16 +13,11 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
   void init(LoggedFood? ciboGiaLoggato) {
     if (ciboGiaLoggato != null) {
       final vecchiaQuantita = ciboGiaLoggato.quantita.round().toString();
-      textController.text = vecchiaQuantita;
+      
       aggiornaQuantita(vecchiaQuantita);
     }
   }
-  // Pulizia del controller
-  @override
-  void dispose() {
-    textController.dispose();
-    super.dispose();
-  }
+
 
   double get quantita => _quantitaInserita;
   String get unita => _unitaMisura;
@@ -35,23 +29,23 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
     return _quantitaInserita;
   }
 
-  int calcolaKcal(FoodModel alimento) {
-    final base = alimento.kcalper100 ?? 0.0;
-    return ((base / 100) * _quantitaBaseNormalizzata).round();
+  double calcolaKcal(FoodModel alimento) {
+    final base = alimento.kcalper100;
+    return ((base / 100) * _quantitaBaseNormalizzata);
   }
 
   double calcolaProt(FoodModel alimento) {
-    final base = alimento.protper100 ?? 0.0;
+    final base = alimento.protper100;
     return (base / 100) * _quantitaBaseNormalizzata;
   }
 
   double calcolaCarb(FoodModel alimento) {
-    final base = alimento.carbper100 ?? 0.0;
+    final base = alimento.carbper100;
     return (base / 100) * _quantitaBaseNormalizzata;
   }
 
   double calcolaGras(FoodModel alimento) {
-    final base = alimento.grasper100 ?? 0.0;
+    final base = alimento.grasper100;
     return (base / 100) * _quantitaBaseNormalizzata;
   }
 
@@ -73,9 +67,9 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
 
   LoggedFood generaCiboLoggato(FoodModel alimento) {
     return LoggedFood(
-      nome: alimento.nome ?? 'alimento sconosciuto',
+      nome: alimento.nome,
       quantita: _quantitaBaseNormalizzata,
-      calorie: calcolaKcal(alimento).toDouble(),
+      calorie: calcolaKcal(alimento),
       carboidrati: calcolaCarb(alimento),
       proteine: calcolaProt(alimento),
       grassi: calcolaGras(alimento),
