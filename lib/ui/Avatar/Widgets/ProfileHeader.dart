@@ -91,8 +91,8 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: ProgressBar(
-                      current: widget.user.exp as double,
-                      goal: xpGoal as double, 
+                      current: widget.user.exp.toDouble(),
+                      goal: xpGoal.toDouble(), 
                       label: '', 
                       abbr: 'exp', 
                       showBackground: false,

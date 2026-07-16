@@ -3,6 +3,7 @@ import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/Homepage/ViewModel/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/View/InfoSliderAlimento_View.dart';
+import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
 import 'package:provider/provider.dart';
 
 class InsertedFood extends StatelessWidget {
@@ -52,9 +53,12 @@ class InsertedFood extends StatelessWidget {
 
                 IconButton(
                   onPressed: () async {
+                    SnackBarInfo.foodAction(context, 'remove', food.nome);
                     await context
                         .read<Homepage_ViewModel>()
                         .removeFood(mealType: mealtype, food: food);
+                       
+                
                   },
                   icon: const Icon(Icons.delete),
                 ),

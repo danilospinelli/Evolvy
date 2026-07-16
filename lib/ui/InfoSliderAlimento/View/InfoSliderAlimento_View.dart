@@ -12,6 +12,7 @@ import '../Widgets/RiquadroNutrizionale.dart';
 import '../Widgets/RigaNutriente.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
 
 class InfoSliderAlimento_View extends StatelessWidget {
   final FoodModel ciboSelezionato;
@@ -95,11 +96,18 @@ class InfoSliderAlimento_View extends StatelessWidget {
                                   insertingFood,
                                 );
                                 if (!context.mounted) return;
+
+                                SnackBarInfo.foodAction(context, 'update', insertingFood.nome);
+
                                 // Navigazione sicura: sto modificando, faccio solo 1 passo indietro verso la Home
                                 Navigator.pop(context); 
                               } else {
                                 await homepageVM.addFood(mealType, insertingFood);
                                 if (!context.mounted) return;
+                                
+                                SnackBarInfo.foodAction(context, 'add', insertingFood.nome);
+
+
                                 // Navigazione sicura: sto aggiungendo, faccio 2 passi indietro (salto la Ricerca) per tornare alla Home
                                 int count = 0;
                                 Navigator.popUntil(context, (route) => count++ == 2);

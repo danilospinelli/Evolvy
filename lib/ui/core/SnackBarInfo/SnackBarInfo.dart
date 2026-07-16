@@ -90,4 +90,36 @@ class SnackBarInfo extends SnackBar {
       );
     }
   }
+  // Metodo semantico per le azioni sui cibi
+  static void foodAction(BuildContext context, String actionType, String nomeCibo) {
+    String messaggio = '';
+    IconData icona = Icons.info;
+    Color colore = Colors.grey;
+
+    switch (actionType) {
+      case 'add':
+        messaggio = '$nomeCibo aggiunto al diario!';
+        icona = Icons.check_circle;
+        colore = Colors.green.shade600;
+        break;
+      case 'update':
+        messaggio = '$nomeCibo aggiornato con successo!';
+        icona = Icons.edit;
+        colore = Colors.blue.shade600;
+        break;
+      case 'remove':
+        messaggio = '$nomeCibo rimosso dal diario.';
+        icona = Icons.delete_outline;
+        colore = Colors.red.shade600;
+        break;
+    }
+
+    SnackBarInfo.show(
+      context,
+      message: messaggio,
+      icon: icona,
+      color: colore,
+      accumula: false, // Meglio false, così non si impilano 10 popup se cancella veloce
+    );
+  }
 }
