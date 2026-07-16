@@ -18,7 +18,7 @@ class RigaAlimento extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                alimento.nome ?? 'Alimento senza nome',
+                alimento.nome,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -30,7 +30,7 @@ class RigaAlimento extends StatelessWidget {
             const SizedBox(width: 16),
 
             Text(
-              '${alimento.kcalper100 ?? 0} kcal/100g',
+              '${alimento.kcalper100} kcal/100g',
               style: TextStyle(
                 fontSize: 15,
                 color: Colors.blue,

@@ -28,7 +28,11 @@ class InfoSliderAlimento_View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ChangeNotifierProvider per rendere disponibile il ViewModel a tutti i widget ed inizializzarlo
+    // Calcoliamo qui il valore iniziale da passare al widget grafico protetto
+    final String testoIniziale = ciboGiaLoggato != null 
+        ? ciboGiaLoggato!.quantita.round().toString() 
+        : "100";
+
     return ChangeNotifierProvider(
       create: (_) => InfoSliderAlimento_ViewModel()..init(ciboGiaLoggato),
       child: Builder(
@@ -51,7 +55,7 @@ class InfoSliderAlimento_View extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        ciboSelezionato.nome ?? 'Alimento',
+                        ciboSelezionato.nome,
                         style: const TextStyle(
                           fontSize: 34,
                           fontWeight: FontWeight.w900,
@@ -68,7 +72,8 @@ class InfoSliderAlimento_View extends StatelessWidget {
                           Expanded(
                             flex: 5,
                             child: InputQuantita(
-                              controller: viewModel.textController,
+                              // PASSIAMO LA STRINGA, NON IL CONTROLLER
+                              valoreIniziale: testoIniziale,
                               onChanged: viewModel.aggiornaQuantita,
                             ),
                           ),
@@ -82,11 +87,11 @@ class InfoSliderAlimento_View extends StatelessWidget {
                           TastoConferma(
                             onPressed: () async {
                               final homepageVM = context.read<Homepage_ViewModel>();
-
                               final insertingFood = viewModel.generaCiboLoggato(ciboSelezionato);
+                              final staModificando = ciboGiaLoggato != null;
 
                               try {
-                                if (ciboGiaLoggato != null) {
+                                if (staModificando) {
                                   await homepageVM.updateFood(
                                     mealType,
                                     ciboGiaLoggato!,
@@ -109,8 +114,15 @@ class InfoSliderAlimento_View extends StatelessWidget {
                                 return;
                               }
 
-                              if (!context.mounted) return; // TODO: CAMBIA, ATTENZIONE ALLO STACK
-                              Navigator.popUntil(context, (route) => route.isFirst);
+                              if (!context.mounted) return;
+                              if (staModificando) {
+                                // Navigazione sicura: sto modificando, faccio solo 1 passo indietro verso la Home
+                                Navigator.pop(context);
+                              } else {
+                                // Navigazione sicura: sto aggiungendo, faccio 2 passi indietro (salto la Ricerca) per tornare alla Home
+                                int count = 0;
+                                Navigator.popUntil(context, (route) => count++ == 2);
+                              }
                             },
                           ),
                         ],
@@ -135,7 +147,6 @@ class InfoSliderAlimento_View extends StatelessWidget {
                         nutrienti: [
                           RigaNutriente(
                             etichetta: "Calorie",
-                            // 5. Chiamiamo i metodi passando l'alimento
                             valore: "${viewModel.calcolaKcal(ciboSelezionato).toStringAsFixed(1)} kcal",
                           ),
                           RigaNutriente(
