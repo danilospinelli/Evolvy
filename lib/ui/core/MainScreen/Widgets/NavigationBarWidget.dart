@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/core/MainScreen/ViewModel/MainScreen_ViewModel.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
-import 'package:flutter_application_1/domain/AvatarColors.dart';
+import 'package:flutter_application_1/ui/core/utils/AvatarColors.dart';
 
 class NavigationBarWidget extends StatelessWidget {
   const NavigationBarWidget({super.key});

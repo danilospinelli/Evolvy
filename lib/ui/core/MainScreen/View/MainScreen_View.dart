@@ -9,7 +9,7 @@ import 'package:flutter_application_1/ui/Avatar/View/Avatar_View.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 import 'package:flutter_application_1/ui/Progress/View/Progress_View.dart';
 import 'package:flutter_application_1/ui/GlobalRanking/View/GlobalRanking_View.dart';
-import 'package:flutter_application_1/domain/AvatarColors.dart';
+import 'package:flutter_application_1/ui/core/utils/AvatarColors.dart';
 
 // E' il wrap delle 4 pagine principali
 // E' Stateless perché la modifica allo stato parte da NavigationBarWidget, non è uno stato locale

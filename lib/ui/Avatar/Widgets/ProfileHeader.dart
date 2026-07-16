@@ -28,15 +28,6 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
     _nameController = TextEditingController(text: widget.user.username);
   }
 
-  /*@override
-  void didUpdateWidget(covariant ProfileHeader oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Se il nome è cambiato "da fuori" (es. dopo il salvataggio) e non stiamo editando, sincronizza il campo
-    if (_not_editing_name && widget.user.username != oldWidget.user.username) {
-      _nameController.text = widget.user.username;
-    }
-  }*/
-
   @override
   void dispose() {
     _nameController.dispose();

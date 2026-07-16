@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
-import 'package:flutter_application_1/domain/AvatarColors.dart';
+import 'package:flutter_application_1/ui/core/utils/AvatarColors.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 import 'package:flutter_application_1/ui/Shop/View/Shop_View.dart';
