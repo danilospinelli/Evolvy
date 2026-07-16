@@ -18,7 +18,7 @@ class RicercaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ChangeNotifierProvider per rendere disponibile il ViewModel a tutti i widget ed inizializzarlo
+    // ChangeNotifierProvider  qui e non multiprov.
     return ChangeNotifierProvider(
       create: (_) => RicercaCibi_ViewModel(),
       child: Builder(
@@ -42,7 +42,6 @@ class RicercaView extends StatelessWidget {
                     children: [
                       Expanded(
                         child: BarraDiRicerca(
-                          controller: viewModel.searchController,
                           onSearch: (testo) {
                             viewModel.cercaCibi(testo);
                           },
@@ -50,7 +49,6 @@ class RicercaView extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       BarCode(
-                        // TODO: inserire funzionalità scansione QR code
                         onPressed: () {},
                       ),
                     ],

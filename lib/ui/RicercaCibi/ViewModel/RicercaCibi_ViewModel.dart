@@ -4,8 +4,6 @@ import 'package:flutter_application_1/domain/models/FoodModel.dart';
 
 class RicercaCibi_ViewModel extends ChangeNotifier {
   final FoodRepository _foodRepository;
-  // Gestione del controller nel ViewModel
-  final TextEditingController searchController = TextEditingController();
 
   RicercaCibi_ViewModel() : _foodRepository = FoodRepository();
 
@@ -14,12 +12,6 @@ class RicercaCibi_ViewModel extends ChangeNotifier {
 
   List<FoodModel>? get risultati => _risultati;
   bool get isLoading => _isLoading;
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
 
   Future<void> cercaCibi(String query) async {
     _isLoading = true;
