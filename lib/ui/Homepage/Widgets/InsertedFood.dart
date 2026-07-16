@@ -3,6 +3,7 @@ import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/Homepage/ViewModel/Homepage_ViewModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
 import 'package:flutter_application_1/ui/InfoSliderAlimento/View/InfoSliderAlimento_View.dart';
+import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
 import 'package:provider/provider.dart';
 
 class InsertedFood extends StatelessWidget {
@@ -52,9 +53,21 @@ class InsertedFood extends StatelessWidget {
 
                 IconButton(
                   onPressed: () async {
-                    await context
-                        .read<Homepage_ViewModel>()
-                        .removeFood(mealType: mealtype, food: food);
+                    try {
+                      await context
+                          .read<Homepage_ViewModel>()
+                          .removeFood(mealType: mealtype, food: food);
+                    } catch (_) {
+                      // La rimozione non è arrivata al db: il cibo resta in lista.
+                      if (!context.mounted) return;
+                      SnackBarInfo.show(
+                        context,
+                        message: 'Eliminazione non riuscita, riprova.',
+                        icon: Icons.error_outline,
+                        color: Colors.red,
+                        accumula: false,
+                      );
+                    }
                   },
                   icon: const Icon(Icons.delete),
                 ),
