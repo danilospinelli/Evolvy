@@ -13,6 +13,7 @@ class RicercaCibi_ViewModel extends ChangeNotifier {
   List<FoodModel>? get risultati => _risultati;
   bool get isLoading => _isLoading;
 
+  //salva i risultati della ricerca dei cibi in _risultati
   Future<void> cercaCibi(String query) async {
     _isLoading = true;
     if (query.trim().isEmpty) {
