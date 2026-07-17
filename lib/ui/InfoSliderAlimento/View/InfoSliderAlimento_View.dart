@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
@@ -11,8 +12,6 @@ import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/InputQuantit
 import '../Widgets/RiquadroNutrizionale.dart';
 import '../Widgets/RigaNutriente.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
-import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
 
 class InfoSliderAlimento_View extends StatelessWidget {
@@ -73,7 +72,6 @@ class InfoSliderAlimento_View extends StatelessWidget {
                           Expanded(
                             flex: 5,
                             child: InputQuantita(
-                              // PASSIAMO LA STRINGA, NON IL CONTROLLER
                               valoreIniziale: testoIniziale,
                               onChanged: viewModel.aggiornaQuantita,
                             ),
@@ -89,21 +87,33 @@ class InfoSliderAlimento_View extends StatelessWidget {
                             onPressed: () async {
                               final homepageVM = context.read<Homepage_ViewModel>();
                               final insertingFood = viewModel.generaCiboLoggato(ciboSelezionato);
-                              final staModificando = ciboGiaLoggato != null;
 
+                              
                               try {
-                                if (staModificando) {
+                                if (ciboGiaLoggato != null) {
+                               
                                   await homepageVM.updateFood(
                                     mealType,
                                     ciboGiaLoggato!,
                                     insertingFood,
                                   );
+                                  
+                                  if (!context.mounted) return;
+                                  SnackBarInfo.foodAction(context, 'update', insertingFood.nome);
+                                  Navigator.pop(context); // 1 solo passo indietro
+
                                 } else {
+                                
                                   await homepageVM.addFood(mealType, insertingFood);
+                                  
+                                  if (!context.mounted) return;
+                                  SnackBarInfo.foodAction(context, 'add', insertingFood.nome);
+                                  
+                                  int count = 0;
+                                  Navigator.popUntil(context, (route) => count++ == 2); // 2 passi indietro
                                 }
                               } catch (_) {
-                                // Il salvataggio è fallito e il cibo non è stato registrato:
-                                // resto sulla schermata così l'utente può riprovare.
+                                // --- GESTIONE DELL'ERRORE (Se salta Supabase) ---
                                 if (!context.mounted) return;
                                 SnackBarInfo.show(
                                   context,
@@ -112,40 +122,13 @@ class InfoSliderAlimento_View extends StatelessWidget {
                                   color: Colors.red,
                                   accumula: false,
                                 );
-<<<<<<< HEAD
-                                if (!context.mounted) return;
-
-                                SnackBarInfo.foodAction(context, 'update', insertingFood.nome);
-
-=======
-                                return;
-                              }
-
-                              if (!context.mounted) return;
-                              if (staModificando) {
->>>>>>> a00b0d9b13fc84274a2d9855b639e42f295176b5
-                                // Navigazione sicura: sto modificando, faccio solo 1 passo indietro verso la Home
-                                Navigator.pop(context);
-                              } else {
-<<<<<<< HEAD
-                                await homepageVM.addFood(mealType, insertingFood);
-                                if (!context.mounted) return;
-                                
-                                SnackBarInfo.foodAction(context, 'add', insertingFood.nome);
-
-
-=======
->>>>>>> a00b0d9b13fc84274a2d9855b639e42f295176b5
-                                // Navigazione sicura: sto aggiungendo, faccio 2 passi indietro (salto la Ricerca) per tornare alla Home
-                                int count = 0;
-                                Navigator.popUntil(context, (route) => count++ == 2);
                               }
                             },
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 32),
+                        ], 
+                      ), 
 
+                      const SizedBox(height: 32),
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
