@@ -84,18 +84,14 @@ class Homepage_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Aggiunge un cibo al pasto specificato, aggiornando sia lo stato locale che la repository
+  // Aggiunge un cibo al pasto specificato: prima il Database, poi lo stato locale.
+  // La lista locale viene toccata solo a scrittura riuscita, così non può divergere dal db.
   Future<void> addFood(
     MealType_Enum mealType,
     LoggedFood food,
   ) async {
-    // Aggiorna la lista locale
-    _addFoodToLocal(mealType, food);
-    updateDailyTip(allFoods);
-    notifyListeners();
-    // Aggiorna il Database
     _isLoading = true;
-      notifyListeners();
+    notifyListeners();
     try {
       await repoLogMeal.addCibo(
         // TODO: GESTIRE USER DINAMICAMENTE
@@ -110,11 +106,9 @@ class Homepage_ViewModel extends ChangeNotifier {
         proteine: food.proteine,
         grassi: food.grassi,
       );
-    } catch (e) {
-      // Rollback sulla lista locale se c'è un errore nel Database
-      _removeFoodFromLocal(mealType, food);
+      _addFoodToLocal(mealType, food);
       updateDailyTip(allFoods);
-      notifyListeners();
+    } catch (e) {
       debugPrint('Errore aggiunta cibo: $e');
       rethrow;
     } finally {
@@ -123,17 +117,12 @@ class Homepage_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Rimuove un cibo dal pasto specificato, aggiornando sia lo stato locale che la repository
+  // Rimuove un cibo dal pasto specificato: prima il Database, poi lo stato locale.
   // TODO: gestire la data dinamicamente: fai il metodo loadLogMealByDate che prende in input la data e lo chiami con la data di oggi
   Future<void> removeFood({
     required MealType_Enum mealType,
     required LoggedFood food,
   }) async {
-    // Aggiorna la lista locale
-    _removeFoodFromLocal(mealType, food);
-    updateDailyTip(allFoods);
-    notifyListeners();
-    // Aggiorna il Database
     _isLoading = true;
     notifyListeners();
     try {
@@ -144,11 +133,9 @@ class Homepage_ViewModel extends ChangeNotifier {
         nomeCibo: food.nome,
         quantita: food.quantita,
       );
-    } catch (e) {
-      // Rollback sulla lista locale se c'è un errore nel Database
-      _addFoodToLocal(mealType, food);
+      _removeFoodFromLocal(mealType, food);
       updateDailyTip(allFoods);
-      notifyListeners();
+    } catch (e) {
       debugPrint('Errore rimozione cibo: $e');
       rethrow;
     } finally {
@@ -157,24 +144,13 @@ class Homepage_ViewModel extends ChangeNotifier {
     }
   }
   
-  
-  
-  
-  
-  
-  
-  // Aggiorna un cibo già loggato con nuovi valori, aggiornando sia lo stato locale che la repository
+  // Aggiorna un cibo già loggato con nuovi valori: prima il Database, poi lo stato locale.
   // TODO: gestire la data dinamicamente: fai il metodo loadLogMealByDate che prende in input la data e lo chiami con la data di oggi
   Future<void> updateFood(
     MealType_Enum mealType,
     LoggedFood oldFood,
     LoggedFood newFood,
   ) async {
-    // Aggiorna la lista locale
-    _updateFoodInLocal(mealType, oldFood, newFood);
-    updateDailyTip(allFoods);
-    notifyListeners();
-    // Aggiorna il Database
     _isLoading = true;
     notifyListeners();
     try {
@@ -190,11 +166,9 @@ class Homepage_ViewModel extends ChangeNotifier {
         proteine: newFood.proteine,
         grassi: newFood.grassi,
       );
-    } catch (e) {
-      // Rollback sulla lista locale se c'è un errore nel Database
-      _updateFoodInLocal(mealType, newFood, oldFood);
+      _updateFoodInLocal(mealType, oldFood, newFood);
       updateDailyTip(allFoods);
-      notifyListeners();
+    } catch (e) {
       debugPrint('Errore aggiornamento cibo: $e');
       rethrow;
     } finally {
@@ -241,6 +215,8 @@ class Homepage_ViewModel extends ChangeNotifier {
     }
   }
 
+  
+  
   // SEZIONE DAILYRECAP -----------------------------------------------------------------------------
 
   // Restituisce la somma totale di un macro specifico (calorie, carboidrati, proteine o grassi) consumato nel giorno corrente

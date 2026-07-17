@@ -39,20 +39,18 @@ class Avatar_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Aggiorna username di AvatarModel in uso
+  // Aggiorna username di AvatarModel in uso: prima il db, poi lo stato locale
   Future<void> editName(String name) async {
     if (_user == null) return;
-
-    _user = _user!.copyWith(username: name);
-    notifyListeners();
 
     _isLoadingProfile = true;
     notifyListeners();
     try {
       await repo.updateNomeAvatar(
-        idUtente: 1, 
+        idUtente: 1,
         nomeAvatar: name,
       );
+      _user = _user!.copyWith(username: name);
     } catch (e) {
       debugPrint('Errore aggiornamento nome: $e');
     } finally {
@@ -61,20 +59,18 @@ class Avatar_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Aggiorna colore scelto e sprite mascotte in uso
+  // Aggiorna colore scelto e sprite mascotte in uso: prima il db, poi lo stato locale
   Future<void> aggiornaColore(int new_color) async {
     if (_user == null) return;
-
-    _user = _user!.copyWith(chosenColor: new_color);
-    notifyListeners();
 
     _isUpdatingColor = true;
     notifyListeners();
     try {
       await repo.updateColoreAvatar(
-        idUtente: 1, 
+        idUtente: 1,
         coloreAvatar: new_color,
       );
+      _user = _user!.copyWith(chosenColor: new_color);
     } catch (e) {
       debugPrint('Errore aggiornamento colore: $e');
     } finally {
@@ -101,23 +97,19 @@ class Avatar_ViewModel extends ChangeNotifier {
       monete += monetePerLevelUp;
     }
 
-    _user = precedente.copyWith(livello: livello, exp: exp, monete: monete);
-    notifyListeners();
-
     _isLoadingProfile = true;
     notifyListeners();
     try {
       await repo.aggiornaDatiAvatar(
-        idUtente: 1, 
+        idUtente: 1,
         livello: livello,
         exp: exp,
         monete: monete,
       );
+      _user = precedente.copyWith(livello: livello, exp: exp, monete: monete);
       return livello - livelloIniziale;
     } catch (e) {
       debugPrint('Errore aggiornamento exp: $e');
-      _user = precedente;
-      notifyListeners();
       return 0;
     } finally {
       _isLoadingProfile = false;
@@ -131,18 +123,18 @@ class Avatar_ViewModel extends ChangeNotifier {
 
     int nLivelli = await aumentaExp(obiettivo.xpReward);
 
-    final obiettivi = List<Obiettivo>.of(_user!.obiettivi);
-    final i = obiettivi.indexWhere((o) => o.id == obiettivo.id);
-    obiettivi[i] = obiettivi[i].copyWith(completed: true);
-
-    _user = _user!.copyWith(obiettivi: obiettivi);
     _isUpdatingObjective = true;
     notifyListeners();
     try {
       await repo.completaObiettivoAvatar(
-        idUtente: 1, 
+        idUtente: 1,
         idObiettivo: obiettivo.id,
       );
+      // marco l'obiettivo solo a scrittura riuscita
+      final obiettivi = List<Obiettivo>.of(_user!.obiettivi);
+      final i = obiettivi.indexWhere((o) => o.id == obiettivo.id);
+      obiettivi[i] = obiettivi[i].copyWith(completed: true);
+      _user = _user!.copyWith(obiettivi: obiettivi);
       return nLivelli;
     } catch (e) {
       debugPrint('Errore completamento obiettivo: $e');

@@ -53,12 +53,30 @@ class InsertedFood extends StatelessWidget {
 
                 IconButton(
                   onPressed: () async {
+<<<<<<< HEAD
                     SnackBarInfo.foodAction(context, 'remove', food.nome);
                     await context
                         .read<Homepage_ViewModel>()
                         .removeFood(mealType: mealtype, food: food);
                        
                 
+=======
+                    try {
+                      await context
+                          .read<Homepage_ViewModel>()
+                          .removeFood(mealType: mealtype, food: food);
+                    } catch (_) {
+                      // La rimozione non è arrivata al db: il cibo resta in lista.
+                      if (!context.mounted) return;
+                      SnackBarInfo.show(
+                        context,
+                        message: 'Eliminazione non riuscita, riprova.',
+                        icon: Icons.error_outline,
+                        color: Colors.red,
+                        accumula: false,
+                      );
+                    }
+>>>>>>> a00b0d9b13fc84274a2d9855b639e42f295176b5
                   },
                   icon: const Icon(Icons.delete),
                 ),

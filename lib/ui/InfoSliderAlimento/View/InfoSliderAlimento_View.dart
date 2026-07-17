@@ -11,6 +11,7 @@ import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/InputQuantit
 import '../Widgets/RiquadroNutrizionale.dart';
 import '../Widgets/RigaNutriente.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
+import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
 
@@ -88,26 +89,53 @@ class InfoSliderAlimento_View extends StatelessWidget {
                             onPressed: () async {
                               final homepageVM = context.read<Homepage_ViewModel>();
                               final insertingFood = viewModel.generaCiboLoggato(ciboSelezionato);
+                              final staModificando = ciboGiaLoggato != null;
 
-                              if (ciboGiaLoggato != null) {
-                                await homepageVM.updateFood(
-                                  mealType,
-                                  ciboGiaLoggato!,
-                                  insertingFood,
+                              try {
+                                if (staModificando) {
+                                  await homepageVM.updateFood(
+                                    mealType,
+                                    ciboGiaLoggato!,
+                                    insertingFood,
+                                  );
+                                } else {
+                                  await homepageVM.addFood(mealType, insertingFood);
+                                }
+                              } catch (_) {
+                                // Il salvataggio è fallito e il cibo non è stato registrato:
+                                // resto sulla schermata così l'utente può riprovare.
+                                if (!context.mounted) return;
+                                SnackBarInfo.show(
+                                  context,
+                                  message: 'Salvataggio non riuscito, riprova.',
+                                  icon: Icons.error_outline,
+                                  color: Colors.red,
+                                  accumula: false,
                                 );
+<<<<<<< HEAD
                                 if (!context.mounted) return;
 
                                 SnackBarInfo.foodAction(context, 'update', insertingFood.nome);
 
+=======
+                                return;
+                              }
+
+                              if (!context.mounted) return;
+                              if (staModificando) {
+>>>>>>> a00b0d9b13fc84274a2d9855b639e42f295176b5
                                 // Navigazione sicura: sto modificando, faccio solo 1 passo indietro verso la Home
-                                Navigator.pop(context); 
+                                Navigator.pop(context);
                               } else {
+<<<<<<< HEAD
                                 await homepageVM.addFood(mealType, insertingFood);
                                 if (!context.mounted) return;
                                 
                                 SnackBarInfo.foodAction(context, 'add', insertingFood.nome);
 
 
+=======
+>>>>>>> a00b0d9b13fc84274a2d9855b639e42f295176b5
                                 // Navigazione sicura: sto aggiungendo, faccio 2 passi indietro (salto la Ricerca) per tornare alla Home
                                 int count = 0;
                                 Navigator.popUntil(context, (route) => count++ == 2);

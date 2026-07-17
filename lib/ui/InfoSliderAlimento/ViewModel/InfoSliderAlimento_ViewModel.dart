@@ -22,6 +22,7 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
   double get quantita => _quantitaInserita;
   String get unita => _unitaMisura;
 
+  //gestisce le varie unita di misura
   double get _quantitaBaseNormalizzata {
     if (_unitaMisura == 'kg' || _unitaMisura == 'l') {
       return _quantitaInserita * 1000;
@@ -29,21 +30,25 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
     return _quantitaInserita;
   }
 
+  //calcola le calorie per quella quantita di alimento
   double calcolaKcal(FoodModel alimento) {
     final base = alimento.kcalper100;
     return ((base / 100) * _quantitaBaseNormalizzata);
   }
 
+  //calcola le proteine per quella quantita di alimento
   double calcolaProt(FoodModel alimento) {
     final base = alimento.protper100;
     return (base / 100) * _quantitaBaseNormalizzata;
   }
 
+  //calcola i carboidrati per quella quantita di alimento
   double calcolaCarb(FoodModel alimento) {
     final base = alimento.carbper100;
     return (base / 100) * _quantitaBaseNormalizzata;
   }
 
+  //calcola i grassi per quella quantita di alimento
   double calcolaGras(FoodModel alimento) {
     final base = alimento.grasper100;
     return (base / 100) * _quantitaBaseNormalizzata;
@@ -65,6 +70,7 @@ class InfoSliderAlimento_ViewModel extends ChangeNotifier {
     }
   }
 
+  
   LoggedFood generaCiboLoggato(FoodModel alimento) {
     return LoggedFood(
       nome: alimento.nome,

@@ -21,8 +21,11 @@ class QuizPage_ViewModel extends ChangeNotifier {
   int? _selectedIndex;
   // True se ho finito tutti i quiz
   bool _finished = false;
+  // True mentre la risposta è in corso di salvataggio sul db
+  bool _isSubmitting = false;
 
   bool get isLoading => _isLoading;
+  bool get isSubmitting => _isSubmitting;
   bool get hasError => !_isLoading && _quizzes == null;
   bool get finished => _finished;
   int get totalQuestions => _quizzes?.length ?? 0;
@@ -82,27 +85,29 @@ class QuizPage_ViewModel extends ChangeNotifier {
   // vive in Avatar_ViewModel.
   Future<int> completaQuiz(int index, Avatar_ViewModel avatarVM) async {
     final quiz = _currentQuiz;
-    if (quiz == null || quiz.risposta) return 0;
+    // _isSubmitting blocca il doppio tap: la domanda risulta risposta solo a
+    // scrittura conclusa, quindi fino ad allora quiz.risposta non fa da guardia.
+    if (quiz == null || quiz.risposta || _isSubmitting) return 0;
 
-    // tengo lo stato precedente: se il salvataggio fallisce ci torno indietro
-    final precedente = quiz;
     final i = _currentIndex;
 
-    // mostro subito la risposta selezionata, poi la persisto
-    _selectedIndex = index;
-    _quizzes![i] = quiz.copyWith(risposta: true);
+    // prima persisto, poi marco la domanda come risposta: se la scrittura
+    // fallisce la domanda resta disponibile senza bisogno di disfare nulla
+    _isSubmitting = true;
     notifyListeners();
-
     try {
       await repo.checkQuiz(quiz.id, _currentUserId);
     } catch (e) {
       debugPrint('Errore invio risposta quiz: $e');
-      // la risposta non è stata registrata: la domanda torna disponibile
-      _quizzes![i] = precedente;
-      _selectedIndex = null;
-      notifyListeners();
       return 0;
+    } finally {
+      _isSubmitting = false;
+      notifyListeners();
     }
+
+    _selectedIndex = index;
+    _quizzes![i] = quiz.copyWith(risposta: true);
+    notifyListeners();
 
     // exp solo dopo che la risposta è sul db, altrimenti un errore di rete
     // la lascerebbe rifattibile e l'utente incasserebbe l'exp due volte.
