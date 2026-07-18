@@ -8,12 +8,14 @@ import 'package:flutter_application_1/domain/MacroType_Enum.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 
 class Homepage_ViewModel extends ChangeNotifier {
-  final LogMealRepository repoLogMeal = LogMealRepository();
-  final UserRepository repoUser = UserRepository();
+  final LogMealRepository repoLogMeal;
+  final UserRepository repoUser;
+
+  Homepage_ViewModel(this.repoLogMeal, this.repoUser);
 
   // Stato condiviso da più widget
   bool _isLoading = false;
-  LogMealModel logMeal = LogMealModel(
+  LogMealModel _logMeal = LogMealModel(
     colazione: [],
     pranzo: [],
     cena: [],
@@ -24,12 +26,13 @@ class Homepage_ViewModel extends ChangeNotifier {
   String _dailyTip = '⭐ Aggiungi il primo alimento del giorno!';
 
   bool get isLoading => _isLoading || _user == null;
+  LogMealModel get logMeal => _logMeal;
   // Restituisce una lista di LoggedFood con tutti i cibi caricati nel giorno corrente
   List<LoggedFood> get allFoods => [
-        ...logMeal.colazione,
-        ...logMeal.pranzo,
-        ...logMeal.cena,
-        ...logMeal.spuntino,
+        ..._logMeal.colazione,
+        ..._logMeal.pranzo,
+        ..._logMeal.cena,
+        ..._logMeal.spuntino,
       ];
   String get dailyTip => _dailyTip;
 
@@ -40,7 +43,7 @@ class Homepage_ViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      logMeal = await repoLogMeal.getPastiGiornalieri(
+      _logMeal = await repoLogMeal.getPastiGiornalieri(
         1,
         DateTime.parse('2026-04-28'),
       );
@@ -60,13 +63,13 @@ class Homepage_ViewModel extends ChangeNotifier {
   List<LoggedFood> foodsByMeal(MealType_Enum mealType) {
     switch (mealType) {
       case MealType_Enum.Colazione:
-        return logMeal.colazione;
+        return _logMeal.colazione;
       case MealType_Enum.Pranzo:
-        return logMeal.pranzo;
+        return _logMeal.pranzo;
       case MealType_Enum.Cena:
-        return logMeal.cena;
+        return _logMeal.cena;
       case MealType_Enum.Spuntino:
-        return logMeal.spuntino;
+        return _logMeal.spuntino;
     }
   }
 

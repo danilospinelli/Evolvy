@@ -4,7 +4,9 @@ import 'package:flutter_application_1/domain/models/QuizModel.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 
 class QuizPage_ViewModel extends ChangeNotifier {
-  final QuizRepository repo = QuizRepository();
+  final QuizRepository repo;
+
+  QuizPage_ViewModel(this.repo);
 
   // TODO: GESTIRE DINAMICAMENTE L'UTENTE
   static const int _currentUserId = 1;
@@ -49,9 +51,8 @@ class QuizPage_ViewModel extends ChangeNotifier {
       (text: quiz.answers3, correct: quiz.value3),
     ];
   }
+  
   // True se l'indice della risposta selezionata è quello della risposta corretta
- 
- 
   bool isCorrect(int index) => answers[index].correct;
 
 

@@ -6,7 +6,7 @@ class LogMealRepository {
 
   
   LogMealRepository(){
-    this._logmealservice=LogMealService();
+    this._logmealservice = LogMealService();
   }
 
 

@@ -31,7 +31,7 @@ class ObiettiviSection extends StatelessWidget {
           const Center(child: CaricamentoCircolare())
         else
           for (final challenge in challenges) ...[
-            _ChallengeCard(
+            ChallengeCard(
               challenge: challenge,
             ),
             const SizedBox(height: 12),
@@ -41,8 +41,8 @@ class ObiettiviSection extends StatelessWidget {
   }
 }
 
-class _ChallengeCard extends StatelessWidget {
-  const _ChallengeCard({required this.challenge});
+class ChallengeCard extends StatelessWidget {
+  const ChallengeCard({required this.challenge});
 
   final Obiettivo challenge;
 

@@ -60,7 +60,7 @@ class SnackBarInfo extends SnackBar {
     );
   }
 
-  static void xpGain(BuildContext context, int xpGuadagnata, int nLivelli) async {
+  static void xpGain(BuildContext context, int xpGuadagnata, int nLivelli) {
     // SnackBar Exp
     SnackBarInfo.show(
       context,

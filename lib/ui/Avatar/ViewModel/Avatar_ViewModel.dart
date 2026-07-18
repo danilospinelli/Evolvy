@@ -4,8 +4,9 @@ import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 
 class Avatar_ViewModel extends ChangeNotifier {
   
-  
-  final AvatarRepository repo=AvatarRepository();
+  final AvatarRepository repo;
+
+  Avatar_ViewModel(this.repo);
 
   static const int expPerLivello = 10;
   static const int monetePerLevelUp = 5;
@@ -13,7 +14,7 @@ class Avatar_ViewModel extends ChangeNotifier {
   AvatarModel? _user;
   AvatarModel? get user => _user;
 
-  // FLAG DI CARICAMENTO SPECIFICI
+  // Flag di caricamento per elementi diversi
   bool _isLoadingProfile = false;
   bool get isLoadingProfile => _isLoadingProfile;
 

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/ViewModel/RicercaCibi_ViewModel.dart';
+import 'package:flutter_application_1/data/repositories/FoodRepository.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarCode.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/BarraDiRicerca.dart';
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/ListaRisultati.dart';
@@ -18,9 +19,9 @@ class RicercaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ChangeNotifierProvider  qui e non multiprov.
+    // ChangeNotifierProvider qui e non multiprov.
     return ChangeNotifierProvider(
-      create: (_) => RicercaCibi_ViewModel(),
+      create: (_) => RicercaCibi_ViewModel(FoodRepository()),
       child: Builder(
         builder: (context) {
           final viewModel = context.watch<RicercaCibi_ViewModel>();
