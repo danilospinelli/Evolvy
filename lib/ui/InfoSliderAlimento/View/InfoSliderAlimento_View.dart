@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/MealType_Enum.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:flutter_application_1/domain/models/LogMealModel.dart';
@@ -11,7 +12,8 @@ import 'package:flutter_application_1/ui/InfoSliderAlimento/Widgets/InputQuantit
 import '../Widgets/RiquadroNutrizionale.dart';
 import '../Widgets/RigaNutriente.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
+import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
 class InfoSliderAlimento_View extends StatelessWidget {
   final FoodModel ciboSelezionato;
@@ -27,12 +29,18 @@ class InfoSliderAlimento_View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ChangeNotifierProvider per rendere disponibile il ViewModel a tutti i widget ed inizializzarlo
+    // Calcoliamo qui il valore iniziale da passare al widget grafico protetto
+    final String testoIniziale = ciboGiaLoggato != null 
+        ? ciboGiaLoggato!.quantita.round().toString() 
+        : "100";
+
     return ChangeNotifierProvider(
       create: (_) => InfoSliderAlimento_ViewModel()..init(ciboGiaLoggato),
       child: Builder(
         builder: (context) {
           final viewModel = context.watch<InfoSliderAlimento_ViewModel>();
+          // Osservo il salvataggio in corso per mostrare la rotella al posto del tasto OK.
+          final homepageVM = context.watch<Homepage_ViewModel>();
 
           return Scaffold(
             backgroundColor: Colors.white,
@@ -50,7 +58,7 @@ class InfoSliderAlimento_View extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        ciboSelezionato.nome ?? 'Alimento',
+                        ciboSelezionato.nome,
                         style: const TextStyle(
                           fontSize: 34,
                           fontWeight: FontWeight.w900,
@@ -67,7 +75,7 @@ class InfoSliderAlimento_View extends StatelessWidget {
                           Expanded(
                             flex: 5,
                             child: InputQuantita(
-                              controller: viewModel.textController,
+                              valoreIniziale: testoIniziale,
                               onChanged: viewModel.aggiornaQuantita,
                             ),
                           ),
@@ -78,28 +86,58 @@ class InfoSliderAlimento_View extends StatelessWidget {
                             onChanged: viewModel.cambiaUnita,
                           ),
                           const SizedBox(width: 12),
+                          if (homepageVM.isUpdatingFood)
+                            // Salvataggio in corso: rotella al posto del tasto OK.
+                            const Padding(
+                              padding: EdgeInsets.all(16),
+                              child: CaricamentoCircolare(),
+                            )
+                          else
                           TastoConferma(
                             onPressed: () async {
-                              final homepageVM = context.read<Homepage_ViewModel>();
+                              final insertingFood = viewModel.generaCiboLoggato(ciboSelezionato);
+
                               
-                              if (ciboGiaLoggato != null) {
-                                await homepageVM.removeFood(
-                                  mealType: mealType,
-                                  food: ciboGiaLoggato!,
+                              try {
+                                if (ciboGiaLoggato != null) {
+                               
+                                  await homepageVM.updateFood(
+                                    mealType,
+                                    ciboGiaLoggato!,
+                                    insertingFood,
+                                  );
+                                  
+                                  if (!context.mounted) return;
+                                  SnackBarInfo.foodAction(context, 'update', insertingFood.nome);
+                                  Navigator.pop(context); // 1 solo passo indietro
+
+                                } else {
+                                
+                                  await homepageVM.addFood(mealType, insertingFood);
+                                  
+                                  if (!context.mounted) return;
+                                  SnackBarInfo.foodAction(context, 'add', insertingFood.nome);
+                                  
+                                  int count = 0;
+                                  Navigator.popUntil(context, (route) => count++ == 2); // 2 passi indietro
+                                }
+                              } catch (_) {
+                                // --- GESTIONE DELL'ERRORE (Se salta Supabase) ---
+                                if (!context.mounted) return;
+                                SnackBarInfo.show(
+                                  context,
+                                  message: 'Salvataggio non riuscito, riprova.',
+                                  icon: Icons.error_outline,
+                                  color: Colors.red,
+                                  accumula: false,
                                 );
                               }
-                              
-                              final insertingFood = viewModel.generaCiboLoggato(ciboSelezionato);
-                              await homepageVM.addFood(mealType, insertingFood);
-                              
-                              if (!context.mounted) return; // TODO: CAMBIA, ATTENZIONE ALLO STACK
-                              Navigator.popUntil(context, (route) => route.isFirst);
                             },
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 32),
+                        ], 
+                      ), 
 
+                      const SizedBox(height: 32),
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -118,7 +156,6 @@ class InfoSliderAlimento_View extends StatelessWidget {
                         nutrienti: [
                           RigaNutriente(
                             etichetta: "Calorie",
-                            // 5. Chiamiamo i metodi passando l'alimento
                             valore: "${viewModel.calcolaKcal(ciboSelezionato).toStringAsFixed(1)} kcal",
                           ),
                           RigaNutriente(

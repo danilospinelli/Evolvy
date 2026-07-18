@@ -58,5 +58,30 @@ class LogMealRepository {
     );
   }
 
+    Future<void> updateCibo({
+    required int idUtente,
+    required DateTime data,
+    required String meal,
+    required String nomeCibo,
+    required double quantita,
+    required double calorie,
+    required double carboidrati,
+    required double proteine,
+    required double grassi,  
+    }) async {
+      await _logmealservice.updateCiboService(
+        idUtente: idUtente,
+        data: data,
+        meal: meal,
+        nomeCibo: nomeCibo,
+        quantita: quantita,
+        calorie: calorie,
+        carboidrati: carboidrati,
+        proteine: proteine,
+        grassi: grassi,
+      );
+    }
+
+
 
 }

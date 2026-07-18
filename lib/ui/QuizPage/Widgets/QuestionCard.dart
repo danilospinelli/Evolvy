@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.dart';
 import 'package:flutter_application_1/ui/QuizPage/Widgets/AnswerButton.dart';
+import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
 class QuestionCard extends StatelessWidget {
   const QuestionCard({super.key});
@@ -33,6 +34,13 @@ class QuestionCard extends StatelessWidget {
           ...vm.answers.asMap().entries.map(
                 (entry) => AnswerButton(index: entry.key, text: entry.value.text),
               ),
+          // Invio in corso: rotella SOTTO le risposte, che restano visibili.
+          // Non le sostituisco per non smontare l'AnswerButton (romperebbe la sua snackbar).
+          if (vm.isSubmitting)
+            const Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Center(child: CaricamentoCircolare()),
+            ),
         ],
       ),
     );

@@ -84,6 +84,39 @@ class LogMealService {
     }
   }
 
+  //aggiorna un cibo specifico in un pasto per un utente e una data specifica
+  Future<void> updateCiboService({
+    required int idUtente,
+    required DateTime data,
+    required String meal,
+    required String nomeCibo,
+    required double quantita,
+    required double calorie,
+    required double carboidrati,
+    required double proteine,
+    required double grassi,
+  }) async {
+    final dateParam = dateFormatter(data);
+    try {
+      await _client.rpc(
+        'aggiorna_log_pasto',
+        params: {
+          'p_id_utente': idUtente,
+          'p_data': dateParam,
+          'p_meal': meal,
+          'p_nome_cibo': nomeCibo,
+          'p_quantita': quantita,
+          'p_calorie': calorie,
+          'p_carboidrati': carboidrati,
+          'p_proteine': proteine,
+          'p_grassi': grassi,
+        },
+      );
+    } catch (e) {
+      throw Exception('Errore durante l\'aggiornamento del cibo: $e');
+    }
+  }
+
 
 }
 

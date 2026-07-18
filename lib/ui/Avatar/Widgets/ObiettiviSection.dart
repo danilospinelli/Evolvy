@@ -26,16 +26,18 @@ class ObiettiviSection extends StatelessWidget {
         ),
         const SizedBox(height: 12),
 
-        // Mostra il caricamento degli obiettivi solo se isUpdatingObjective è vero
+        // Le card restano SEMPRE visibili: non le sostituisco con la rotella,
+        // altrimenti la _ChallengeCard verrebbe smontata e la sua snackbar saltata.
+        for (final challenge in challenges) ...[
+          ChallengeCard(
+            challenge: challenge,
+          ),
+          const SizedBox(height: 12),
+        ],
+
+        // Operazione in corso: rotella SOTTO la lista, come nel quiz.
         if (vm.isUpdatingObjective)
-          const Center(child: CaricamentoCircolare())
-        else
-          for (final challenge in challenges) ...[
-            ChallengeCard(
-              challenge: challenge,
-            ),
-            const SizedBox(height: 12),
-          ],
+          const Center(child: CaricamentoCircolare()),
       ],
     );
   }
@@ -52,7 +54,7 @@ class ChallengeCard extends StatelessWidget {
     final completed = challenge.completed;
 
     return InkWell(
-      onTap: completed ? null : () async {
+      onTap: (completed || vm.isUpdatingObjective) ? null : () async {
         int nLivelli = await vm.completaObiettivo(challenge);
         if (context.mounted) {
           SnackBarInfo.xpGain(context, challenge.xpReward, nLivelli);

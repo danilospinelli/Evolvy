@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/repositories/AvatarRepository.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
+import 'package:flutter_application_1/ui/core/utils/RetryConnessione.dart';
 
 class Avatar_ViewModel extends ChangeNotifier {
   
@@ -24,68 +25,68 @@ class Avatar_ViewModel extends ChangeNotifier {
   bool _isUpdatingObjective = false;
   bool get isUpdatingObjective => _isUpdatingObjective;
 
+  bool _isUpdatingName = false;
+  bool get isUpdatingName => _isUpdatingName;
 
 
-  /// Carica profilo utente e sfide giornaliere dal database
+  //Carica profilo utente e sfide giornaliere dal database
   Future<void> initialize() async {
     _isLoadingProfile = true;
     notifyListeners();
-    try {
-      _user = await repo.getAvatarInfo(idUtente: 1);
-    } catch (e) {
-      debugPrint('Errore caricamento dei dati: $e');
-    } finally {
-      _isLoadingProfile = false;
-      notifyListeners();
-    }
+
+    // Riprova finché la connessione al DB non si ristabilisce: la rotella a
+    // schermo intero (mostrata finché user == null) resta accesa per tutta la durata.
+    _user = await eseguiConRetry(() => repo.getAvatarInfo(idUtente: 1));
+
+    // Si arriva qui solo a caricamento riuscito.
+    _isLoadingProfile = false;
+    notifyListeners();
   }
 
-  // Aggiorna username di AvatarModel in uso
+  //Aggiorna username di AvatarModel in uso
   Future<void> editName(String name) async {
     if (_user == null) return;
 
-    _user = _user!.copyWith(username: name);
+    _isUpdatingName = true;
     notifyListeners();
 
-    _isLoadingProfile = true;
-    notifyListeners();
-    try {
+    // Riprova finché la connessione al DB non si ristabilisce:
+    // la rotella sul solo nome resta accesa per tutta la durata dei tentativi.
+    await eseguiConRetry(() async {
       await repo.updateNomeAvatar(
-        idUtente: 1, 
+        idUtente: 1,
         nomeAvatar: name,
       );
-    } catch (e) {
-      debugPrint('Errore aggiornamento nome: $e');
-    } finally {
-      _isLoadingProfile = false;
-      notifyListeners();
-    }
+    });
+
+    // Si arriva qui solo a operazione riuscita.
+    _user = _user!.copyWith(username: name);
+    _isUpdatingName = false;
+    notifyListeners();
   }
 
-  // Aggiorna colore scelto e sprite mascotte in uso
+  // Aggiorna colore scelto per l'avatar
   Future<void> aggiornaColore(int new_color) async {
     if (_user == null) return;
 
-    _user = _user!.copyWith(chosenColor: new_color);
-    notifyListeners();
-
     _isUpdatingColor = true;
     notifyListeners();
-    try {
+
+    // Riprova finché la connessione al DB non si ristabilisce:
+    // la rotella (isUpdatingColor) resta accesa per tutta la durata dei tentativi.
+    await eseguiConRetry(() async {
       await repo.updateColoreAvatar(
-        idUtente: 1, 
+        idUtente: 1,
         coloreAvatar: new_color,
       );
-    } catch (e) {
-      debugPrint('Errore aggiornamento colore: $e');
-    } finally {
-      _isUpdatingColor = false;
-      notifyListeners();
-    }
+    });
+
+    // Si arriva qui solo a operazione riuscita.
+    _user = _user!.copyWith(chosenColor: new_color);
+    _isUpdatingColor = false;
+    notifyListeners();
   }
 
-
-  //TODO verificare perche restituisce il livello gaudaganto spin lo sapevi?
   // Gestione dell'esperienza
   Future<int> aumentaExp(int expGuadagnata) async {
     if (_user == null || expGuadagnata <= 0) return 0;
@@ -103,61 +104,51 @@ class Avatar_ViewModel extends ChangeNotifier {
       monete += monetePerLevelUp;
     }
 
-    _user = precedente.copyWith(livello: livello, exp: exp, monete: monete);
-    notifyListeners();
-
-    _isLoadingProfile = true;
-    notifyListeners();
-    try {
+    // Nessuno spinner qui: se chiamata da completaObiettivo la rotella è quella
+    // della sezione obiettivi; dal quiz il feedback è gestito dalla QuizPage.
+    // Riprova finché la connessione al DB non si ristabilisce.
+    await eseguiConRetry(() async {
       await repo.aggiornaDatiAvatar(
-        idUtente: 1, 
+        idUtente: 1,
         livello: livello,
         exp: exp,
         monete: monete,
       );
-      return livello - livelloIniziale;
-    } catch (e) {
-      debugPrint('Errore aggiornamento exp: $e');
-      _user = precedente;
-      notifyListeners();
-      return 0;
-    } finally {
-      _isLoadingProfile = false;
-      notifyListeners();
-    }
+    });
+
+    // Si arriva qui solo a operazione riuscita.
+    _user = precedente.copyWith(livello: livello, exp: exp, monete: monete);
+    notifyListeners();
+    return livello - livelloIniziale;
   }
 
-  // Completa un obiettivo giornaliero
+  //Completa un obiettivo giornaliero
   Future<int> completaObiettivo(Obiettivo obiettivo) async {
     if (_user == null || obiettivo.completed) return 0;
 
+    // Accendo SUBITO la rotella sulla sezione obiettivi: resta lì per tutta
+    // l'operazione (aggiornamento exp + completamento), senza toccare l'header.
+    _isUpdatingObjective = true;
+    notifyListeners();
+
     int nLivelli = await aumentaExp(obiettivo.xpReward);
 
+    // Riprova finché la connessione al DB non si ristabilisce:
+    // lo spinner degli obiettivi (isUpdatingObjective) resta acceso per tutta la durata.
+    await eseguiConRetry(() async {
+      await repo.completaObiettivoAvatar(
+        idUtente: 1,
+        idObiettivo: obiettivo.id,
+      );
+    });
+
+    // Marco l'obiettivo solo a scrittura riuscita.
     final obiettivi = List<Obiettivo>.of(_user!.obiettivi);
     final i = obiettivi.indexWhere((o) => o.id == obiettivo.id);
     obiettivi[i] = obiettivi[i].copyWith(completed: true);
-
     _user = _user!.copyWith(obiettivi: obiettivi);
-    _isUpdatingObjective = true;
+    _isUpdatingObjective = false;
     notifyListeners();
-    try {
-      await repo.completaObiettivoAvatar(
-        idUtente: 1, 
-        idObiettivo: obiettivo.id,
-      );
-      return nLivelli;
-    } catch (e) {
-      debugPrint('Errore completamento obiettivo: $e');
-      return 0;
-    } finally {
-      _isUpdatingObjective = false;
-      notifyListeners();
-    }
-  }
-
-  void aumentaStreak() {
-    if (_user == null) return;
-    _user = _user!.copyWith(streak: _user!.streak + 1);
-    notifyListeners();
+    return nLivelli;
   }
 }
