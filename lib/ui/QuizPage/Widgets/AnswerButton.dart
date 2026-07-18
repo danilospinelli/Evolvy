@@ -42,7 +42,7 @@ class AnswerButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
-          onTap: vm.answered
+          onTap: (vm.answered || vm.isSubmitting)
               ? null
               : () async {
                   int nLivelli = await vm.completaQuiz(index, context.read<Avatar_ViewModel>());

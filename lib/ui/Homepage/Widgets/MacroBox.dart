@@ -33,7 +33,7 @@ class MacroBox extends StatelessWidget {
           ),
           const SizedBox(height: 18),
 
-          if (vm.isLoading)
+          if (vm.isLoading || vm.isUpdatingFood)
             const CaricamentoCircolare()
           else
             ...MacroType_Enum.values

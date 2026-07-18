@@ -53,12 +53,13 @@ class InsertedFood extends StatelessWidget {
 
                 IconButton(
                   onPressed: () async {
-                    SnackBarInfo.foodAction(context, 'remove', food.nome);
                     await context
                         .read<Homepage_ViewModel>()
                         .removeFood(mealType: mealtype, food: food);
-                       
-                
+                    // Snackbar DOPO l'await: compare solo a rimozione realmente avvenuta.
+                    if (context.mounted) {
+                      SnackBarInfo.foodAction(context, 'remove', food.nome);
+                    }
                   },
                   icon: const Icon(Icons.delete),
                 ),

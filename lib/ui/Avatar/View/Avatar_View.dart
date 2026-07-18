@@ -29,16 +29,12 @@ class Avatar_View extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          // Blocco in alto: profilo
-          if (vm.isLoadingProfile)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Center(child: CaricamentoCircolare()),
-            )
-          else 
-            ProfileHeader(
-              user: user,
-            ),
+          // Blocco in alto: profilo.
+          // La rotella del cambio nome è dentro ProfileHeader, sul solo nome:
+          // la barra XP e il resto dell'header restano sempre visibili.
+          ProfileHeader(
+            user: user,
+          ),
           const SizedBox(height: 24),
           
           // Blocco in mezzo: avatar

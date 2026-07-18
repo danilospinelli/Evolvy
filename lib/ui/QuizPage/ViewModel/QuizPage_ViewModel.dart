@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/repositories/QuizRepository.dart';
 import 'package:flutter_application_1/domain/models/QuizModel.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
+import 'package:flutter_application_1/ui/core/utils/RetryConnessione.dart';
 
 class QuizPage_ViewModel extends ChangeNotifier {
   final QuizRepository repo = QuizRepository();
@@ -26,7 +27,6 @@ class QuizPage_ViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
   bool get isSubmitting => _isSubmitting;
-  bool get hasError => !_isLoading && _quizzes == null;
   bool get finished => _finished;
   int get totalQuestions => _quizzes?.length ?? 0;
   int get currentQuestionNumber => _currentIndex + 1;
@@ -60,19 +60,18 @@ class QuizPage_ViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    try {
-      final result = await repo.getQuiz(idUtente);
-      // scarta le domande già risposte oggi, anche se il backend le restituisce comunque
-      _quizzes = result.where((q) => !q.risposta).toList();
-      _currentIndex = 0;
-      _selectedIndex = null;
-      _finished = false;
-    } catch (e) {
-      debugPrint('Errore caricamento quiz: $e');
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    // Riprova finché la connessione al DB non si ristabilisce:
+    // la rotella a schermo intero resta accesa per tutta la durata dei tentativi.
+    final result = await eseguiConRetry(() => repo.getQuiz(idUtente));
+
+    // Si arriva qui solo a caricamento riuscito.
+    // scarta le domande già risposte oggi, anche se il backend le restituisce comunque
+    _quizzes = result.where((q) => !q.risposta).toList();
+    _currentIndex = 0;
+    _selectedIndex = null;
+    _finished = false;
+    _isLoading = false;
+    notifyListeners();
   }
 
 
@@ -86,16 +85,15 @@ class QuizPage_ViewModel extends ChangeNotifier {
 
     _isSubmitting = true;
     notifyListeners();
-    try {
-      await repo.checkQuiz(quiz.id, _currentUserId);
-    } catch (e) {
-      debugPrint('Errore invio risposta quiz: $e');
-      return 0;
-    } finally {
-      _isSubmitting = false;
-      notifyListeners();
-    }
 
+    // Riprova finché la connessione al DB non si ristabilisce:
+    // la rotella sotto le risposte resta accesa per tutta la durata dei tentativi.
+    await eseguiConRetry(() async {
+      await repo.checkQuiz(quiz.id, _currentUserId);
+    });
+
+    // Si arriva qui solo a invio riuscito.
+    _isSubmitting = false;
     _selectedIndex = index;
     _quizzes![i] = quiz.copyWith(risposta: true);
     notifyListeners();

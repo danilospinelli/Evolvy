@@ -57,7 +57,7 @@ class DailyRecap extends StatelessWidget {
           const SizedBox(height: 18),
 
           // SEZIONE CALORIE
-          if (vm.isLoading)
+          if (vm.isLoading || vm.isUpdatingFood)
             const CaricamentoCircolare()
           else
             ProgressBar(

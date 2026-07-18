@@ -42,7 +42,7 @@ class TipsBox extends StatelessWidget {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: vm.isLoading
+                  child: (vm.isLoading || vm.isUpdatingFood)
                       ? const CaricamentoCircolare()
                       : Text(
                           vm.dailyTip,

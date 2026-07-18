@@ -13,6 +13,7 @@ import '../Widgets/RiquadroNutrizionale.dart';
 import '../Widgets/RigaNutriente.dart';
 import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.dart';
 import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
+import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
 class InfoSliderAlimento_View extends StatelessWidget {
   final FoodModel ciboSelezionato;
@@ -38,6 +39,8 @@ class InfoSliderAlimento_View extends StatelessWidget {
       child: Builder(
         builder: (context) {
           final viewModel = context.watch<InfoSliderAlimento_ViewModel>();
+          // Osservo il salvataggio in corso per mostrare la rotella al posto del tasto OK.
+          final homepageVM = context.watch<Homepage_ViewModel>();
 
           return Scaffold(
             backgroundColor: Colors.white,
@@ -83,9 +86,15 @@ class InfoSliderAlimento_View extends StatelessWidget {
                             onChanged: viewModel.cambiaUnita,
                           ),
                           const SizedBox(width: 12),
+                          if (homepageVM.isUpdatingFood)
+                            // Salvataggio in corso: rotella al posto del tasto OK.
+                            const Padding(
+                              padding: EdgeInsets.all(16),
+                              child: CaricamentoCircolare(),
+                            )
+                          else
                           TastoConferma(
                             onPressed: () async {
-                              final homepageVM = context.read<Homepage_ViewModel>();
                               final insertingFood = viewModel.generaCiboLoggato(ciboSelezionato);
 
                               

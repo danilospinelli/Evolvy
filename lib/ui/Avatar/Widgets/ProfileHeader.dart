@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 import 'package:flutter_application_1/ui/core/ProgressBar/Progressbar.dart';
+import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
 /// Blocco in alto: nome, barra XP, monete, streak.
 class ProfileHeader extends StatefulWidget {
@@ -36,6 +37,7 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isUpdatingName = context.watch<Avatar_ViewModel>().isUpdatingName;
     final xpGoal = widget.user.livello * 10;
     //final xpProgress =
     //    xpGoal == 0 ? 0.0 : (widget.user.exp / xpGoal).clamp(0.0, 1.0);
@@ -50,31 +52,39 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
             children: [
               Row(
                 children: [
-                  Expanded(
-                    child: TextField(
-                    controller: _nameController,
-                    readOnly: _not_editing_name, // Se true, blocca la modifica
-                    onTap: () {
-                      setState(() {
-                        _not_editing_name = false; // Al click, sblocca il campo
-                      });
-                    },
-                    onSubmitted: (nuovoTesto) {
-                      setState(() {
-                        _not_editing_name = true; // Quando premi "Invio" sulla tastiera, salva e blocca
-                        context.read<Avatar_ViewModel>().editName(nuovoTesto);
-                      });
-                    },
-                    decoration: InputDecoration(
-                      // Rimuove la linea sotto se è in modalità sola lettura
-                      border: _not_editing_name ? InputBorder.none : const UnderlineInputBorder(),
-                      suffixIcon: _not_editing_name 
-                      ? const Icon(Icons.edit, size: 16) // Mostra una matitina di aiuto
-                      : null,
+                  if (isUpdatingName)
+                    // Cambio nome in corso: rotella al posto del solo nome.
+                    // La barra XP qui sotto resta visibile.
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+                      child: CaricamentoCircolare(),
+                    )
+                  else
+                    Expanded(
+                      child: TextField(
+                      controller: _nameController,
+                      readOnly: _not_editing_name, // Se true, blocca la modifica
+                      onTap: () {
+                        setState(() {
+                          _not_editing_name = false; // Al click, sblocca il campo
+                        });
+                      },
+                      onSubmitted: (nuovoTesto) {
+                        setState(() {
+                          _not_editing_name = true; // Quando premi "Invio" sulla tastiera, salva e blocca
+                          context.read<Avatar_ViewModel>().editName(nuovoTesto);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        // Rimuove la linea sotto se è in modalità sola lettura
+                        border: _not_editing_name ? InputBorder.none : const UnderlineInputBorder(),
+                        suffixIcon: _not_editing_name
+                        ? const Icon(Icons.edit, size: 16) // Mostra una matitina di aiuto
+                        : null,
+                      ),
+                      style: const TextStyle(fontSize: 20, color: Colors.black),
+                      ),
                     ),
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
-                    ),
-                  ),
                 ],
               ),
               const SizedBox(height: 6),
