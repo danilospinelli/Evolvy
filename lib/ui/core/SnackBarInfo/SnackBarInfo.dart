@@ -60,8 +60,8 @@ class SnackBarInfo extends SnackBar {
     );
   }
 
-  static void xpGain(BuildContext context, int xpGuadagnata, int nLivelli) {
-    // SnackBar Exp
+  static Future<void> xpGain(BuildContext context, int xpGuadagnata, int nLivelli) async {
+    // SnackBar exp
     SnackBarInfo.show(
       context,
       message: 'Punti esperienza guadagnati: +$xpGuadagnata EXP',
@@ -71,7 +71,11 @@ class SnackBarInfo extends SnackBar {
     );
 
     if (nLivelli > 0) {
+      // Aspetta mezzo secondo per allineamento animazioni
+      await Future.delayed(const Duration(milliseconds: 500));
+
       // SnackBar livello
+      if (!context.mounted) return;
       SnackBarInfo.show(
         context,
         message: nLivelli == 1 ? 'Sei aumentato di Livello!' : 'Sei aumentato di $nLivelli Livelli!',
@@ -79,17 +83,23 @@ class SnackBarInfo extends SnackBar {
         color: const Color.fromARGB(255, 34, 153, 38),
         accumula: true,
       );
+
+      // Aspetta mezzo secondo per allineamento animazioni
+      await Future.delayed(const Duration(milliseconds: 500));
+
       // SnackBar monete
+      if (!context.mounted) return;
       int nMonete = Avatar_ViewModel.monetePerLevelUp * nLivelli;
       SnackBarInfo.show(
         context,
         message: 'Hai guadagnato $nMonete monete',
         icon: Icons.monetization_on_rounded,
-        color: Colors.yellow,
+        color: Colors.amber, // Nota: Colors.yellow rende il testo bianco illeggibile, meglio amber!
         accumula: true,
       );
     }
   }
+
   // Metodo semantico per le azioni sui cibi
   static void foodAction(BuildContext context, String actionType, String nomeCibo) {
     String messaggio = '';

@@ -55,6 +55,18 @@ class Mock_LogMealRepository implements LogMealRepository {
     required double proteine,
     required double grassi,
   }) async {}
+  @override
+  Future<void> updateCibo({
+    required int idUtente,
+    required DateTime data,
+    required String meal,
+    required String nomeCibo,
+    required double quantita,
+    required double calorie,
+    required double carboidrati,
+    required double proteine,
+    required double grassi,  
+    }) async {}
 }
 
 class Mock_UserRepository implements UserRepository {
