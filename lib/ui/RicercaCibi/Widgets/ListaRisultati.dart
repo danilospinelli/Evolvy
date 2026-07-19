@@ -5,6 +5,9 @@ import 'package:flutter_application_1/ui/RicercaCibi/ViewModel/RicercaCibi_ViewM
 import 'package:flutter_application_1/ui/RicercaCibi/Widgets/RigaAlimento.dart';
 import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
+//Lista dei risultati. Come solito, è un grande box che al suo interno avrà le varie righe alimento,
+//fatte dal widget RigaAlimento.
+
 class ListaRisultati extends StatelessWidget {
   final RicercaCibi_ViewModel viewModel;
 
@@ -30,12 +33,15 @@ class ListaRisultati extends StatelessWidget {
           ),
         ],
       ),
+      //ClipRRect è un widget che crea un contenitore esterno arrotondato uniformemente.
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24.0),
-        // ListenableBuilder è come Consumer
+        //ListenableBuilder per ridisegnare solo questa parte di interfaccia quando viene aggiornata!
         child: ListenableBuilder(
           listenable: viewModel,
           builder: (context, child) {
+
+            //Caricamento circolare come sempre.
             if (viewModel.isLoading) {
               return const Center(child: CaricamentoCircolare());
             }
@@ -53,6 +59,8 @@ class ListaRisultati extends StatelessWidget {
               );
             }
 
+            //ListView widget che ti permette di scrollare la lista dentro il box.
+            //Separated tramite Divider crea piccole righe separatrici. Diverso rispetto a Riquadro nutrizionale perchè qui non so quanti alimenti ho.
             return ListView.separated(
               itemCount: risultati.length,
               separatorBuilder: (context, index) => Divider(
@@ -61,14 +69,18 @@ class ListaRisultati extends StatelessWidget {
                 indent: 16,
                 endIndent: 16,
               ),
+              //ItemBuilder ci costruisce solo gli ogetti restituiti che entrano in un determinato spazio.
+              //Se si scorre li aggiorna.
               itemBuilder: (context, index) {
                 final cibo = risultati[index];
+                //Chamiamo il nostro widget Riga alimento.
                 return RigaAlimento(
                   alimento: cibo,
                   onTap: () async {
-                    await Navigator.push(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
+                        //CLicchiamo un cibo e andiamo nella pagina infoslider.
                         builder: (_) => InfoSliderAlimento_View(
                           ciboSelezionato: cibo,
                           mealType: mealType,),

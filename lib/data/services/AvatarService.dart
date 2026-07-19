@@ -1,6 +1,9 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AvatarService {
+
+  //inizializzazione del client di Supabase. Final per i motivi analoghi descritti prima,
+  //non vogliamo sia un oggetto modificabile durante l'esecuzione.
   
   late final SupabaseClient _client;
 
@@ -8,8 +11,9 @@ class AvatarService {
     this._client = Supabase.instance.client;
   }
 
+  //Restituisce tutte le informazione per la pagina dell'avatar tramite una chiamata asincrona al DB.
+  //utilizza una funzione rpc che abbianmo definito all'interno di Supabase.
 
-  //restituisce tutte le informazione per la pagina avatar
   Future<dynamic> getAvatarInfoService({required int idUtente}) async {
     try {
       final response = await _client.rpc(
@@ -22,7 +26,9 @@ class AvatarService {
     }
   }
 
-  //aggiorna il nome dell'avatar
+  //Aggiorna il nome dell'avatar dell'utente "idUetnte" con la stringa "nomeAvatar" tramite chiamata asincrona al DB.
+  //Anch'esso è gestito tramite una rpc definita in Supabase.
+
   Future<void> updateNomeAvatarService({required int idUtente, required String nomeAvatar}) async {
     try {
       await _client.rpc(
@@ -34,7 +40,9 @@ class AvatarService {
     }
   }
 
-  //aggiorna il colore dell'avatar
+  //Aggiorna il colore dell'avatar dell'utente "idUtente" con il colore "coloreAvatar" tramite chiamata asincrona al DB.
+  //Gestito tramite una funzione rpc definita in Supabase.
+
   Future<void> updateColoreAvatarService({required int idUtente,required int coloreAvatar}) async {
     try {
       await _client.rpc(
@@ -46,7 +54,9 @@ class AvatarService {
     }
   }
   
-  //aggiorna lo stato dell obbiettivo giornaliero
+  //Aggiorna lo stato dell obbiettivo giornaliero dell'utente "idUtente" dell'obiettivo "idObiettivo" tramite chiamata asincrona al DB.
+  //Gestito tramite una funzione rpc definita in Supabase.
+
   Future<void> completaObbietivoAvatarService({required int idUtente,required int idObiettivo,}) async {
     try {
       await _client.rpc(
@@ -61,7 +71,9 @@ class AvatarService {
     }
   }
 
-  //funzione per aggiornare i dati dell'avatar:livello, exp, monete
+  //Funzione per aggiornare i dati dell'avatar: livello, exp, monete dell'utente "idUtente". Chiamata asincrona al DB
+  //gestita tramite una funzione rpc definita in Supabase.
+  
   Future<void> aggiornaDatiAvatarService({required int idUtente, required int livello, required int exp, required int monete}) async {
     try {
       await _client.rpc(

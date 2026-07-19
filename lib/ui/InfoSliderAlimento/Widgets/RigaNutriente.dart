@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+//Widget che rappresenta un micro componente, una singola riga sulla quale verranno mostrati i dati nutrizionali
+//di un alimento in particolare. é dentro Riquadro nutrizionale ma gestito dalla View Di infoslider.
+
 class RigaNutriente extends StatelessWidget {
   final String etichetta;
   final String valore;
@@ -13,8 +16,10 @@ class RigaNutriente extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
+      //Spazio verticale da tenere conto per più righe con EdgeInsest vertical.
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
+        //SpaceBetween per etichetta a sinistra e valore a destra.
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(

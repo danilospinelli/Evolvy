@@ -5,6 +5,8 @@ import 'package:flutter_application_1/ui/core/utils/MacroColors.dart';
 import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 import 'package:flutter_application_1/ui/Homepage/Widgets/MacroTile.dart'; 
 
+//Widget che rapppresenta il BOX a sinistra dei macronutrienti raggiunti dall'utente.
+
 class MacroBox extends StatelessWidget {
   final Homepage_ViewModel vm;
 
@@ -33,18 +35,19 @@ class MacroBox extends StatelessWidget {
           ),
           const SizedBox(height: 18),
 
+          //Oscuriamo solo questa parte con questa logica con la rotellina.
           if (vm.isLoading || vm.isUpdatingFood)
             const CaricamentoCircolare()
           else
             ...MacroType_Enum.values
-                .where((meal) => meal != MacroType_Enum.Calorie)
+                //Non ci servono le calorie ora.
+                .where((macro) => macro != MacroType_Enum.Calorie)
                 .map(
                   (meal) => Column(
                     children: [
-                      // Usiamo il componente pulito
+                      //Per ogni riga usiamo il nostro widget MacroTile.
                       MacroTile(
                         label: meal.toString().split('.').last,
-                        // FIX: Arrotondiamo per mostrare numeri interi (es. 150 invece di 150.0)
                         value: vm.obtainedMacros(meal, vm.allFoods).round().toString(),
                         goal: vm.dailyMacroGoal(meal).round().toString(),
                         color: macroColor(meal),

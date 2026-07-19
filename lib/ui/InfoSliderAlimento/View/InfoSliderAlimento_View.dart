@@ -15,6 +15,9 @@ import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.da
 import 'package:flutter_application_1/ui/core/SnackBarInfo/SnackBarInfo.dart';
 import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
+//Widget generale della pagina di infosliderAlimento. La pagina dove seleziono le quantità e aggiungo il cibo
+//é strettamente connesso alla homepage.
+
 class InfoSliderAlimento_View extends StatelessWidget {
   final FoodModel ciboSelezionato;
   final MealType_Enum mealType;
@@ -29,17 +32,19 @@ class InfoSliderAlimento_View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calcoliamo qui il valore iniziale da passare al widget grafico protetto
+    //Se stiamo modificando un cibo già nel log allora mostriamo le sue quantità
+    //alteimenti di base 100g.
     final String testoIniziale = ciboGiaLoggato != null 
         ? ciboGiaLoggato!.quantita.round().toString() 
         : "100";
 
+    //Usiamo un provider specifico per questa pagina dato che ci si arriva tramite sequenze di azioni.
+    //non è nella navigationBar.
     return ChangeNotifierProvider(
       create: (_) => InfoSliderAlimento_ViewModel()..init(ciboGiaLoggato),
       child: Builder(
         builder: (context) {
           final viewModel = context.watch<InfoSliderAlimento_ViewModel>();
-          // Osservo il salvataggio in corso per mostrare la rotella al posto del tasto OK.
           final homepageVM = context.watch<Homepage_ViewModel>();
 
           return Scaffold(
@@ -49,7 +54,9 @@ class InfoSliderAlimento_View extends StatelessWidget {
               elevation: 0,
               leading: const FrecciaIndietro(coloreIcona: Colors.blue),
             ),
+            //SafeArea per disegnare i widget escludendo interfacce visive dedicate ad altro nei telefoni per esempio.
             body: SafeArea(
+              //SingleChildScrollView come sempre per scrollare senza che ci siano problemi di overflow.
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -74,12 +81,14 @@ class InfoSliderAlimento_View extends StatelessWidget {
                         children: [
                           Expanded(
                             flex: 5,
+                            //La barra di input delle quantità che occupa un tot di spazio tramite flex ed Expanded
                             child: InputQuantita(
                               valoreIniziale: testoIniziale,
                               onChanged: viewModel.aggiornaQuantita,
                             ),
                           ),
                           const SizedBox(width: 12),
+                          //Tasto per cambiare l'unità di misura. Altro Widget.
                           SelettoreQuantita(
                             valoreAttuale: viewModel.unita,
                             opzioni: viewModel.unitaDisponibili,
@@ -87,18 +96,19 @@ class InfoSliderAlimento_View extends StatelessWidget {
                           ),
                           const SizedBox(width: 12),
                           if (homepageVM.isUpdatingFood)
-                            // Salvataggio in corso: rotella al posto del tasto OK.
+                            //Salvataggio in corso: rotella al posto del tasto OK.
                             const Padding(
                               padding: EdgeInsets.all(16),
                               child: CaricamentoCircolare(),
                             )
                           else
+                          //Aggiunta di un cibo, o la sua modifica, al diario.
                           TastoConferma(
                             onPressed: () async {
                               final insertingFood = viewModel.generaCiboLoggato(ciboSelezionato);
 
-                              
                               try {
+                                //se c'era già un cibo usiamo UpdateFood.
                                 if (ciboGiaLoggato != null) {
                                
                                   await homepageVM.updateFood(
@@ -107,19 +117,24 @@ class InfoSliderAlimento_View extends StatelessWidget {
                                     insertingFood,
                                   );
                                   
+                                  //Vediamo se siamo ancora nel contesto giusto e mostriamo la snackbar.
                                   if (!context.mounted) return;
                                   SnackBarInfo.foodAction(context, 'update', insertingFood.nome);
                                   Navigator.pop(context); // 1 solo passo indietro
 
                                 } else {
                                 
+                                  //Aggiungiamo il cibo di tipo FoodModel, traformato in LoggedFood da generaCiboLoggato al diario.
                                   await homepageVM.addFood(mealType, insertingFood);
                                   
+                                  //Vediamo se siamo ancora nel contesto giusto e mostriamo la snackbar.
                                   if (!context.mounted) return;
                                   SnackBarInfo.foodAction(context, 'add', insertingFood.nome);
                                   
+                                  //Se clicchiamo OK dobbiamo ricordarci da dove eravamo venuti. Usiamo un contatore per tere traccia di ciò.
+                                  //Abbiamo fatto 2 passi dalla homepage fino a qui.
                                   int count = 0;
-                                  Navigator.popUntil(context, (route) => count++ == 2); // 2 passi indietro
+                                  Navigator.popUntil(context, (route) => count++ == 2);
                                 }
                               } catch (_) {
                                 // --- GESTIONE DELL'ERRORE (Se salta Supabase) ---
@@ -139,6 +154,7 @@ class InfoSliderAlimento_View extends StatelessWidget {
 
                       const SizedBox(height: 32),
                       const Align(
+                        //Testo allineato in centro sinistra.
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "Valori Nutrizionali:",
@@ -151,9 +167,16 @@ class InfoSliderAlimento_View extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
+                      
 
+                      //TODO!!: Nel prossimo sprint rendere questo comportamento uguale a MacroBox e MacroTile. In questo caso è Hardcodato con parametri definiti.
+                      //Widget esterno RiquadroNutrizionale che gestisce la visualizzazione di tutti i valori nutrizionali
+                      //Dell'elemento selezionato. Grazie al Watch sul viewModel cambiano e si ridisegnano al cambiamento delle quantità.
                       RiquadroNutrizonale(
                         nutrienti: [
+                          //Il riquadro nutrizionale è un Box che al suo interno ha dei widget separati per le righe.
+                          //Gestionie molto simile a MacroBox e MacroTile.
+                          //Con toStringAsFixed(1) mostiamo una singola cifra decimale.
                           RigaNutriente(
                             etichetta: "Calorie",
                             valore: "${viewModel.calcolaKcal(ciboSelezionato).toStringAsFixed(1)} kcal",

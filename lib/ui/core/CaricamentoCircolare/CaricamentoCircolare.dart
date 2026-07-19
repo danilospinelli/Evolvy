@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+//Questo Widget rappresenta la barra circolare di caricamento.
+//Lo chiamiamo qunado si devono aspettare dei caricamenti di dati ad esempio.
+
 class CaricamentoCircolare extends StatelessWidget {
   const CaricamentoCircolare({super.key});
 

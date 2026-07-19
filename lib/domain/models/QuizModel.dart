@@ -1,4 +1,9 @@
 class QuizModel {
+
+  //Classe Quiz con le sue caratteristiche. Sono trattati come sequenze di stringhe per Domanda e Risposta e booleani 
+  //per la rispettiva risposta corretta
+  //Final qui ancora più importante essendo un aspetto gamificato non vogliamo che possano essere modifcate tali variabili.
+  
   final int id;
   final String question;
   final String answers1;
@@ -9,6 +14,8 @@ class QuizModel {
   final bool value3;
   final String spiegazione;
   final bool risposta;
+
+//Costruttore della classe. Required per prevenire la creazione di quiz incompleti.
 
   QuizModel({
     required this.id,
@@ -24,6 +31,9 @@ class QuizModel {
   });
 
 
+//Metodo factory che prende come input il JSON dalla Repository e ne costruisce un oggetto Dart QuizModel ben caraterizzato.
+//Tutti i campi sono trattati come stringhe e booleani.
+// 
   factory QuizModel.fromJson(Map<String, dynamic> json) {
     return QuizModel(
         id: json['id'] as int,
@@ -35,12 +45,15 @@ class QuizModel {
         value2: json['check2'] as bool,
         value3: json['check3'] as bool,
         spiegazione: json['spiegazione'] as String,
-        // di default lo trattiamo come non risposto
+        //Di default lo trattiamo come non risposto.
         risposta: json['risposto'] as bool? ?? false
     );
 
   }
 
+
+//Metodo copywith che come tutti gli altri creerà un nuovo record modificando solo il parametro
+//che deve essere modificato. Ad esempio il booleano "risposta".
 
   QuizModel copyWith({
     int? id,

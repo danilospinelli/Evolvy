@@ -8,6 +8,9 @@ import 'package:flutter_application_1/ui/core/AvatarCondiviso/AvatarCondiviso.da
 import 'package:flutter_application_1/ui/core/FrecciaIndietroWidget/FrecciaIndietro.dart';
 import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
+//Widget per la pagina dei quiz. Restituisce lo Scaffold generale della pagina e chiama ovviamente tutti gli altri
+//nostri widget come answerButton o NextQuestionButton.
+
 class QuizPage_View extends StatelessWidget {
   const QuizPage_View({super.key});
 
@@ -15,10 +18,13 @@ class QuizPage_View extends StatelessWidget {
   Widget build(BuildContext context) {
     QuizPage_ViewModel vm = context.watch<QuizPage_ViewModel>();
 
+    //body del widget creato separatamente
     Widget body;
 
+    //Caricamento circolare se si caricano i dati.
     if (vm.isLoading) {
       body = const Center(child: CaricamentoCircolare());
+      //Se non ci sono piu domande.
     } else if (vm.totalQuestions == 0) {
             body = const Center(
               child: Padding(
@@ -30,6 +36,7 @@ class QuizPage_View extends StatelessWidget {
                 ),
               ),
             );
+            //Se ho finito le domande nella sessione.
           } else if (vm.finished) {
             body = const Center(
               child: Padding(
@@ -52,12 +59,18 @@ class QuizPage_View extends StatelessWidget {
               ),
             );
           } else {
+
+            //Gestione del Quiz attivo. Gestito da una SingleChildScrollView per scrollare la pagina se necessario.
             body = SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                //Creazione di altri 2 widget da mettere al top ovvero la barra di progressione
+                //e le domande.
                 const QuizProgressBar(),
                 const QuestionCard(),
+                //Quando si risponde ad una domanda viene creato un nuovo Box Container con fiammella che fornisce
+                //la spiegazione della domanda.
                 if (vm.answered)
                   Container(
                     margin: const EdgeInsets.fromLTRB(12, 0, 0, 12),
@@ -68,6 +81,7 @@ class QuizPage_View extends StatelessWidget {
                       larghezzaMassimaMessaggio: double.infinity,
                     ),
                   ),
+                  //Se abbiamo risposto appare il bottone di NextQuestion.
                 if (vm.answered) const NextQuestionButton(),
               ],
             ),

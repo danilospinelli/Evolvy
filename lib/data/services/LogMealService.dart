@@ -2,6 +2,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LogMealService {
 
+  //inizializzazione del client di Supabase. Final per i motivi analoghi descritti prima,
+  //non vogliamo sia un oggetto modificabile durante l'esecuzione.
+
   late final SupabaseClient _client;
 
   LogMealService(){
@@ -11,7 +14,9 @@ class LogMealService {
 
 
 
-  //Recupera i pasti giornalieri per un utente e una data specifica
+  //Recupera i pasti giornalieri per l'utente "utendeId" data una data specifica "data" e una chiamata asincrona al DB
+  //gestita tramite una funzione rpc. Utilizza "dateFormatter" per far combaciare il fromato di data di Dart con Supabase.
+
   Future<dynamic> getPastiGiornalieriService({required int utenteId,required DateTime data,
   }) async {
     final dateParam = dateFormatter(data);
@@ -26,7 +31,9 @@ class LogMealService {
     }
   }
 
-  //rimuove un cibo specifico da un pasto per un utente e una data specifica
+  //Rimuove un cibo specificato da parametri come "Meal" {pranzo cena etc} "nomeCibo" o "quantita" dal diario dell'utente "idUtente". Lo fa tramite una
+  //chiamata asincrona al DB e una funzione rpc. Utilizza "dateFormatter" per far combaciare il fromato di data di Dart con Supabase.
+
   Future<void> removeCiboService({
     required int idUtente,
     required DateTime data,
@@ -51,7 +58,10 @@ class LogMealService {
     }
   }
 
-  //aggiunge un cibo specifico a un pasto per un utente e una data specifica
+  //Aggiunge un cibo specificato da parametri come "Meal" {pranzo cena etc.} "nomeCibo" o "quantita" al diario dell'utente "idUtente" con le sue caratteristiche
+  //"calorie" "proteine" etc. Lo fa tramite una chiamata asincrona al DB e una funzione rpc. 
+  //Utilizza "dateFormatter" per far combaciare il fromato di data di Dart con Supabase.
+
   Future<void> addCiboService({
     required int idUtente,
     required DateTime data,
@@ -84,7 +94,11 @@ class LogMealService {
     }
   }
 
-  //aggiorna un cibo specifico in un pasto per un utente e una data specifica
+  //Aggiorna un cibo specificato da parametri come "Meal" {pranzo cena etc.} "nomeCibo" o "quantita" al diario dell'utente "idUtente" con le sue caratteristiche
+  //"calorie" "proteine" etc. Lo fa tramite una chiamata asincrona al DB e una funzione rpc. 
+  //Utilizza "dateFormatter" per far combaciare il fromato di data di Dart con Supabase.
+  //Utilizzato quando l'utente vuole modificare le quantità di un pasto già inserito nel LogMeal.
+
   Future<void> updateCiboService({
     required int idUtente,
     required DateTime data,
@@ -121,7 +135,10 @@ class LogMealService {
 }
 
 
-  //formatta la data nel formato corretto
+  //Funzione helper per formattare la data fornita da Dart con "DataTime" nella classica
+  //notazione ""anno-mese-giorno" per farla combaciare con quella di Supabase.
+  //Usa padLeft per accomunare mesi e giorni con singola cifra allo stesso formato. (1 gennaio = 01 01).
+
   String dateFormatter(DateTime data) {
     final y = data.year.toString().padLeft(4, '0');
     final m = data.month.toString().padLeft(2, '0');

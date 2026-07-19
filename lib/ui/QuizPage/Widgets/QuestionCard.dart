@@ -4,11 +4,14 @@ import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.d
 import 'package:flutter_application_1/ui/QuizPage/Widgets/AnswerButton.dart';
 import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
+//Widget che rappresenta il box delle domande che verranno proposte all'utente nel quiz
+
 class QuestionCard extends StatelessWidget {
   const QuestionCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    //Watch perchè le domande cambiano sempre e vanno ridisegnate.
     final vm = context.watch<QuizPage_ViewModel>();
 
     return Container(
@@ -23,6 +26,8 @@ class QuestionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          //Nel box generale scriviamo il titolo della domanda. poi con map ... iteriamo su tutte le risposte di quella domanda
+          //e costuiamo per ognuna una riga specifica con il widget AnswerButton.
           Text(
             vm.question,
             style: const TextStyle(
@@ -34,6 +39,7 @@ class QuestionCard extends StatelessWidget {
           ...vm.answers.asMap().entries.map(
                 (entry) => AnswerButton(index: entry.key, text: entry.value.text),
               ),
+              
           // Invio in corso: rotella SOTTO le risposte, che restano visibili.
           // Non le sostituisco per non smontare l'AnswerButton (romperebbe la sua snackbar).
           if (vm.isSubmitting)

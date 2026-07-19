@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/ui/QuizPage/ViewModel/QuizPage_ViewModel.dart';
 
+//Widget che rappresenta il bottone per passare alla prossima domanda.
+
 class NextQuestionButton extends StatelessWidget {
   const NextQuestionButton({super.key});
 
   @override
   Widget build(BuildContext context) {
+    //Usiamo watch perchè il bottone deve ridisegnarsi diversamente in base a parametri del VM
+    //in questo caso Avanti o Fine.
     final vm = context.watch<QuizPage_ViewModel>();
 
     return Container(
@@ -22,6 +26,7 @@ class NextQuestionButton extends StatelessWidget {
           ),
         ),
         child: Text(
+          //Testo cambia dinamicamente come detto prima.
           vm.isLastQuestion ? 'FINE' : 'AVANTI',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
