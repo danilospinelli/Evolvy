@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart';
 import 'package:flutter_application_1/data/repositories/AvatarRepository.dart';
-import 'package:flutter_application_1/ui/Avatar/Widgets/ObiettiviSection.dart';
+import 'package:flutter_application_1/domain/models/ObiettivoModel.dart';
+import 'package:flutter_application_1/ui/Avatar/Widgets/ChallengeCard.dart';
 
 // Creazione di Repository Mock per i test: per interagire con il ViewModel è necessario passargli una repository, ma nei test non facciamo
 // delle vere chiamate al db, quindi creiamo delle sotto-classi mock che fano override dei loro metodi che non implementiamo visto che
