@@ -12,13 +12,14 @@ import 'package:flutter_application_1/ui/core/utils/RetryConnessione.dart';
 //e i fabisogni giornalieri di nutrienti e calorie oltre che i suggerimenti.
 
 class Homepage_ViewModel extends ChangeNotifier {
-  final LogMealRepository repoLogMeal = LogMealRepository();
-  final UserRepository repoUser = UserRepository();
+  final LogMealRepository repoLogMeal;
+  final UserRepository repoUser;
+
+  Homepage_ViewModel(this.repoLogMeal, this.repoUser);
 
   //Variabile generale per il caricamento.
   bool _isLoading = false;
-
-  LogMealModel logMeal = LogMealModel(
+  LogMealModel _logMeal = LogMealModel(
     colazione: [],
     pranzo: [],
     cena: [],
@@ -29,6 +30,7 @@ class Homepage_ViewModel extends ChangeNotifier {
   String _dailyTip = '⭐ Aggiungi il primo alimento del giorno!';
 
   bool get isLoading => _isLoading || _user == null;
+  LogMealModel get logMeal => _logMeal;
 
   //Operazione su un cibo in corso: la guardano SOLO i box in alto
   //(macro, calorie, suggerimenti). La lista dei pasti resta invariata. Così mostriamo il caricamento solo di quei Box.
@@ -37,12 +39,11 @@ class Homepage_ViewModel extends ChangeNotifier {
 
   // Restituisce una singola lista di LoggedFood con tutti i cibi caricati nel giorno corrente, indifferentemente dal pasto.
   List<LoggedFood> get allFoods => [
-    ...logMeal.colazione,
-    ...logMeal.pranzo,
-    ...logMeal.cena,
-    ...logMeal.spuntino,
-  ];
-
+        ..._logMeal.colazione,
+        ..._logMeal.pranzo,
+        ..._logMeal.cena,
+        ..._logMeal.spuntino,
+      ];
   String get dailyTip => _dailyTip;
 
   //Inizializza il LogMeal del giorno corrente caricandolo dalla repository
@@ -53,8 +54,11 @@ class Homepage_ViewModel extends ChangeNotifier {
     //Riprova finché la connessione al DB non si ristabilisce. Due blocchi
     //separati, così un fallimento sul secondo non fa ri-scaricare anche il primo.
     //*Nota*: data Hardcoded, da cambiare nei prosimi sprint
-    logMeal = await eseguiConRetry(
-      () => repoLogMeal.getPastiGiornalieri(1, DateTime.parse('2026-04-28')),
+    _logMeal = await eseguiConRetry(
+      () => repoLogMeal.getPastiGiornalieri(
+        1,
+        DateTime.parse('2026-04-28'),
+      ),
     );
 
     updateDailyTip(allFoods);
@@ -69,13 +73,13 @@ class Homepage_ViewModel extends ChangeNotifier {
   List<LoggedFood> foodsByMeal(MealType_Enum mealType) {
     switch (mealType) {
       case MealType_Enum.Colazione:
-        return logMeal.colazione;
+        return _logMeal.colazione;
       case MealType_Enum.Pranzo:
-        return logMeal.pranzo;
+        return _logMeal.pranzo;
       case MealType_Enum.Cena:
-        return logMeal.cena;
+        return _logMeal.cena;
       case MealType_Enum.Spuntino:
-        return logMeal.spuntino;
+        return _logMeal.spuntino;
     }
   }
 

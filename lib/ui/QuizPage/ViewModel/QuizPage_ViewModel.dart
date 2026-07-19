@@ -8,7 +8,9 @@ import 'package:flutter_application_1/ui/core/utils/RetryConnessione.dart';
 //2a componente di gamification dell'applicazione.
 
 class QuizPage_ViewModel extends ChangeNotifier {
-  final QuizRepository repo = QuizRepository();
+  final QuizRepository repo;
+
+  QuizPage_ViewModel(this.repo);
 
   //Hardcoded. TODO: renderlo dinamico nei prossimi sprint.
   static const int _currentUserId = 1;
@@ -45,9 +47,7 @@ class QuizPage_ViewModel extends ChangeNotifier {
   String get spiegazione => _currentQuiz?.spiegazione ?? '';
   bool get answered => _currentQuiz?.risposta ?? false;
 
-
-
-  //Restituisce le risposte della domanda corrente come lista (testo + correttezza) di una stringa piu il suo booleano associato.
+    //Restituisce le risposte della domanda corrente come lista (testo + correttezza) di una stringa piu il suo booleano associato.
   List<({String text, bool correct})> get answers {
     final quiz = _currentQuiz;
     if (quiz == null) return [];

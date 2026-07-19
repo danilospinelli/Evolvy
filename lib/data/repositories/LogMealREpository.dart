@@ -11,7 +11,7 @@ class LogMealRepository {
 
   
   LogMealRepository(){
-    this._logmealservice=LogMealService();
+    this._logmealservice = LogMealService();
   }
 
 //Metodo asincrono che restituisce i pasti dell'utente identificati dal suo id e dalla data di inserimento

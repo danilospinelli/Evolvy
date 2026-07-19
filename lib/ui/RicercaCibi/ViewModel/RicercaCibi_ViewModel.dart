@@ -9,7 +9,7 @@ import 'package:flutter_application_1/ui/core/utils/RetryConnessione.dart';
 class RicercaCibi_ViewModel extends ChangeNotifier {
   final FoodRepository _foodRepository;
 
-  RicercaCibi_ViewModel() : _foodRepository = FoodRepository();
+  RicercaCibi_ViewModel(this._foodRepository);
 
   //Lista nullable se l'utente non cerca nulla e vuota se non restituisce risultati.
   List<FoodModel>? _risultati;

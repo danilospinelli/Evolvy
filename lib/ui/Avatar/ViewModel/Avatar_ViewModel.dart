@@ -8,7 +8,10 @@ import 'package:flutter_application_1/domain/models/ObiettivoModel.dart';
 //a contenere logiche di gamification dell'applicazione.
 
 class Avatar_ViewModel extends ChangeNotifier {
-  final AvatarRepository repo = AvatarRepository();
+  
+  final AvatarRepository repo;
+
+  Avatar_ViewModel(this.repo);
 
   //Costanti di bilanciamento di levelup e ottenimento monete.
   static const int expPerLivello = 10;
@@ -18,7 +21,7 @@ class Avatar_ViewModel extends ChangeNotifier {
   AvatarModel? _user;
   AvatarModel? get user => _user;
 
-  // FLAG DI CARICAMENTO SPECIFICI. Verrà caricata quindi solo quella sezione della pagina
+  //FLAG DI CARICAMENTO SPECIFICI. Verrà caricata quindi solo quella sezione della pagina
   //e non tutta intera da capo.
   bool _isLoadingProfile = false;
   bool get isLoadingProfile => _isLoadingProfile;

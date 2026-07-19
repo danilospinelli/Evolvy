@@ -72,10 +72,8 @@ class SnackBarInfo extends SnackBar {
 
   //Metodo di logica che ci permette di definire solamente qui, e non sparpagliato in tutta l'app, la visualizzazione
   //della snackBar relativa a specifici eventi. 
-
-  static void xpGain(BuildContext context, int xpGuadagnata, int nLivelli) async {
-
-    //SnackBar guadagno Exp
+  static Future<void> xpGain(BuildContext context, int xpGuadagnata, int nLivelli) async {
+    // SnackBar exp
     SnackBarInfo.show(
       context,
       message: 'Punti esperienza guadagnati: +$xpGuadagnata EXP',
@@ -86,6 +84,11 @@ class SnackBarInfo extends SnackBar {
 
     //SnackBar livello
     if (nLivelli > 0) {
+      //Aspetta mezzo secondo per allineamento animazioni
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      //SnackBar livello
+      if (!context.mounted) return;
       SnackBarInfo.show(
         context,
         message: nLivelli == 1 ? 'Sei aumentato di Livello!' : 'Sei aumentato di $nLivelli Livelli!',
@@ -94,13 +97,17 @@ class SnackBarInfo extends SnackBar {
         accumula: true,
       );
 
+      // Aspetta mezzo secondo per allineamento animazioni
+      await Future.delayed(const Duration(milliseconds: 500));
+
       //SnackBar guadagno monete
+      if (!context.mounted) return;
       int nMonete = Avatar_ViewModel.monetePerLevelUp * nLivelli;
       SnackBarInfo.show(
         context,
         message: 'Hai guadagnato $nMonete monete',
         icon: Icons.monetization_on_rounded,
-        color: Colors.yellow,
+        color: Colors.amber, // Nota: Colors.yellow rende il testo bianco illeggibile, meglio amber!
         accumula: true,
       );
     }
@@ -109,7 +116,6 @@ class SnackBarInfo extends SnackBar {
 
   //Stesso discorso di sopra, metodo che permette di gestire in maniera comoda la creazione di Snakcbar personalizzate in base alla
   //rimozione, aggiunta o update di un cibo nel LogMeal.
-
   static void foodAction(BuildContext context, String actionType, String nomeCibo) {
     String messaggio = '';
     IconData icona = Icons.info;
