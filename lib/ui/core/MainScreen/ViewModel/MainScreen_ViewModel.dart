@@ -5,6 +5,7 @@ class MainScreen_ViewModel extends ChangeNotifier {
 
   int get currentPageIndex => _currentPageIndex;
 
+//Per tenere traccia dello stato attuale della navigazione.
   void setCurrentPageIndex(int index) {
     _currentPageIndex = index;
     notifyListeners();

@@ -1,4 +1,10 @@
+import 'package:flutter_application_1/domain/models/ObiettivoModel.dart';
+
+
 class AvatarModel {
+
+//variabili che compongono l'aspetto gamificato dell'utente
+//rappresentato dall'avatar. 
 
   final String username;
   final int livello;
@@ -8,6 +14,8 @@ class AvatarModel {
   final int chosenColor;
   final List<Obiettivo> obiettivi;
 
+//Costruttore principale. I parametri sono required per non formare
+//mai un utente senza qualche dato significativo.
 
   AvatarModel({
     required this.username,
@@ -18,6 +26,10 @@ class AvatarModel {
     required this.chosenColor,
     required this.obiettivi,
   });
+
+//Metodo factory che prende in input il JSON mandato dalla repository e crea un oggetto Dart
+//ben parametrizzato. il map funziona esattamente come quello in FoodRep, restituendo una lista di
+//obiettivi compatta.
 
   factory AvatarModel.fromJson(Map<String, dynamic> json) {
     return AvatarModel(
@@ -30,6 +42,9 @@ class AvatarModel {
       obiettivi: (json['obiettivi_giornalieri'] as List<dynamic>).map((o) => Obiettivo.fromJson(o as Map<String, dynamic>)).toList(),
     );
   }
+
+//Se viene modificato un parametro dell'ogetto AvatarModel si restituisce
+//un nuovo record con il copywith aggiornando solo il dato cambiato.
 
   AvatarModel copyWith({
     String? username,
@@ -53,39 +68,3 @@ class AvatarModel {
 
 }
 
-class Obiettivo {
-  final int id;
-  final String testo;
-  final int xpReward;
-  final bool completed;
-
-  Obiettivo({
-    required this.id,
-    required this.testo,
-    required this.xpReward,
-    this.completed = false,
-  });
-
-  factory Obiettivo.fromJson(Map<String, dynamic> json) {
-    return Obiettivo(
-      id: (json['id_obiettivo'] as num).toInt(),
-      testo: (json['testo'] as String),
-      xpReward: (json['exp_obiettivo'] as num).toInt(),
-      completed: (json['completato'] as bool),
-    );
-  }
-
-  Obiettivo copyWith({
-    int? id,
-    String? testo,
-    int? xpReward,
-    bool? completed,
-  }) {
-    return Obiettivo(
-      id: id ?? this.id,
-      testo: testo ?? this.testo,
-      xpReward: xpReward ?? this.xpReward,
-      completed: completed ?? this.completed,
-    );
-  }
-}

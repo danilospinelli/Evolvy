@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+//Widget puramente grafico del tasto OK. Non presenta logica ma solo UI, in questo modo
+//Potrebbe anche essere riutulizzato in futuro.
+
 class TastoConferma extends StatelessWidget {
   final VoidCallback onPressed;
 
@@ -7,6 +10,7 @@ class TastoConferma extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Widget per un Bottone in sovraimpressione.
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green.shade600,
@@ -14,6 +18,7 @@ class TastoConferma extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         elevation: 4,
       ),
+      //Delega la logica del "cliccaggio" al genitore.
       onPressed: onPressed,
 
       child: const Text(

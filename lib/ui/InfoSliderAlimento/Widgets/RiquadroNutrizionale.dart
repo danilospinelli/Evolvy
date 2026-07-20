@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'RigaNutriente.dart';
 
+//Widget che rappresenta un grande Box dove verranno inserite le righe degli alimenti nella pagina.
+
 class RiquadroNutrizonale extends StatelessWidget {
+  //Riceve una lista di widget da mettere al suo interno.
   final List<RigaNutriente> nutrienti;
 
   const RiquadroNutrizonale({super.key, required this.nutrienti});
@@ -23,6 +26,7 @@ class RiquadroNutrizonale extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade100),
       ),
       child: Column(
+        //MainAxis min per visualizzare tutto nel minor spazio possibile senza allungarsi all'infinito.
         mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(
@@ -38,7 +42,11 @@ class RiquadroNutrizonale extends StatelessWidget {
               ],
             ),
           ),
+          //Diveder crea delle righe sottilissime per separare le righe nutrizionali.
           const Divider(height: 1),
+          //ConstrainedBox impone al riquadro di non superare un determinato valore, in questo caso 250.
+          //insieme a ListView e ShrinkWrap questo ci permette di avere sia la totale pagina iniziale scorrevole con il Widget SingleChildScroll in InfoSliderView
+          //Ma diventerà un box scorrevole a se stante in caso dovessimo aggiungere tot micronutrienti o altri valori.
           ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 250),
             child: Scrollbar(

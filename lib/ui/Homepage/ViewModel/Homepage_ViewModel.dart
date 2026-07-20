@@ -8,34 +8,41 @@ import 'package:flutter_application_1/domain/MacroType_Enum.dart';
 import 'package:flutter_application_1/domain/models/FoodModel.dart';
 import 'package:flutter_application_1/ui/core/utils/RetryConnessione.dart';
 
-class Homepage_ViewModel extends ChangeNotifier {
-  final LogMealRepository repoLogMeal = LogMealRepository();
-  final UserRepository repoUser = UserRepository();
+//ViewModel della Homepage. Gestisce molta logica dato che la HP contiene numerose funzionalità come il diario alimentare
+//e i fabisogni giornalieri di nutrienti e calorie oltre che i suggerimenti.
 
-  // Stato condiviso da più widget
+class Homepage_ViewModel extends ChangeNotifier {
+  final LogMealRepository repoLogMeal;
+  final UserRepository repoUser;
+
+  Homepage_ViewModel(this.repoLogMeal, this.repoUser);
+
+  //Variabile generale per il caricamento.
   bool _isLoading = false;
-  LogMealModel logMeal = LogMealModel(
+  LogMealModel _logMeal = LogMealModel(
     colazione: [],
     pranzo: [],
     cena: [],
     spuntino: [],
   );
   UserModel? _user;
-  
+
   String _dailyTip = '⭐ Aggiungi il primo alimento del giorno!';
 
   bool get isLoading => _isLoading || _user == null;
+  LogMealModel get logMeal => _logMeal;
 
-  // Operazione su un cibo in corso: la guardano SOLO i box in alto
-  // (macro, calorie, suggerimenti). La lista dei pasti resta invariata.
+  //Operazione su un cibo in corso: la guardano SOLO i box in alto
+  //(macro, calorie, suggerimenti). La lista dei pasti resta invariata. Così mostriamo il caricamento solo di quei Box.
   bool _isUpdatingFood = false;
   bool get isUpdatingFood => _isUpdatingFood;
-  // Restituisce una lista di LoggedFood con tutti i cibi caricati nel giorno corrente
+
+  // Restituisce una singola lista di LoggedFood con tutti i cibi caricati nel giorno corrente, indifferentemente dal pasto.
   List<LoggedFood> get allFoods => [
-        ...logMeal.colazione,
-        ...logMeal.pranzo,
-        ...logMeal.cena,
-        ...logMeal.spuntino,
+        ..._logMeal.colazione,
+        ..._logMeal.pranzo,
+        ..._logMeal.cena,
+        ..._logMeal.spuntino,
       ];
   String get dailyTip => _dailyTip;
 
@@ -44,37 +51,39 @@ class Homepage_ViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    // Riprova finché la connessione al DB non si ristabilisce. Due blocchi
-    // separati, così un fallimento sul secondo non fa ri-scaricare anche il primo.
-    logMeal = await eseguiConRetry(
+    //Riprova finché la connessione al DB non si ristabilisce. Due blocchi
+    //separati, così un fallimento sul secondo non fa ri-scaricare anche il primo.
+    //*Nota*: data Hardcoded, da cambiare nei prosimi sprint
+    _logMeal = await eseguiConRetry(
       () => repoLogMeal.getPastiGiornalieri(
         1,
         DateTime.parse('2026-04-28'),
       ),
     );
+
     updateDailyTip(allFoods);
     _user = await eseguiConRetry(() => repoUser.getUserMacro(idUtente: 1));
 
-    // Si arriva qui solo a caricamento riuscito.
+    //Si arriva qui solo a caricamento riuscito.
     _isLoading = false;
     notifyListeners();
   }
 
-  // Restituisce una lista di LoggedFood in base al tipo di pasto del giorno corrente
+  //Restituisce una lista di LoggedFood in base al tipo di pasto.
   List<LoggedFood> foodsByMeal(MealType_Enum mealType) {
     switch (mealType) {
       case MealType_Enum.Colazione:
-        return logMeal.colazione;
+        return _logMeal.colazione;
       case MealType_Enum.Pranzo:
-        return logMeal.pranzo;
+        return _logMeal.pranzo;
       case MealType_Enum.Cena:
-        return logMeal.cena;
+        return _logMeal.cena;
       case MealType_Enum.Spuntino:
-        return logMeal.spuntino;
+        return _logMeal.spuntino;
     }
   }
 
-  // This method returns an icon based on the meal type
+  //Associamo un icona direttamente al tipo di pasto.
   IconData mealTypeIcon(MealType_Enum mealType) {
     switch (mealType) {
       case MealType_Enum.Colazione:
@@ -88,17 +97,14 @@ class Homepage_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Aggiunge un cibo al pasto specificato: prima il Database, poi lo stato locale.
-  // La lista locale viene toccata solo a scrittura riuscita, così non può divergere dal db.
-  Future<void> addFood(
-    MealType_Enum mealType,
-    LoggedFood food,
-  ) async {
+  //Aggiunge un cibo al pasto specificato: prima al Database, poi al diario locale.
+  //La lista locale viene toccata solo a scrittura riuscita, così non può divergere dal db.
+  Future<void> addFood(MealType_Enum mealType, LoggedFood food) async {
     _isUpdatingFood = true;
     notifyListeners();
 
-    // Riprova finché la connessione al DB non si ristabilisce:
-    // la rotella al posto del tasto OK resta accesa per tutta la durata dei tentativi.
+    //Riprova finché la connessione al DB non si ristabilisce:
+    //la rotella al posto del tasto OK resta accesa per tutta la durata dei tentativi.
     await eseguiConRetry(() async {
       await repoLogMeal.addCibo(
         idUtente: 1,
@@ -113,14 +119,15 @@ class Homepage_ViewModel extends ChangeNotifier {
       );
     });
 
-    // Si arriva qui solo a inserimento riuscito.
+    //Si arriva qui solo a inserimento riuscito.
+    //Mettiamo poi il cibo nel pasto corretto.
     _addFoodToLocal(mealType, food);
     updateDailyTip(allFoods);
     _isUpdatingFood = false;
     notifyListeners();
   }
 
-  // Rimuove un cibo dal pasto specificato: prima il Database, poi lo stato locale.
+  //Rimuove un cibo dal pasto specificato: prima al Database, poi dal pasto locale.
   Future<void> removeFood({
     required MealType_Enum mealType,
     required LoggedFood food,
@@ -128,8 +135,8 @@ class Homepage_ViewModel extends ChangeNotifier {
     _isUpdatingFood = true;
     notifyListeners();
 
-    // Riprova finché la connessione al DB non si ristabilisce:
-    // le rotelle nei box in alto restano accese per tutta la durata dei tentativi.
+    //Riprova finché la connessione al DB non si ristabilisce:
+    //le rotelle nei box in alto restano accese per tutta la durata dei tentativi.
     await eseguiConRetry(() async {
       await repoLogMeal.removeCibo(
         idUtente: 1,
@@ -140,14 +147,15 @@ class Homepage_ViewModel extends ChangeNotifier {
       );
     });
 
-    // Si arriva qui solo a rimozione riuscita.
+    //Si arriva qui solo a rimozione riuscita.
+    //Rimuoviamo anche dal pasto locale.
     _removeFoodFromLocal(mealType, food);
     updateDailyTip(allFoods);
     _isUpdatingFood = false;
     notifyListeners();
   }
-  
-  // Aggiorna un cibo già loggato con nuovi valori: prima il Database, poi lo stato locale.
+
+  // Aggiorna un cibo già loggato con nuovi valori: prima al Database, poi al diario locale.
   Future<void> updateFood(
     MealType_Enum mealType,
     LoggedFood oldFood,
@@ -172,19 +180,20 @@ class Homepage_ViewModel extends ChangeNotifier {
       );
     });
 
-    // Si arriva qui solo ad aggiornamento riuscito.
+    //Si arriva qui solo ad aggiornamento riuscito.
+    //Aggiorniamo il cibo per il diario locale
     _updateFoodInLocal(mealType, oldFood, newFood);
     updateDailyTip(allFoods);
     _isUpdatingFood = false;
     notifyListeners();
   }
 
-  // Ricostruisce i valori nutrizionali per 100g partendo da un cibo loggato.
-  // Pura logica matematica isolata dal contesto grafico.
+  //Ricostruisce i valori nutrizionali per 100g partendo da un cibo loggato.
+  //In caso di modifica di un cibo voglio che i valori per calcolare le nuove quantità siano quelli base per 100g.
   FoodModel resetValori(LoggedFood food) {
     // Se la quantità è nulla, assumiamo 100g di base
     final moltiplicatore = (food.quantita) / 100;
-    
+
     return FoodModel(
       nome: food.nome,
       kcalper100: (food.calorie) / moltiplicatore,
@@ -194,17 +203,17 @@ class Homepage_ViewModel extends ChangeNotifier {
     );
   }
 
-  // Rimuove un cibo solo dalla lista locale
+  //Rimuove un cibo solo dalla lista locale.
   void _removeFoodFromLocal(MealType_Enum mealType, LoggedFood food) {
     foodsByMeal(mealType).remove(food);
   }
 
-  // Aggiunge un cibo solo dalla lista locale
+  //Aggiunge un cibo solo alla lista locale.
   void _addFoodToLocal(MealType_Enum mealType, LoggedFood food) {
     foodsByMeal(mealType).add(food);
   }
 
-  // Sostituisce un cibo con uno aggiornato solo nella lista locale, mantenendone la posizione
+  //Sostituisce un cibo con uno aggiornato solo nella lista locale, mantenendone la posizione tramite l'indice.
   void _updateFoodInLocal(
     MealType_Enum mealType,
     LoggedFood oldFood,
@@ -217,12 +226,11 @@ class Homepage_ViewModel extends ChangeNotifier {
     }
   }
 
-  
-  
   // SEZIONE DAILYRECAP -----------------------------------------------------------------------------
 
-  // Restituisce la somma totale di un macro specifico (calorie, carboidrati, proteine o grassi) consumato nel giorno corrente
+  //Restituisce la somma totale di un macro specifico (calorie, carboidrati, proteine o grassi) consumato nel giorno corrente.
   double obtainedMacros(MacroType_Enum macro, List<LoggedFood> foods) {
+    //fold scorre la lista accumulando in un unico valore la somma del nutriente partendo da 0.
     double result = foods.fold<double>(0.0, (sum, food) {
       switch (macro) {
         case MacroType_Enum.Calorie:
@@ -235,13 +243,13 @@ class Homepage_ViewModel extends ChangeNotifier {
           return sum + food.grassi;
       }
     });
-    // Tronca il risultato a 1 decimale per una visualizzazione più pulita
+    //Tronca il risultato a 1 decimale per una visualizzazione più pulita.
     return double.parse(result.toStringAsFixed(1));
-}
+  }
 
-  // Ritorna i macro goal giornalieri
+  //Ritorna i macro goal giornalieri dell'utente.
   double dailyMacroGoal(MacroType_Enum macro) {
-    switch(macro) {
+    switch (macro) {
       case MacroType_Enum.Calorie:
         return (_user?.calorie ?? 0).toDouble();
       case MacroType_Enum.Carboidrati:
@@ -253,7 +261,7 @@ class Homepage_ViewModel extends ChangeNotifier {
     }
   }
 
-  // Aggiorna il daily tip in base ai macro consumati finora
+  //Aggiorna il daily tip in base ai macro consumati finora. Logica semplice nei prossimi *sprint* va reso dinamico.
   void updateDailyTip(List<LoggedFood> foods) {
     final carbs = obtainedMacros(MacroType_Enum.Carboidrati, foods);
     final proteins = obtainedMacros(MacroType_Enum.Proteine, foods);
@@ -262,11 +270,14 @@ class Homepage_ViewModel extends ChangeNotifier {
     if (foods.isEmpty) {
       _dailyTip = '⭐ Aggiungi il primo alimento del giorno!';
     } else if (carbs > proteins && carbs > fats) {
-      _dailyTip = '❌ Hai consumato più carboidrati; bilancia con proteine e grassi sani.';
+      _dailyTip =
+          '❌ Hai consumato più carboidrati; bilancia con proteine e grassi sani.';
     } else if (proteins > carbs && proteins > fats) {
-      _dailyTip = '✅ Ottimo apporto proteico; assicurati di aggiungere anche carboidrati complessi.';
+      _dailyTip =
+          '✅ Ottimo apporto proteico; assicurati di aggiungere anche carboidrati complessi.';
     } else if (fats > carbs && fats > proteins) {
-      _dailyTip = '❌ Stai assumendo molti grassi; prova ad aumentare le proteine e i carboidrati.';
+      _dailyTip =
+          '❌ Stai assumendo molti grassi; prova ad aumentare le proteine e i carboidrati.';
     } else {
       _dailyTip = '✅ Il tuo piano alimentare è equilibrato, continua così!';
     }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+//Widget che rappresenta il selettore dll'unità di misura a destra della barra di inserimento quantità.
+
 class SelettoreQuantita extends StatelessWidget {
+  //Parametri che mi servono per aggiornare correttamente l'unità di misura.
   final String valoreAttuale;
   final List<String> opzioni;
   final ValueChanged<String?> onChanged;
@@ -22,8 +25,10 @@ class SelettoreQuantita extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade400, width: 1.5),
       ),
 
+      //Widget che mi creano il menu a tendina per la selezione delle unità di misura.
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
+          //mostriamo valoreAttuale per default.
           value: valoreAttuale,
           icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
           style: const TextStyle(
@@ -31,13 +36,16 @@ class SelettoreQuantita extends StatelessWidget {
             color: Colors.black87,
             fontWeight: FontWeight.w600,
           ),
+          //Per il menu a tendina servono ogetti di tipo DropDown. con map iteriamo su tutte le nostre
+          //unità di misura e le trasformiamo per vederla nel menu a tendina.
           items: opzioni.map((String singolaUnita) {
             return DropdownMenuItem<String>(
               value: singolaUnita,
               child: Text(singolaUnita),
             );
-          }).toList(),
+          }).toList(), //Lista finale compatta.
 
+          //Dopo il tap ritorniamo l'aggiornamento.
           onChanged: onChanged,
         ),
       ),

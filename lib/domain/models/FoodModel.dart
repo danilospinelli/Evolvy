@@ -1,9 +1,15 @@
 class FoodModel {
+
+  //Parametri che definiscono un generico cibo. Totalmente indipendente dal logMeal dell'utente.
+
   final String nome;
   final double kcalper100;
   final double protper100;
   final double carbper100;
   final double grasper100;
+
+//Costruttore principale. I parametri sono required per costruire sempre un cibo
+//senza mancanza di informazioni.
 
   FoodModel({
     required this.nome,
@@ -12,6 +18,9 @@ class FoodModel {
     required this.carbper100,
     required this.grasper100,
   });
+
+//Metodo factory che prende il file JSON mandato dalla repository e costruisce l'ogetto Dart FoodModel 
+//ben parametrizzato con valori Double per rappresentare bene i macro nutrienti.
 
   factory FoodModel.fromJson(Map<String, dynamic> json) {
     return FoodModel(

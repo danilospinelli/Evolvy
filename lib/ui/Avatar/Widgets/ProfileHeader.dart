@@ -5,7 +5,10 @@ import 'package:flutter_application_1/ui/Avatar/ViewModel/Avatar_ViewModel.dart'
 import 'package:flutter_application_1/ui/core/ProgressBar/Progressbar.dart';
 import 'package:flutter_application_1/ui/core/CaricamentoCircolare/CaricamentoCircolare.dart';
 
-/// Blocco in alto: nome, barra XP, monete, streak.
+//Widget che gestisce tutta la sezione in alto della pagina dell'avatar.
+//dalla barra esperienza al cambio nome alla visualizzazione di exp monete e streak.
+//é stateful per gestire correttamente lo stato di visualizzazione nome e scrittura nuovo nome.
+
 class ProfileHeader extends StatefulWidget {
   const ProfileHeader({
     super.key,
@@ -19,7 +22,8 @@ class ProfileHeader extends StatefulWidget {
 }
 
 class _ProfileHeader_ViewState extends State<ProfileHeader> {
-  // Stato interno
+
+  //Stato interno sulla riga del nome della mascotte.
   bool _not_editing_name = true;
   late final TextEditingController _nameController;
 
@@ -29,6 +33,7 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
     _nameController = TextEditingController(text: widget.user.username);
   }
 
+  //essenziale per disallocare memoria al controller quando non lo si usa piu.
   @override
   void dispose() {
     _nameController.dispose();
@@ -37,15 +42,15 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
 
   @override
   Widget build(BuildContext context) {
+    //Vediamo con Watch se si sta aggiornando il nome per la gestione dello stato.
     final bool isUpdatingName = context.watch<Avatar_ViewModel>().isUpdatingName;
+    //Leggera logica di gamification, ogni livello necessita di 10 punti esperienza in piu.
     final xpGoal = widget.user.livello * 10;
-    //final xpProgress =
-    //    xpGoal == 0 ? 0.0 : (widget.user.exp / xpGoal).clamp(0.0, 1.0);
-
+  
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Nome + barra XP
+        //Nome + barra XP
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,8 +58,8 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
               Row(
                 children: [
                   if (isUpdatingName)
-                    // Cambio nome in corso: rotella al posto del solo nome.
-                    // La barra XP qui sotto resta visibile.
+                    //Cambio nome in corso: rotella al posto solo del nome.
+                    //La barra XP qui sotto resta visibile.
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 14, horizontal: 4),
                       child: CaricamentoCircolare(),
@@ -63,23 +68,24 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
                     Expanded(
                       child: TextField(
                       controller: _nameController,
-                      readOnly: _not_editing_name, // Se true, blocca la modifica
+                      readOnly: _not_editing_name, //Se true, blocca la modifica
                       onTap: () {
                         setState(() {
-                          _not_editing_name = false; // Al click, sblocca il campo
+                          _not_editing_name = false; //Al click, sblocca il campo
                         });
                       },
                       onSubmitted: (nuovoTesto) {
                         setState(() {
-                          _not_editing_name = true; // Quando premi "Invio" sulla tastiera, salva e blocca
+                          _not_editing_name = true; //Quando premi "Invio" sulla tastiera, salva e blocca.
+                          //Chiama poi il viewModel per cambiare il nome.
                           context.read<Avatar_ViewModel>().editName(nuovoTesto);
                         });
                       },
                       decoration: InputDecoration(
-                        // Rimuove la linea sotto se è in modalità sola lettura
+                        //Rimuove la linea sotto il nome se è in modalità sola lettura
                         border: _not_editing_name ? InputBorder.none : const UnderlineInputBorder(),
                         suffixIcon: _not_editing_name
-                        ? const Icon(Icons.edit, size: 16) // Mostra una matitina di aiuto
+                        ? const Icon(Icons.edit, size: 16) //Mostra una matitina di aiuto
                         : null,
                       ),
                       style: const TextStyle(fontSize: 20, color: Colors.black),
@@ -88,7 +94,8 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
                 ],
               ),
               const SizedBox(height: 6),
-              // Barra compatta
+
+              //Barra compatta
               Row(
                 children: [
                   Text(
@@ -100,6 +107,7 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
+                    //Chiamiamo la nostra ProgressBar con valueOnSide True per la versione compatta.
                     child: ProgressBar(
                       current: widget.user.exp.toDouble(),
                       goal: xpGoal.toDouble(), 
@@ -115,7 +123,8 @@ class _ProfileHeader_ViewState extends State<ProfileHeader> {
           ),
         ),
         const SizedBox(width: 12),
-        // Monete e streak
+
+        //Monete e streak
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+//widget solo estetico rappresentante un barcode.
+
 class BarCode extends StatelessWidget {
   final VoidCallback onPressed;
 
