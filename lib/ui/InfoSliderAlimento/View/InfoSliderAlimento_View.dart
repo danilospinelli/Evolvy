@@ -107,53 +107,12 @@ class InfoSliderAlimento_View extends StatelessWidget {
                             onPressed: () async {
                               final insertingFood = viewModel.generaCiboLoggato(ciboSelezionato);
 
-<<<<<<< HEAD
                               if (ciboGiaLoggato != null) {
 
                                 await homepageVM.updateFood(
                                   mealType,
                                   ciboGiaLoggato!,
                                   insertingFood,
-=======
-                              try {
-                                //se c'era già un cibo usiamo UpdateFood.
-                                if (ciboGiaLoggato != null) {
-                               
-                                  await homepageVM.updateFood(
-                                    mealType,
-                                    ciboGiaLoggato!,
-                                    insertingFood,
-                                  );
-                                  
-                                  //Vediamo se siamo ancora nel contesto giusto e mostriamo la snackbar.
-                                  if (!context.mounted) return;
-                                  SnackBarInfo.foodAction(context, 'update', insertingFood.nome);
-                                  Navigator.pop(context); // 1 solo passo indietro
-
-                                } else {
-                                
-                                  //Aggiungiamo il cibo di tipo FoodModel, traformato in LoggedFood da generaCiboLoggato al diario.
-                                  await homepageVM.addFood(mealType, insertingFood);
-                                  
-                                  //Vediamo se siamo ancora nel contesto giusto e mostriamo la snackbar.
-                                  if (!context.mounted) return;
-                                  SnackBarInfo.foodAction(context, 'add', insertingFood.nome);
-                                  
-                                  //Se clicchiamo OK dobbiamo ricordarci da dove eravamo venuti. Usiamo un contatore per tere traccia di ciò.
-                                  //Abbiamo fatto 2 passi dalla homepage fino a qui.
-                                  int count = 0;
-                                  Navigator.popUntil(context, (route) => count++ == 2);
-                                }
-                              } catch (_) {
-                                // --- GESTIONE DELL'ERRORE (Se salta Supabase) ---
-                                if (!context.mounted) return;
-                                SnackBarInfo.show(
-                                  context,
-                                  message: 'Salvataggio non riuscito, riprova.',
-                                  icon: Icons.error_outline,
-                                  color: Colors.red,
-                                  accumula: false,
->>>>>>> 90d09e33782f201416e79eafe7676b4c860a28ce
                                 );
 
                                 if (!context.mounted) return;
