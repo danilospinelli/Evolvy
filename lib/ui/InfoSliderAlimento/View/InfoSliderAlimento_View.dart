@@ -97,40 +97,27 @@ class InfoSliderAlimento_View extends StatelessWidget {
                             onPressed: () async {
                               final insertingFood = viewModel.generaCiboLoggato(ciboSelezionato);
 
-                              
-                              try {
-                                if (ciboGiaLoggato != null) {
-                               
-                                  await homepageVM.updateFood(
-                                    mealType,
-                                    ciboGiaLoggato!,
-                                    insertingFood,
-                                  );
-                                  
-                                  if (!context.mounted) return;
-                                  SnackBarInfo.foodAction(context, 'update', insertingFood.nome);
-                                  Navigator.pop(context); // 1 solo passo indietro
+                              if (ciboGiaLoggato != null) {
 
-                                } else {
-                                
-                                  await homepageVM.addFood(mealType, insertingFood);
-                                  
-                                  if (!context.mounted) return;
-                                  SnackBarInfo.foodAction(context, 'add', insertingFood.nome);
-                                  
-                                  int count = 0;
-                                  Navigator.popUntil(context, (route) => count++ == 2); // 2 passi indietro
-                                }
-                              } catch (_) {
-                                // --- GESTIONE DELL'ERRORE (Se salta Supabase) ---
-                                if (!context.mounted) return;
-                                SnackBarInfo.show(
-                                  context,
-                                  message: 'Salvataggio non riuscito, riprova.',
-                                  icon: Icons.error_outline,
-                                  color: Colors.red,
-                                  accumula: false,
+                                await homepageVM.updateFood(
+                                  mealType,
+                                  ciboGiaLoggato!,
+                                  insertingFood,
                                 );
+
+                                if (!context.mounted) return;
+                                SnackBarInfo.foodAction(context, 'update', insertingFood.nome);
+                                Navigator.pop(context); // 1 solo passo indietro
+
+                              } else {
+
+                                await homepageVM.addFood(mealType, insertingFood);
+
+                                if (!context.mounted) return;
+                                SnackBarInfo.foodAction(context, 'add', insertingFood.nome);
+
+                                int count = 0;
+                                Navigator.popUntil(context, (route) => count++ == 2); // 2 passi indietro
                               }
                             },
                           ),
