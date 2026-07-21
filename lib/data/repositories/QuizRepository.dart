@@ -6,11 +6,8 @@ import 'package:flutter_application_1/domain/models/QuizModel.dart';
 //durante le operazioni o le query.
 
 class QuizRepository {
-  late final QuizService _quizService;
+  final QuizService _quizService=QuizService();
 
-  QuizRepository(){
-    this._quizService=QuizService();
-  }
 
 //Metodo perfettamente speculare a quello del FoodRepository, da un id Utente prende la sua lista 
 //di quiz e tramite Map e toList allla fine restituisce una lista compatta.

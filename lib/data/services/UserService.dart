@@ -5,11 +5,8 @@ class UserService {
   //inizializzazione del client di Supabase. Final per i motivi analoghi descritti prima,
   //non vogliamo sia un oggetto modificabile durante l'esecuzione.
 
-  late final SupabaseClient _client;
+  final SupabaseClient _client= Supabase.instance.client;
 
-  UserService() {
-    this._client = Supabase.instance.client;
-  }
 
 //Metodo che recupera le informazioni sui macro nutrienti di un utente "idUtente" con una chiamata asincrona al DB
 //e tramite una funzione rpc in Supabase.

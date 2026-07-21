@@ -5,11 +5,8 @@ class AvatarService {
   //inizializzazione del client di Supabase. Final per i motivi analoghi descritti prima,
   //non vogliamo sia un oggetto modificabile durante l'esecuzione.
   
-  late final SupabaseClient _client;
+  final SupabaseClient _client= Supabase.instance.client;
 
-  AvatarService() {
-    this._client = Supabase.instance.client;
-  }
 
   //Restituisce tutte le informazione per la pagina dell'avatar tramite una chiamata asincrona al DB.
   //utilizza una funzione rpc che abbianmo definito all'interno di Supabase.

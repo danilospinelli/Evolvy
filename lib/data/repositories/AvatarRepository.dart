@@ -5,11 +5,9 @@ import 'package:flutter_application_1/domain/models/AvatarModel.dart';
 //durante le operazioni o le query.
 
 class AvatarRepository {
-  late final AvatarService _avatarService;
+  final AvatarService _avatarService=AvatarService();
 
-  AvatarRepository(){
-    this._avatarService=AvatarService();
-  }
+
 
   //Funzione asincrona che prende dati dal service tramite l'id di un utente (nel nostro caso come "mock" nel codice come id utente = 1)
   // e le converte poi in un ogetto avatar model.
@@ -19,9 +17,9 @@ class AvatarRepository {
     return AvatarModel.fromJson(avatarJson);
   }
 
-//I successivi metodi non restituiscono nessun ogetto ma la loro funzione è semplicemente quella di prendere dei parametri
-//e aggiornare i rispettivi valori nel database.
-//Infatti non è presente nessuna chiamata ai models ma lavora solo con i Service.
+  //I successivi metodi non restituiscono nessun ogetto ma la loro funzione è semplicemente quella di prendere dei parametri
+  //e aggiornare i rispettivi valori nel database.
+  //Infatti non è presente nessuna chiamata ai models ma lavora solo con i Service.
 
   Future<void> updateNomeAvatar({required int idUtente, required String nomeAvatar}) async {
     await _avatarService.updateNomeAvatarService(idUtente: idUtente, nomeAvatar: nomeAvatar);

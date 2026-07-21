@@ -5,11 +5,9 @@ import 'package:flutter_application_1/domain/models/UserModel.dart';
 //durante le operazioni o le query.
 
 class UserRepository {
-  late final UserService _userService;
+  final UserService _userService=UserService();
 
-  UserRepository(){
-    this._userService=UserService();
-  }
+
 
 //Metodo perfettamente equivalente agli altri metodi della repository.
 //Da un IdUtente restituisce uno UserModel caratterizzato dai Macro nutrienti dell'utente.

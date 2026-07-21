@@ -5,11 +5,8 @@ class QuizService {
   //inizializzazione del client di Supabase. Final per i motivi analoghi descritti prima,
   //non vogliamo sia un oggetto modificabile durante l'esecuzione.
 
-  late final SupabaseClient _client;
+  final SupabaseClient _client= Supabase.instance.client;
 
-  QuizService(){
-    this._client = Supabase.instance.client;
-  }
 
     //Recupera i quiz per un utente specifico "idUtente" dal DB tramite una chiamata asincrona e una funzione rpc in Supabase
 

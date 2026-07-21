@@ -7,12 +7,10 @@ import '../services/LogMealService.dart';
 //Questa classe riguarda tutto il cibo legato all'utente, quindi nel suo LogMeal.
 
 class LogMealRepository {
-  late final LogMealService _logmealservice;
+  final LogMealService _logmealservice= LogMealService();
 
   
-  LogMealRepository(){
-    this._logmealservice = LogMealService();
-  }
+
 
 //Metodo asincrono che restituisce i pasti dell'utente identificati dal suo id e dalla data di inserimento
 //(Il concetto di data ci servirà nel TODO: calndario)

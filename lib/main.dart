@@ -20,7 +20,6 @@ Future<void> main() async {
 
   //Abbiamo gestito l'avvio dell App tramite un MultiProvider per le pagine della navigationBar
   //Mentre altre pagine hanno provider singoli.
-  //TODO: una best practice sarebbe quella di fare il 2o metodo per tutti!
   runApp(
     MultiProvider(
       providers: [
